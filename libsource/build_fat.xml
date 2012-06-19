@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<project name="Make FatJar(experimental)" default="search" basedir=".">
+<!-- ====================================================================== 
+     2012. 4. 11. 오전 10:59:20                                                        
+
+     project isearch core     
+     description
+                   
+     by bleujin(bleujin@gmail.com)                                                                
+     ====================================================================== -->
+    <!--
+        <property name="fjepPath" value="reference:file:plugins\net.sf.fjep.fatjar_0.0.31.jarfatjar.jar"/>
+        <taskdef name="fatjar.build" classname="net.sf.fjep.anttask.FJBuildTask" classpath="${fjepPath}"/>
+        <typedef name="fatjar.manifest" classname="net.sf.fjep.anttask.FJManifestType" classpath="${fjepPath}"/>
+        <typedef name="fatjar.exclude" classname="net.sf.fjep.anttask.FJExcludeType" classpath="${fjepPath}"/>
+        <typedef name="fatjar.jarsource" classname="net.sf.fjep.anttask.FJJarSourceType" classpath="${fjepPath}"/>
+        <typedef name="fatjar.filesource" classname="net.sf.fjep.anttask.FJFileSourceType" classpath="${fjepPath}"/>
+    -->
+    <!-- uncomment the above lines to use ANT outside of Eclipse -->
+	
+	<property name="baseDir" value="." />
+	<property name="targetDir" value="../lib" />
+	
+    <target name="search">
+    	<delete file="${targetDir}/search_fat.jar"></delete>
+        <fatjar.build output="${targetDir}/search_fat.jar">
+            <fatjar.manifest/>
+        	<fatjar.jarsource file="${basedir}\search\tm-extractors-0.4.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\search\metadata-extractor-2.3.1.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\search\lucene-analyzers-2.9.1.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\search\lucene-core-2.9.1.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\search\metadata-extractor-2.3.1.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search\koreananalyzer-20100525.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search\lucene-instantiated-2.9.3.jar" relpath=""/>  
+        </fatjar.build>
+    </target>
+
+    <target name="search36">
+    	<delete file="${targetDir}/search36_fat.jar"></delete>
+        <fatjar.build output="${targetDir}/search36_fat.jar">
+            <fatjar.manifest/>
+        	<fatjar.jarsource file="${basedir}\search36\lucene-core-3.6.0.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\search36\koreananalyzer-3x-120223.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search36\lucene-instantiated-3.6.0.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search36\lucene-analyzers-3.6.0.jar" relpath=""/>  
+        </fatjar.build>
+    </target>
+
+	
+    <target name="search_util">
+    	<delete file="${targetDir}/search_util_fat.jar"></delete>
+        <fatjar.build output="${targetDir}/search_util_fat.jar">
+            <fatjar.manifest/>
+        	<fatjar.jarsource file="${basedir}\search_util\jericho-html-3.1.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\search_util\ecs-1.4.2.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\search_util\tidy.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\search_util\htmllexer.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\search_util\htmlparser.jar" relpath=""/> 
+        </fatjar.build>
+    </target>
+
+
+</project>

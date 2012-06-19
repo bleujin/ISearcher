@@ -1,0 +1,19 @@
+org.apache.lucene.store.LockObtainFailedException: exception.indexer.lock.obtain_failed:owner[20100720/DEFAULT/ion_page]
+	at net.ion.isearcher.impl.TemporaryWriter.begin(TemporaryWriter.java:60)
+	at net.ion.isearcher.indexer.DefaultIndexer.run(DefaultIndexer.java:84)
+	at java.lang.Thread.run(Unknown Source)
+2010. 7. 20 오후 2:49:21 net.ion.isearcher.crawler.model.MaxDepthModel <init>
+정보: Crawler model: net.ion.isearcher.crawler.model.MaxDepthModel
+2010. 7. 20 오후 2:49:21 net.ion.isearcher.crawler.model.MaxDepthModel <init>
+정보: - max depth=0
+2010. 7. 20 오후 2:49:21 net.ion.isearcher.crawler.model.MaxDepthModel <init>
+정보: - max iterations=4194304
+2010. 7. 20 오후 2:49:22 net.ion.framework.db.servant.ServantChannel <init>
+정보: init Channel : Thread-6(class net.ion.framework.db.servant.StdOutServant)
+2010. 7. 20 오후 2:49:22 net.ion.framework.db.DBController destroySelf
+정보: DBController : destroyed
+2010. 7. 20 오후 2:49:22 net.ion.framework.db.DBController destroySelf
+정보: DBController : destroyed
+2010. 7. 20 오후 2:49:22 net.ion.framework.db.DBController destroySelf
+정보: DBController : destroyed
+

@@ -1,0 +1,62 @@
+<project name="Jar Publish" default="publish" basedir=".">
+	
+	<property name="baseDir" value="." />
+	<property name="binDir" value="./bin" />
+	<property name="publishDir" value="./publish" />
+	
+	<tstamp>
+	  <format property="TODAY_MY" pattern="MM/dd/yyyy hh:mm"/>
+	</tstamp>
+	
+	<property name="manifes.main.class" value="" />
+	<property name="manifes.classpath" value="./" />
+	<property name="version.number" value="2"/>
+	<property name="build.number" value="2"/>
+
+
+	<target name="publish">
+		<delete file="publish/isearcher_${version.number}.${build.number}.jar"></delete>
+		<jar destfile="publish/isearcher_${version.number}.${build.number}.jar">
+			<manifest>
+			  <attribute name="Built-By" value="${user.name}"/>
+			  <attribute name="Created-By" value="${user.name}"/>
+			  <!-- attribute name="Main-Class" value="${manifest.main.class}"/ -->
+			  <attribute name="Built-Date" value="${TODAY_MY}" />
+			  <attribute name="Class-Path" value="${manifes.classpath}" />
+			  <section name="common">
+			    <attribute name="Specification-Title" value="i-on search engine"/>
+			    <attribute name="Specification-Version" value="${version.number}.${build.number}"/>
+			    <attribute name="Specification-Vendor" value="i-on"/>
+			  </section>
+			</manifest>
+			<fileset dir="${binDir}/" includes="net/**" />
+			<fileset dir="${binDir}/" includes="org/**" />
+			<exclude name="**/*Test.class"/>
+			<exclude name="**/*Example*"/>
+		</jar>
+	</target>
+
+	<target name="copy" depends="publish">
+		<echo>Copy to ICSS6</echo>
+		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../ICSS6/icss/WEB-INF/lib/" />
+		<echo>Copy to ICSS6Extend</echo>
+		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../ICSS6Extend/lib/common/" />
+		<echo>Copy to ICS6Extend</echo>
+		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../ICS6Extend/lib/icssearcher/" />
+		<echo>Copy to AradonExtend</echo>
+		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../AradonExtend/lib/" />
+		<echo>Copy to MongoSearch</echo>
+		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../MongoSearch/lib/" />
+	</target>
+
+	<target name="copy_novision" depends="publish">
+		<echo>Copy to ICSS6</echo>
+		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../ICSS6/icss/WEB-INF/lib/" />
+		<echo>Copy to ICSS6Extend</echo>
+		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../ICSS6Extend/lib/common/" />
+		<echo>Copy to ICS6</echo>
+		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../ICS6/ics/WEB-INF/lib/" />
+		<echo>Copy to ICS6Extend</echo>
+		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../ICS6Extend/lib/icssearcher/" />
+	</target>
+</project>

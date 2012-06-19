@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+<Configure id="Server" class="org.mortbay.jetty.Server">
+    <!-- Uncomment to limit available threads -->
+    <!-- Allow an extra thread for Jetty itself, plus one for each Connector -->
+    <!--
+    <Set name="ThreadPool">
+      <New class="org.mortbay.thread.BoundedThreadPool">
+        <Set name="minThreads">3</Set>
+        <Set name="lowThreads">0</Set>
+        <Set name="maxThreads">3</Set>
+      </New>
+    </Set>
+    -->
+</Configure>

@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<project name="Make FatJar(experimental)" default="isearcher" basedir=".">
+<!-- ====================================================================== 
+     2009. 4. 11. 오전 10:59:20                                                        
+
+     project framework core     
+     description
+                   
+     by bleujin(bleujin@gmail.com)                                                                
+     ====================================================================== -->
+    <!--
+        <property name="fjepPath" value="reference:file:plugins\net.sf.fjep.fatjar_0.0.31.jarfatjar.jar"/>
+        <taskdef name="fatjar.build" classname="net.sf.fjep.anttask.FJBuildTask" classpath="${fjepPath}"/>
+        <typedef name="fatjar.manifest" classname="net.sf.fjep.anttask.FJManifestType" classpath="${fjepPath}"/>
+        <typedef name="fatjar.exclude" classname="net.sf.fjep.anttask.FJExcludeType" classpath="${fjepPath}"/>
+        <typedef name="fatjar.jarsource" classname="net.sf.fjep.anttask.FJJarSourceType" classpath="${fjepPath}"/>
+        <typedef name="fatjar.filesource" classname="net.sf.fjep.anttask.FJFileSourceType" classpath="${fjepPath}"/>
+    -->
+    <!-- uncomment the above lines to use ANT outside of Eclipse -->
+	
+	<property name="baseDir" value="." />
+	<property name="binDir" value="../bin" />
+	<property name="icssDir" value="../../ICSS5" />
+	<property name="icsDir" value="../../ICS5_R2" />
+	<path id="isearcher.classpath">
+		  <pathelement location="${basedir}/test/junit4_3.jar"/>
+		  <pathelement location="${basedir}/core_fat.jar"/>
+		  <pathelement location="${basedir}/core_lucene_fat.jar"/>
+		  <pathelement location="${basedir}/test/framework.jar"/>
+		  <pathelement location="${basedir}/etc/htmlparser.jar"/>
+		  <pathelement location="${basedir}/core/koreananalyzer-20100525.jar"/>
+		  <pathelement location="${basedir}/test/ojdbc14.jar"/>
+		  <pathelement location="${basedir}/server_fat.jar"/>
+	  	  <pathelement location="${binDir}/"/>
+	</path>
+
+	<target name="unitTest">
+		<echo>classpath: ${toString:isearcher.classpath}</echo>
+		<junit printsummary="yes" fork="yes" haltonfailure="no">
+			<classpath refid="isearcher.classpath" />
+			<formatter type="xml"/>
+			<test name="net.ion.isearcher.AllTest" todir="../data"/>
+		</junit>
+		<junitreport todir="../data">
+            <fileset dir="../data">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="../data/html"/>
+		</junitreport>
+	</target>
+	
+	<target name="isearcher">
+		<tstamp>
+		  <format property="TODAY_MY" pattern="MM/dd/yyyy hh:mm"/>
+		</tstamp>		
+		<property name="manifes.main.class" value="" />
+		<property name="manifes.classpath" value="./" />
+		<property name="version.number" value="2"/>
+		<property name="build.number" value="1"/>
+		
+		<delete file="${baseDir}/isearcher.jar"></delete>
+		<jar destfile="${baseDir}/isearcher.jar" basedir="${binDir}/">
+			<manifest>
+			  <attribute name="Built-By" value="${user.name}"/>
+			  <attribute name="Created-By" value="${user.name}"/>
+			  <!-- attribute name="Main-Class" value="${manifest.main.class}"/ -->
+			  <attribute name="Built-Date" value="${TODAY_MY}" />
+			  <attribute name="Class-Path" value="${manifes.classpath}" />
+			  <section name="common">
+			    <attribute name="Specification-Title" value="i-on search engine"/>
+			    <attribute name="Specification-Version" value="${version.number}.${build.number}"/>
+			    <attribute name="Specification-Vendor" value="i-on"/>
+			  </section>
+			</manifest>
+			<exclude name="**/*Test.class"/>
+			<exclude name="**/*Example*"/>
+		</jar>
+		<!--
+		<echo>Copy To ICS</echo>
+		<copy file="${baseDir}/isearcher.jar" todir="${icsDir}/lib/search/" />
+		<copy file="${baseDir}/isearcher.jar" todir="${icsDir}/ics/WEB-INF/lib/" />
+		
+		<echo>Copy To ICSS</echo>
+		<copy file="${baseDir}/isearcher.jar" todir="${icssDir}/lib/core/" />
+		<copy file="${baseDir}/isearcher.jar" todir="${icssDir}/icss/WEB-INF/lib/" />
+		<copy file="${baseDir}/core_fat.jar"  todir="${icssDir}/lib/core/" />
+		<copy file="${baseDir}/core_fat.jar"  todir="${icssDir}/icss/WEB-INF/lib/" />
+
+		<echo>Copy To Aradon</echo>
+		<copy file="${baseDir}/isearcher.jar" todir="../../Aradon/lib/aradon/default/" />
+
+		<echo>Copy To SearchExport</echo>
+		<copy file="${baseDir}/isearcher.jar" todir="../../SearchExport/lib/" />
+		-->
+	</target>
+
+	
+	<target name="core_fat">
+		<delete file="${baseDir}/core_fat.jar"></delete>
+        <fatjar.build output="${baseDir}/core_fat.jar">
+            <fatjar.manifest/>
+            <!--fatjar.jarsource file="${basedir}\core\commons-codec-1.4.jar" relpath=""/>
+            <fatjar.jarsource file="${basedir}\core\commons-httpclient-3.1.jar" relpath=""/>
+            <fatjar.jarsource file="${basedir}\core\commons-io-1.3.1.jar" relpath=""/>
+            <fatjar.jarsource file="${basedir}\core\commons-lang-2.3.jar" relpath=""/>
+        	<fatjar.jarsource file="${basedir}\core\commons-logging-1.1.jar" relpath=""/-->
+        	
+        	<fatjar.jarsource file="${basedir}\core\httpcore-4.0.1.jar" relpath=""/>
+        	<fatjar.jarsource file="${basedir}\core\httpcore-nio-4.0.1.jar" relpath=""/>
+           	<fatjar.jarsource file="${basedir}\core\jericho-html-3.1.jar" relpath=""/>
+           	<fatjar.jarsource file="${basedir}\core\koreanAnalyzer-20100525.jar" relpath=""/>
+        </fatjar.build>
+    </target>
+
+	<target name="server_fat">
+		<delete file="${baseDir}/server_fat.jar"></delete>
+        <fatjar.build output="${baseDir}/server_fat.jar">
+            <fatjar.manifest/>
+            <!-- fatjar.jarsource file="${basedir}\server\servlet-api-2.5-6.0.0.jar" relpath=""/ -->
+            <!-- fatjar.jarsource file="${basedir}\server\ecs-1.4.2.jar" relpath=""/ -->
+            <fatjar.jarsource file="${basedir}\server\org.eclipse.jetty.ajp.jar" relpath=""/>
+            <fatjar.jarsource file="${basedir}\server\org.eclipse.jetty.continuations.jar" relpath=""/>
+            <fatjar.jarsource file="${basedir}\server\org.eclipse.jetty.http.jar" relpath=""/>
+            <fatjar.jarsource file="${basedir}\server\org.eclipse.jetty.io.jar" relpath=""/>
+            <fatjar.jarsource file="${basedir}\server\org.eclipse.jetty.server.jar" relpath=""/>
+            <fatjar.jarsource file="${basedir}\server\org.eclipse.jetty.util.jar" relpath=""/>
+            <fatjar.jarsource file="${basedir}\server\org.restlet.ext.jetty.jar" relpath=""/>
+            <fatjar.jarsource file="${basedir}\server\org.restlet.jar" relpath=""/>
+        </fatjar.build>
+    </target>
+
+
+    <target name="core_lucene_fat">
+    	<delete file="${baseDir}/core_lucene_fat.jar"></delete>
+        <fatjar.build output="${baseDir}/core_lucene_fat.jar">
+            <fatjar.manifest/>
+
+        	<fatjar.jarsource file="${basedir}\lucene\lucene-analyzers-2.9.1.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\lucene\lucene-core-2.9.1.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\lucene\lucene-instantiated-2.9.3.jar" relpath=""/> 
+        	<!-- fatjar.jarsource file="${basedir}\lucene\lucene-demos-2.9.0.jar" relpath=""/ --> 
+        </fatjar.build>
+    </target>
+
+    <target name="binary_fat">
+    	<delete file="${baseDir}/binary_fat.jar"></delete>
+        <fatjar.build output="${baseDir}/binary_fat.jar">
+            <fatjar.manifest/>
+
+        	<fatjar.jarsource file="${basedir}\binary\asm-3.2.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\binary\commons-compress-1.0.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\binary\fae.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\binary\metadata-extractor-2.3.1.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\binary\nlog4j-1.2.25.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\binary\poi-3.6-20091214.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\binary\poi-contrib-3.6-20091214.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\binary\poi-ooxml-3.6-20091214.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\binary\poi-ooxml-schemas-3.6-20091214.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\binary\poi-scratchpad-3.6-20091214.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\binary\tm-extractors-0.4.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\binary\tagsoup-1.2.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\binary\xmlbeans-xmlpublic-2.4.0.jar" relpath=""/> 
+        </fatjar.build>
+    </target>
+	
+
+    <target name="httpclient_fat">
+    	<delete file="httpclient_413fat.jar" failonerror="no"></delete>
+        <fatjar.build output="httpclient_413fat.jar">
+            <fatjar.manifest mergemanifests="false"/>
+        	<!-- <fatjar.jarsource file="lib\etc\commons-codec-1.4.jar" relpath=""/> -->
+        	<fatjar.jarsource file="${basedir}\etc\httpclient-4.1.3.jar" relpath=""/>
+        	<fatjar.jarsource file="${basedir}\etc\httpcore-4.1.4.jar" relpath=""/>
+        	<fatjar.jarsource file="${basedir}\etc\httpmime-4.1.3.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\etc\tidy.jar" relpath=""/> 
+        </fatjar.build>
+    </target>
+    
+	
+
+</project>

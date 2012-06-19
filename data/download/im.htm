@@ -1,0 +1,996 @@
+<html>
+<head>
+<title>아이오닌을 위한 커뮤니티 I-ON Members</title>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<link rel="stylesheet" href="/zeroboard/images/main/im.css" type="text/css">
+</head>
+
+<script>
+<!--
+	
+	var key = new Array();
+
+	key['0'] = "/zboard.php?id=notice";	//공지
+	key['f'] = "/zboard.php?id=free";	//자유게시판
+	key['q'] = "/zboard.php?id=qna"; 	//업무관련 질문과 답
+	key['a'] = "/zboard.php?id=kin";	//아무거나 질문
+	key['l'] = "/zboard.php?id=lecture";	//강좌게시판
+	key['r'] = "/zboard.php?id=use";	//질렀어요지르세요
+	key['n'] = "/zboard.php?id=news";	//새소식
+	key['u'] = "/zboard.php?id=useful";	//유용한사이트
+	key['p'] = "/zboard.php?id=pds";	//자료실
+	key['i'] = "/zboard.php?id=image";	//사진게시판
+	key['g'] = "/zboard.php?id=09";	//공동구매
+	key['w'] = "/zboard.php?id=wish";	//개정요구
+	key['b'] = "/zboard.php?id=memonote";	//메시지보드
+	key['m'] = "/zboard.php?id=notice&select_arrange=headnum&desc=asc&page_num=20&selected=&exec=&sn=off&ss=on&sc=off&category=10&keyword=";	//경영회의
+	key['t'] = "/zboard.php?id=notice&select_arrange=headnum&desc=asc&page_num=20&selected=&exec=&sn=off&ss=on&sc=off&category=9&keyword=";	//팀장공지
+
+	key['h'] = "/";
+	
+	function GetKeyStroke(KeyStroke) {
+
+		if ( (event.srcElement.tagName != 'INPUT') && (event.srcElement.tagName != 'TEXTAREA') ) {
+  			isNetscape=(document.layers);
+    			eventChooser = (isNetscape) ? KeyStroke.which : event.keyCode;
+	    		which = String.fromCharCode(eventChooser).toLowerCase();
+  	  		for (var i in key)
+    			if (which == i) window.location = '/zeroboard/' + key[i];
+		}
+	}
+	document.onkeypress = GetKeyStroke;
+-->
+</script>
+
+<script>
+function getCookie(strName) {
+    var strArg = new String(strName + "=");
+    var nArgLen, nCookieLen, nEnd;
+    var i = 0, j;
+    nArgLen = strArg.length;
+    nCookieLen = document.cookie.length;
+
+    if(nCookieLen > 0) {
+        while(i < nCookieLen) {
+            j = i + nArgLen;
+            if(document.cookie.substring(i, j) == strArg) {
+                nEnd = document.cookie.indexOf (";", j);
+
+                if(nEnd == -1) nEnd = document.cookie.length;
+                return unescape(document.cookie.substring(j, nEnd));
+            }
+
+            i = document.cookie.indexOf(" ", i) + 1;
+            if (i == 0) break;
+        }
+    }
+    return("");
+}
+
+function openWindow(url, id, no, subject, sx, sy, lx, ly) {
+    var show = getCookie("i-on"+no);
+
+    if(show!=no) window.open(url+'popup.php?id='+id+'&no='+no, subject, 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,width='+sx+',height='+sy+',left='+lx+',top='+ly);
+}
+
+
+</script>
+
+<!--Login Area-START----------------------------------------------------------------------------------------------------->
+<body bgcolor="#FFFFFF" text="#000000" topmargin="0" leftmargin="0" background="/zeroboard/images/main/all_bg.gif">
+<table width="1000" border="0" cellspacing="0" cellpadding="0" background="/zeroboard/images/main/top_bg.gif">
+  <tr>
+    <td><a href="/" target="_self" onfocus="blur()"><img src="/zeroboard/images/main/logo.gif" width="512" height="91" border="0"></a></td>
+    <td width="100%" valign="bottom"> 
+		<!--OUTLOGIN-START--------------------------------------------------------------------------------------------------->
+		<!-- 로그인 되었을때의 화면입니다 -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+	  <td> 
+	   <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		  <tr>
+			<td align="right"><font color="#FFFFFF"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1">User 
+			  : </font></b>
+			  </font><img src=/zeroboard/outlogin_skin/ion/images/i_memo_off.gif border=0 align=absmiddle>  <a onfocus=blur() href="javascript:void(window.open('/zeroboard/member_memo.php','member_memo','width=450,height=500,status=no,toolbar=no,resizable=yes,scrollbars=yes'))"><b><font color=#FFFFFF>박정진</font></b></a> </td>
+			 <td align="right" width="65"><a onfocus=blur() href='/zeroboard/logout.php?&s_url=%2Fzeroboard%2Fmain.php'><img src=/zeroboard/outlogin_skin/ion/images/i_logout.gif border=0></a></td>
+		  </tr>
+		</table>
+	  </td>
+	</tr>
+	<tr> 
+	  <td height="10"></td>
+	</tr>
+	<tr> 
+	  <td align="right"> 
+		<table width="118" border="0" cellspacing="0" cellpadding="0">
+		  <tr> 
+			<td align="right"></td>
+			<td align="right"><a onfocus=blur() href=# onclick="window.open('/zeroboard/member_modify.php?group_no=1','zbMemberModify','width=560,height=590,toolbars=no,resizable=yes,scrollbars=yes')"><img src=/zeroboard/outlogin_skin/ion/images/i_info.gif border=0></a></td>
+			<td align="right"><a href=# onclick="window.open('/zeroboard/member_join.php?group_no=1','zbMemberJoin','width=560,height=590,toolbars=no,resizable=yes,scrollbars=yes')"><img src="/zeroboard/images/main/join.gif" width="58" height="26" border="0"></a></td>
+			<td align="right"><a href="http://rd.i-on.net/zeroboard/main_rnd.php"><img src=/zeroboard/images/main/go_rd2.gif border=0></a></td>
+		  </tr>
+		</table>
+	  </td>
+	</tr>
+</table>
+
+		<!--OUTLOGIN-END----------------------------------------------------------------------------------------------------->
+    </td>
+    <td><img src="/zeroboard/images/main/top_r.gif" width="40" height="91"></td>
+  </tr>
+</table>
+<!--Login Area-END------------------------------------------------------------------------------------------------------->
+
+<table width="1000" border="0" cellspacing="0" cellpadding="0">
+  <tr> 
+    <td background="/zeroboard/images/main/left_bg.gif" width="168" valign="top">
+      <table width="168" border="0" cellspacing="0" cellpadding="0" height="100%">
+        <tr> 
+          <td> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td>&nbsp;</td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=notice">공지사항 
+                  [0]</a></td>
+              </tr>
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=notice&select_arrange=headnum&desc=asc&page_num=20&selected=&exec=&sn=off&ss=on&sc=off&category=10&keyword=">경영회의공지
+                  [m]</a></td>
+              </tr>
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=notice&select_arrange=headnum&desc=asc&page_num=20&selected=&exec=&sn=off&ss=on&sc=off&category=9&keyword=">팀장공지
+                  [t]</a></td>
+              </tr>
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=qa">QM팀공지
+                  </a></td>
+              </tr>
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=marketing">마케팅팀
+                	</a></td>
+              </tr>              
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=ecm">ECM사업본부
+                	</a></td>
+              </tr>              
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=free">자유게시판 
+                  [f]</a></td>
+              </tr>                            
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=memonote">메시지 보드 
+                  [b]</a></td>
+              </tr>                         
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" height="10">
+              <tr> 
+                <td align="right"><img src="/zeroboard/images/main/left_line.gif" width="153" height="5"></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=qna">업무관련 
+                  FAQ [q]</a></td>
+              </tr>
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=request">업무환경 개선요청
+</a></td>
+              </tr>
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=kin">아무거나 
+                  질문 [a]</a></td>
+              </tr>
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=lecture">강좌게시판 
+                  [l] </a></td>
+              </tr>
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=use">자랑/지름 
+                  [r]</a></td>
+              </tr>
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=news">새로운 
+                  소식 [n] </a></td>
+              </tr>
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=useful">유용한사이트 
+                  [u] </a></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" height="10">
+              <tr> 
+                <td align="right"><img src="/zeroboard/images/main/left_line.gif" width="153" height="5"></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=pds"><font class=menu>자료실 
+                  [p]</font></a></td>
+              </tr>
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=image"><font class=menu>사진자료실 
+                  [i]</font></a></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" height="10">
+              <tr> 
+                <td align="right"><img src="/zeroboard/images/main/left_line.gif" width="153" height="5"></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=09"><font class=menu>장터/공동구매 
+                  [g]</font></a></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" height="10">
+              <tr> 
+                <td align="right"><img src="/zeroboard/images/main/left_line.gif" width="153" height="5"></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=wish"><font class=menu>개정요구사항 
+                  [w]</font></a></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=rhodes"><font class=menu>Rhodes 제품게시판
+                  </font></a></td>
+              </tr>
+            </table>            
+            <!--
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=idea"><font color=#2B60DE class=menu><b>아이오닌  아이디어</b></font></a></td>
+              </tr>
+            </table>            
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=ibcms"><font class=menu>IBCMS</font></a></td>
+              </tr>
+            </table>
+            -->
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" height="10">
+              <tr> 
+                <td align="right"><img src="/zeroboard/images/main/left_line.gif" width="153" height="5"></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            	<!--
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul2.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom">추가게시판</td>
+              </tr>
+              -->
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul2.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"> <a href="/zeroboard/zboard.php?id=resource">자원관리/공통일정</a></td>
+              </tr>
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul2.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"> <a href="/zeroboard/zboard.php?id=vote">설문조사</a></td>
+              </tr>
+	<!--
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul2.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"> <a href="/zeroboard/zboard.php?id=edu">사내대학</a></td>
+              </tr>
+	-->
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul2.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"> <a href="/zeroboard/zboard.php?id=hr">인재채용</a>
+		</td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" height="10">
+              <tr> 
+                <td align="right"><img src="/zeroboard/images/main/left_line.gif" width="153" height="5"></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul2.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=imirenotice"><font class=menu>사우회공지
+                  </font></a></td>
+              </tr>   
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul2.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=imirewant"><font class=menu>사우회에바란다
+                  </font></a></td>
+              </tr>   
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul2.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=imirecal"><font class=menu>사우회일정
+                  </font></a></td>
+              </tr>   
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul2.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=minimarket"><font class=menu>사우회장터
+                  </font></a></td>
+              </tr>                                             
+            </table> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" height="10">
+              <tr> 
+                <td align="right"><img src="/zeroboard/images/main/left_line.gif" width="153" height="5"></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=ionfc"><font class=menu>축구동호회
+                  </font></a> </td>
+              </tr>     
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=band"><font class=menu>밴드동호회
+                  </font></a><img src=/zeroboard/latest_skin/main/images/new.gif border=0></td>
+              </tr>     
+            </table> 	
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=naksi"><font class=menu>낚시동호회
+                  </font></a></td>
+              </tr>     
+            </table> 	
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=forcus"><font class=menu>사진동호회
+                  </font></a></td>
+              </tr>     
+            </table> 	
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=itr"><font class=menu>ITR동호회
+                  </font></a></td>
+              </tr>     
+            </table> 			
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=masil"><font class=menu>참마실동호회
+                  </font></a></td>
+              </tr>     
+            </table> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="23">&nbsp;</td>
+                <td width="20" align="center"><img src="/zeroboard/images/main/lrft_bul.gif" width="9" height="9"></td>
+                <td height="20" valign="bottom"><a href="/zeroboard/zboard.php?id=misarang"><font class=menu>味사랑동호회
+                  </font></a></td>
+              </tr>     
+            </table> 
+          </td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+    </td>
+    <td width="1" valign="top" background="/zeroboard/images/main/left_00_bg.gif"><img src="/zeroboard/images/main/left_00_top.gif" width="15" height="171"> 
+    </td>
+    <td rowspan="2" valign="top" width="100%" bgcolor="#FFFFFF"> 
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-530404-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<script type="text/javascript">
+/*
+var now = new Date() ;
+
+if (now.getYear() == 2008 && now.getMonth() == 11 && now.getDate() < 13 ){
+	window.open("http://im.i-on.net/zeroboard/2008_megabreed.html", 'openWindow','scrollbars=no,toolbar=no,location=no,directories=no,width=451 ,height=639,resizable=no,menubar=no,top=100,left=100');
+}
+*/
+</script>
+
+	  <!--ZEROBOARD-START--------------------------------------------------------------------------------------------------->	
+	  <table width="100%" border="0" cellspacing="10" cellpadding="0">
+        <tr> 
+          <td width="1">&nbsp;</td>
+          <td> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="204" valign="top"><img src="/zeroboard/images/main/notice_img.gif" width="204" height="92"><br>
+                </td>
+                <td width="1"><img src="/zeroboard/images/main/0000.gif" width="20" height="1"></td>
+                <td width="100%" valign="top"> 
+                  <table width="100%" border="0" cellspacing="0" cellpadding="5" bgcolor="#eeeeee">
+                    <tr> 
+                      <td>
+						<!--NOTICE-START------------------------------------------------------------------------------------------------------>						
+							<p style="padding-top: 5px"><span style="font-size: 9pt">
+04/30 <a href='/zeroboard/view.php?id=notice&no=679'>[공지]조직도 및 직원연락처 ('10.04.30 기준)</font></b></a></span><br>
+04/30 <a href='/zeroboard/view.php?id=notice&no=678'>[공지][공지] 시행공문2010-037 신규채용의 건 / 시행공문2010-038 전보발령의 ...</font></b></a></span><br>
+04/15 <a href='/zeroboard/view.php?id=notice&no=677'>[공지]직원연락처 ('10.04.15 기준)</font></b></a></span><br>
+04/15 <a href='/zeroboard/view.php?id=notice&no=676'>[공지][공지] 시행공문2010-036 신규채용의 건 (조직도 포함)</font></b></a></span><br>
+04/14 <a href='/zeroboard/view.php?id=notice&no=675'>[일반][마이크로소프트 보안공지] 2010년 04월 마이크로소프트 보안 공지 발표</font></b></a></span><br>
+</p>
+						<!--NOTICE-END--------------------------------------------------------------------------------------------------------->					
+					  </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>         
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td align="center"><img src="/zeroboard/images/main/body_line.gif" width="767" height="15"></td>
+        </tr>
+      </table>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+<form method=post name=write action=write_ok.php>
+<input type=hidden name=id value=memonote>
+<input type=hidden name=main_memo value=1>
+<input type=hidden name=use_html value="1">
+<input type=hidden name=subject value="M">
+<input type=hidden name=password value="Knucles">
+
+<script language="javascript">
+function Change(target,classname,type)
+	{
+	if ( target.value == target.defaultValue && type==0)	target.value = '';
+	if ( !target.value && type==1)	target.value = target.defaultValue;
+	target.className=classname;
+	}
+</script>
+
+		   <tr valign="top"> 
+          		 <td width="700" style="padding-left:20px">
+          			<!--Message Board -START------------------------------------------------------------------------------------------------------>
+
+
+          			<span style="font-size: 9pt">
+&nbsp;05-06 17:53 [김지예]&nbsp; <a href='/zeroboard/zboard.php?id=memonote'>아이폰/안드로이드 개발에 관심있으신 분은 자유게시판 글을 읽어주세요~ (박병철부장님요청)</font></b></a><img src=/zeroboard/latest_skin/memo/images/new.gif border=0></span><br>
+&nbsp;05-06 13:33 [배진익]&nbsp; <a href='/zeroboard/zboard.php?id=memonote'>다양한 의견이 존재하니 설문조사도 하는 것이겠지요. 사우회를 바란다에 의견주세요</font></b></a></span><br>
+&nbsp;05-06 13:33 [배진익]&nbsp; <a href='/zeroboard/zboard.php?id=memonote'>이런 의견은 사우회 게시판으로 주셔도 될 것 같습니다.</font></b></a></span><br>
+&nbsp;05-06 13:28 [곽인숙]&nbsp; <a href='/zeroboard/zboard.php?id=memonote'>뭐 이건 결혼 안하면 돈만 내고 하나도 받질 못하니...탈퇴했다 결혼할때 재가입하고 혜택받음...</font></b></a></span><br>
+&nbsp;05-06 13:27 [곽인숙]&nbsp; <a href='/zeroboard/zboard.php?id=memonote'>사우회 경조사는 회사랑 다르게 기획됐음 좋겠어요..생일..이런걸루..</font></b></a></span><br>
+&nbsp;05-06 12:55 [양재혁]&nbsp; <a href='/zeroboard/zboard.php?id=memonote'>회사 1층에 '정상영업 중입니다'라고 간판이라도 걸어야 할 듯 ㅋㅋㅋ</font></b></a></span><br>
+
+          			<!--Message Board -END--------------------------------------------------------------------------------------------------------->		
+
+					<table><tr><td>
+												<td><img src="skin/domi_memo/memo.gif"></td>
+						<td><input type=text name="memo" size=60 maxlength=60 value='' style="border: solid 1px #FFFFFF; border-bottom:solid 1px #E0E0E0;"></td>
+												<td></td>
+						<td align=right valign="middle" style='padding-top:2px;padding-right:3px;'><input onfocus='this.blur()' type=image src="skin/domi_memo/write.gif" border=0 value="write" alt="글쓰기"></input></td>
+					</td></tr></table>
+
+          		</td>
+			</tr>
+</form>
+      </table>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td align="center"><img src="/zeroboard/images/main/body_line.gif" width="767" height="15"></td>
+        </tr>
+      </table>      
+      <table width="100%" border="0" cellspacing="10" cellpadding="0">
+        <tr valign="top"> 
+          <td width="1">&nbsp;</td>
+          <td> 
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="10"><img src="/zeroboard/images/main/body_bul.gif" width="2" height="11"></td>
+                <td><b><font color="#FF6600">새로운 소식</font></b></td>
+                <td width="50" align="right"><a href="/zeroboard/zboard.php?id=news"><img src="/zeroboard/images/main/more.gif" width="34" height="7" border="0"></a></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="8">
+              <tr> 
+                <td>
+				<!--NEWS-START-------------------------------------------------------------------------------------------------------->					
+						<p style="padding-top: 5px"><span style="font-size: 9pt">
+04/27 <a href='/zeroboard/zboard.php?id=news&no=490'>KM&ECM Conference 2010 똑똑하게 즐겁게 Smar...</font></b></a></span><br>
+04/22 <a href='/zeroboard/zboard.php?id=news&no=489'>KT도 열심히 준비 중... 10개 업종에서 기술력을 가지...</font></b></a></span><br>
+04/15 <a href='/zeroboard/zboard.php?id=news&no=488'>공공기관 모바일앱 개발 '글쎄'</font></b></a></span><br>
+</p>
+					
+				<!--NEWS-END---------------------------------------------------------------------------------------------------------->
+				</td>
+              </tr>
+            </table>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="10"><img src="/zeroboard/images/main/body_bul.gif" width="2" height="11"></td>
+                <td><b><font color="#FF6600">인재채용</font></b></td>
+                <td width="50" align="right"><a href="/zeroboard/zboard.php?id=hr"><img src="/zeroboard/images/main/more.gif" width="34" height="7" border="0"></a></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="8">
+              <tr> 
+                <td>
+				<!--NEWS-START-------------------------------------------------------------------------------------------------------->					
+						<p style="padding-top: 5px"><span style="font-size: 9pt">
+07/27 <a href='/zeroboard/view.php?id=hr&no=26'>[DC1팀] 쇼핑몰 개발 유지보수 업무 / CASS Wm 개발유...</font></b></a></span><br>
+07/27 <a href='/zeroboard/view.php?id=hr&no=25'>[DC4팀] SHOW증권, SHOW팝업증권 운영유지보수 담...</font></b></a></span><br>
+07/27 <a href='/zeroboard/view.php?id=hr&no=24'>[DC4팀] AMBoP 솔루션 서버프로그램 개발자 / 클라이...</font></b></a></span><br>
+07/08 <a href='/zeroboard/view.php?id=hr&no=23'>[디지털컨버전스3팀] 서비스 운영 기획 PM을 모십니다 (개...</font></b></a></span><br>
+06/10 <a href='/zeroboard/view.php?id=hr&no=22'>[품질관리팀] 컨텐트관리시스템 전문기업에서 품질전문가를...</font></b></a></span><br>
+</p>
+					
+				<!--NEWS-END---------------------------------------------------------------------------------------------------------->
+				</td>
+              </tr>
+            </table>           
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="10"><img src="/zeroboard/images/main/body_bul.gif" width="2" height="11"></td>
+                <td><b><font color="#FF6600">마케팅관련</font></b></td>
+                <td width="50" align="right"><a href="/zeroboard/zboard.php?id=marketing"><img src="/zeroboard/images/main/more.gif" width="34" height="7" border="0"></a></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="8">
+              <tr> 
+                <td>
+				<!--NEWS-START-------------------------------------------------------------------------------------------------------->					
+						<p style="padding-top: 5px"><span style="font-size: 9pt">
+04/28 <a href='/zeroboard/view.php?id=marketing&no=31'>스마트폰 트랜드 자료</font></b></a></span><br>
+03/09 <a href='/zeroboard/view.php?id=marketing&no=30'>I-ON Company Presentation 2010 (국문 ...</font></b></a>[1]</span><br>
+02/03 <a href='/zeroboard/view.php?id=marketing&no=29'>케이스스터디_A&D신용정보_Image System_EDMS</font></b></a></span><br>
+</p>
+					
+				<!--NEWS-END---------------------------------------------------------------------------------------------------------->
+				</td>
+              </tr>
+            </table>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="10"><img src="/zeroboard/images/main/body_bul.gif" width="2" height="11"></td>
+                <td><b><font color="#669900">유용한 사이트</font></b></td>
+                <td width="50" align="right"><a href="/zeroboard/zboard.php?id=useful"><img src="/zeroboard/images/main/more.gif" width="34" height="7" border="0"></a></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+              <tr> 
+                <td>
+				<!--USEFUL-START------------------------------------------------------------------------------------------------------>
+						<p style="padding-top: 5px"><span style="font-size: 9pt">
+02/26 <a href='/zeroboard/zboard.php?id=useful&no=65'>무료 강연 정보를 한눈에 볼수 있는 사이트 소개합니다.</font></b></a>[1]</span><br>
+07/19 <a href='/zeroboard/zboard.php?id=useful&no=64'>나모에서 나온 크로스에디터(짜바스크립트 기반) 데모사이...</font></b></a></span><br>
+07/06 <a href='/zeroboard/zboard.php?id=useful&no=63'>웹아카이브</font></b></a></span><br>
+</p>
+				<!--USEFUL-END--------------------------------------------------------------------------------------------------------->
+				</td>
+              </tr>
+            </table>
+
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="10"><img src="/zeroboard/images/main/body_bul.gif" width="2" height="11"></td>
+                <td><b><font color="#339999">업무관련 FAQ</font></b></td>
+                <td width="50" align="right"><a href="/zeroboard/zboard.php?id=qna"><img src="/zeroboard/images/main/more.gif" width="34" height="7" border="0"></a></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+              <tr> 
+                <td>
+				<!--QA-START----------------------------------------------------------------------------------------------------------->
+						<p style="padding-top: 5px"><span style="font-size: 9pt">
+01/29 <a href='/zeroboard/zboard.php?id=qna&no=106'>2010년도 회사규정</font></b></a>[1]</span><br>
+12/21 <a href='/zeroboard/zboard.php?id=qna&no=105'>[차량관련] 네비게이션 메뉴얼</font></b></a></span><br>
+12/08 <a href='/zeroboard/zboard.php?id=qna&no=104'>위임전결 및 담당자 안내</font></b></a>[1]</span><br>
+</p>
+				<!--QA-END-------------------------------------------------------------------------------------------------------------->
+				</td>
+              </tr>
+            </table>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="10"><img src="/zeroboard/images/main/body_bul.gif" width="2" height="11"></td>
+                <td><b><font color="#FF3333">강좌게시판</font></b></td>
+                <td width="50" align="right"><a href="/zeroboard/zboard.php?id=lecture"><img src="/zeroboard/images/main/more.gif" width="34" height="7" border="0"></a></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+              <tr> 
+                <td>
+				<!--LECTURE-START----------------------------------------------------------------------------------------------------->
+						<p style="padding-top: 5px"><span style="font-size: 9pt">
+08/11 <a href='/zeroboard/zboard.php?id=lecture&no=116'>왜 아이폰에 열광할까?</font></b></a></span><br>
+07/09 <a href='/zeroboard/zboard.php?id=lecture&no=115'>인터넷 이야기 - Ddos공격 (안철수전용백신첨부)</font></b></a></span><br>
+06/19 <a href='/zeroboard/zboard.php?id=lecture&no=114'>eclipse jseclipse</font></b></a>[1]</span><br>
+</p>
+				<!--LECTURE-END-------------------------------------------------------------------------------------------------------->
+				</td>
+              </tr>
+            </table>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="10"><img src="/zeroboard/images/main/body_bul.gif" width="2" height="11"></td>
+                <td><b><font color="blue">사우회 공지</font></b></td>
+                <td width="50" align="right"><a href="/zeroboard/zboard.php?id=imirenotice"><img src="/zeroboard/images/main/more.gif" width="34" height="7" border="0"></a></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+              <tr> 
+                <td>
+				<!--LECTURE-START----------------------------------------------------------------------------------------------------->
+						<p style="padding-top: 5px"><span style="font-size: 9pt">
+05/03 <a href='/zeroboard/view.php?id=imirenotice&no=93'>사우회 경조사 비용 확대 지급 관련 설문조사 본문</font></b></a>[8]</span><br>
+04/21 <a href='/zeroboard/view.php?id=imirenotice&no=92'>2010년 사우회 도우미</font></b></a>[1]</span><br>
+04/19 <a href='/zeroboard/view.php?id=imirenotice&no=91'>4월 사우회 행사 공지입니다.</font></b></a>[7]</span><br>
+</p>
+				<!--LECTURE-END-------------------------------------------------------------------------------------------------------->
+				</td>
+              </tr>
+            </table>    
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="10"><img src="/zeroboard/images/main/body_bul.gif" width="2" height="11"></td>
+                <td><b><font color=·"darkred">사우회에 바란다</font></b></td>
+                <td width="50" align="right"><a href="/zeroboard/zboard.php?id=imirewant"><img src="/zeroboard/images/main/more.gif" width="34" height="7" border="0"></a></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+              <tr> 
+                <td>
+				<!--LECTURE-START----------------------------------------------------------------------------------------------------->
+						<p style="padding-top: 5px"><span style="font-size: 9pt">
+04/12 <a href='/zeroboard/view.php?id=imirewant&no=14'>사우회 자판기 사업은 어찌되어 가나요?</font></b></a>[2]</span><br>
+10/15 <a href='/zeroboard/view.php?id=imirewant&no=13'>오재철 사장님배 e-Sports 올림픽</font></b></a>[11]</span><br>
+07/22 <a href='/zeroboard/view.php?id=imirewant&no=12'>가을 체육대회 추천장소</font></b></a>[4]</span><br>
+</p>
+				<!--LECTURE-END-------------------------------------------------------------------------------------------------------->
+				</td>
+              </tr>
+            </table>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="10"><img src="/zeroboard/images/main/body_bul.gif" width="2" height="11"></td>
+                <td><b><font color="#FF6600">업무환경개선요청</font></b></td>
+                <td width="50" align="right"><a href="/zeroboard/zboard.php?id=request"><img src="/zeroboard/images/main/more.gif" width="34" height="7" border="0"></a></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+              <tr> 
+                <td>
+				<!--LECTURE-START----------------------------------------------------------------------------------------------------->
+						<p style="padding-top: 5px"><span style="font-size: 9pt">
+03/17 <a href='/zeroboard/view.php?id=request&no=44'>명함에 팀 표시 제거</font></b></a>[7]</span><br>
+03/09 <a href='/zeroboard/view.php?id=request&no=43'>샤워장 만드는건 어떨까요??</font></b></a>[7]</span><br>
+02/26 <a href='/zeroboard/view.php?id=request&no=42'>회사 앞 주차장 타일 관련해서...</font></b></a>[2]</span><br>
+</p>
+				<!--LECTURE-END-------------------------------------------------------------------------------------------------------->
+				</td>
+              </tr>
+            </table>                                     
+          </td>
+          <td width="320"> 
+            <table width="100%" border="0" cellspacing="1" cellpadding="0">
+              <tr> 
+                <td bgcolor="#FFFFFF"><b><font color="#50658B">장터/공동구매 <a href="/zeroboard/zboard.php?id=09"><img src="/zeroboard/images/main/more.gif" width="34" height="7" border="0"></a> 
+                  </font></b></td>
+              </tr>
+              <tr> 
+                <td> 
+                  <table width="100%" border="0" cellspacing="0" cellpadding="3">
+                    <tr valign="top"> 
+                      <td><img src="/zeroboard/images/main/cart.gif" width="30" height="30"></td>
+                      <td>
+					  <!--KIN-START----------------------------------------------------------------------------------------------------------->
+						<p style="padding-top: 5px"><span style="font-size: 9pt">
+05/06 <a href='/zeroboard/zboard.php?id=09&no=122'>iTunes Gift Cards 판매합니...</font></b></a>[1]<img src=/zeroboard/latest_skin/main/images/new.gif border=0></span><br>
+05/03 <a href='/zeroboard/zboard.php?id=09&no=121'>[무료방출] 레스토랑가이드북 ZAGAT</font></b></a>[3]</span><br>
+03/11 <a href='/zeroboard/zboard.php?id=09&no=118'>20인치 모니터 팔까한데 사실분 있...</font></b></a>[1]</span><br>
+</p>
+					  <!--KIN-END-------------------------------------------------------------------------------------------------------------->
+					  </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="1" cellpadding="0" bgcolor="#CCCCCC">
+              <tr>
+                <td bgcolor="#FFFFFF"><b><font color="#50658B"><img src="/zeroboard/images/main/body_ri.gif" width="18" height="17">자유게시판 
+                  <a href="/zeroboard/zboard.php?id=free"><img src="/zeroboard/images/main/more.gif" width="34" height="7" border="0"></a> </font></b></td>
+              </tr>
+              <tr>
+                <td bgcolor="#eeeeee">
+				  <table width="100%" border="0" cellspacing="0" cellpadding="3">
+                    <tr> 
+                      <td>
+					  <!--FREE-START--------------------------------------------------------------------------------------------------------->
+						<p style="padding-top: 5px"><span style="font-size: 9pt">
+05/06 <a href='/zeroboard/zboard.php?id=free&no=965'>[급구] 사내에 iPhone 및 Android ...</font></b></a><img src=/zeroboard/latest_skin/main/images/new.gif border=0></span><br>
+05/06 <a href='/zeroboard/zboard.php?id=free&no=964'>지금까지 본 장대높이뛰기중 최고!!</font></b></a>[1]<img src=/zeroboard/latest_skin/main/images/new.gif border=0></span><br>
+05/05 <a href='/zeroboard/zboard.php?id=free&no=963'>[부고] ECM사업팀 소우성 대리 조모상(...</font></b></a>[3]</span><br>
+05/03 <a href='/zeroboard/zboard.php?id=free&no=962'>입사 인사 드립니다.</font></b></a>[5]</span><br>
+05/01 <a href='/zeroboard/zboard.php?id=free&no=961'>지하철에서 아이패드를 사용하는 아저씨를 ...</font></b></a>[3]</span><br>
+04/30 <a href='/zeroboard/zboard.php?id=free&no=960'>아이초컬릿도 나왔군요..ㅡㅡ;</font></b></a></span><br>
+04/29 <a href='/zeroboard/zboard.php?id=free&no=959'>[경축] 컨텐트인프라개발팀 정은진씨 시집...</font></b></a>[5]</span><br>
+04/28 <a href='/zeroboard/zboard.php?id=free&no=958'>We Rule 같이 하실 분</font></b></a>[14]</span><br>
+04/27 <a href='/zeroboard/zboard.php?id=free&no=957'>BANDAI 건담 프라모델 좋아 하는 사람...</font></b></a>[2]</span><br>
+04/23 <a href='/zeroboard/zboard.php?id=free&no=956'>'SW기술자 신고제' 8개월만에 재검토</font></b></a>[4]</span><br>
+04/23 <a href='/zeroboard/zboard.php?id=free&no=955'>TIOBE 2010년 개발 언어 인기 순위</font></b></a>[8]</span><br>
+04/22 <a href='/zeroboard/zboard.php?id=free&no=954'>주차의 달인</font></b></a>[3]</span><br>
+04/20 <a href='/zeroboard/zboard.php?id=free&no=953'>파워풀 일렉트로닉 공연실황</font></b></a>[1]</span><br>
+04/18 <a href='/zeroboard/zboard.php?id=free&no=952'>[re] 개발 교육 및 토론회에 아이온 개발자들...</font></b></a>[11]</span><br>
+</p>
+					  <!--FREE-END------------------------------------------------------------------------------------------------------------>
+					  </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" height="5">
+              <tr>
+                <td></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="1" cellpadding="0" bgcolor="#CCCCCC">
+              <tr>
+                <td bgcolor="#FFFFFF"><b><font color="#50658B"><img src="/zeroboard/images/main/body_ri.gif" width="18" height="17">자랑/지름게시판 
+                  <a href="/zeroboard/zboard.php?id=use"><img src="/zeroboard/images/main/more.gif" width="34" height="7" border="0"></a> </font></b></td>
+              </tr>
+              <tr>
+                <td bgcolor="#eeeeee">
+				  <table width="100%" border="0" cellspacing="0" cellpadding="3">
+                    <tr> 
+                      <td>
+					  <!--FREE-START--------------------------------------------------------------------------------------------------------->
+						<p style="padding-top: 5px"><span style="font-size: 9pt">
+04/23 <a href='/zeroboard/zboard.php?id=use&no=76'>JBL On Stage Micro 아이팟(폰)...</font></b></a>[3]</span><br>
+03/21 <a href='/zeroboard/zboard.php?id=use&no=75'>본좌영접-EP3</font></b></a>[4]</span><br>
+03/15 <a href='/zeroboard/zboard.php?id=use&no=73'>본좌영접-EP2</font></b></a>[1]</span><br>
+01/11 <a href='/zeroboard/zboard.php?id=use&no=72'>막걸리 질렀슴다. -_-;;;</font></b></a>[5]</span><br>
+</p>
+					  <!--FREE-END------------------------------------------------------------------------------------------------------------>
+					  </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" height="5">
+              <tr>
+                <td></td>
+              </tr>
+            </table>            
+            <table width="100%" border="0" cellspacing="1" cellpadding="0" bgcolor="#CCCCCC">
+              <tr> 
+                <td bgcolor="#FFFFFF"><b><font color="#50658B"><img src="/zeroboard/images/main/body_ri.gif" width="18" height="17">사진자료실 
+                  <a href="/zeroboard/zboard.php?id=image"><img src="/zeroboard/images/main/more.gif" width="34" height="7" border="0"></a> </font></b></td>
+              </tr>
+              <tr> 
+                <td bgcolor="#eeeeee"> 
+                  <table width="100%" border="0" cellspacing="0" cellpadding="3">
+                    <tr> 
+                      <td>
+					  <!--FREE-START--------------------------------------------------------------------------------------------------------->
+						<p style="padding-top: 5px"><span style="font-size: 9pt">
+03/19 <a href='/zeroboard/zboard.php?id=image&no=214'>박재하 부장님 생일파티</font></b></a>[6]</span><br>
+02/11 <a href='/zeroboard/zboard.php?id=image&no=213'>2010년 아이온 전사 워크샵</font></b></a>[5]</span><br>
+01/26 <a href='/zeroboard/zboard.php?id=image&no=211'>아이폰 어플 슬림 사이클</font></b></a></span><br>
+01/04 <a href='/zeroboard/zboard.php?id=image&no=210'>2010년 시무식 사진</font></b></a>[4]</span><br>
+</p>
+					  <!--FREE-END------------------------------------------------------------------------------------------------------------>					  
+					  </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" height="5">
+              <tr> 
+                <td></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="1" cellpadding="0" bgcolor="#CCCCCC">
+              <tr> 
+                <td bgcolor="#FFFFFF"><b><font color="#50658B"><img src="/zeroboard/images/main/body_ri.gif" width="18" height="17">자료실 
+                  <a href="/zeroboard/zboard.php?id=pds"><img src="/zeroboard/images/main/more.gif" width="34" height="7" border="0"></a> </font></b></td>
+              </tr>
+              <tr> 
+                <td bgcolor="#eeeeee"> 
+                  <table width="100%" border="0" cellspacing="0" cellpadding="3">
+                    <tr> 
+                      <td>
+					  <!--PDS-START---------------------------------------------------------------------------------------------------------->
+						<p style="padding-top: 5px"><span style="font-size: 9pt">
+12/14 <a href='/zeroboard/zboard.php?id=pds&no=153'>일본어 문서에서는 이 글꼴로...</font></b></a></span><br>
+10/12 <a href='/zeroboard/zboard.php?id=pds&no=151'>나모에서 맹글고 있는 텍스트 에디터</font></b></a>[2]</span><br>
+10/09 <a href='/zeroboard/zboard.php?id=pds&no=150'>물리디스크 전체를 가상 하드 디스크(VHD)...</font></b></a></span><br>
+08/27 <a href='/zeroboard/zboard.php?id=pds&no=149'>Active Ports 1.4</font></b></a>[2]</span><br>
+</p>
+					  <!--PDS-END------------------------------------------------------------------------------------------------------------->
+					  </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" height="5">
+              <tr> 
+                <td></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="1" cellpadding="0" bgcolor="#CCCCCC">
+              <tr> 
+                <td bgcolor="#FFFFFF"><b><font color="#50658B"><img src="/zeroboard/images/main/body_ri.gif" width="18" height="17">아무거나 
+                  질문게시판 <a href="/zeroboard/zboard.php?id=kin"><img src="/zeroboard/images/main/more.gif" width="34" height="7" border="0"></a> </font></b></td>
+              </tr>
+              <tr> 
+                <td bgcolor="#eeeeee"> 
+                  <table width="100%" border="0" cellspacing="0" cellpadding="3">
+                    <tr> 
+                      <td>
+					  <!--KIN-START----------------------------------------------------------------------------------------------------------->
+						<p style="padding-top: 5px"><span style="font-size: 9pt">
+05/11 <a href='/zeroboard/zboard.php?id=kin&no=69'>동호회 게시판에,,,</font></b></a>[2]</span><br>
+05/04 <a href='/zeroboard/zboard.php?id=kin&no=68'>회사에서 교육할 때 노트북 구비는 어려운...</font></b></a>[3]</span><br>
+10/01 <a href='/zeroboard/zboard.php?id=kin&no=67'>문득 궁금해진... '뮤'</font></b></a>[9]</span><br>
+07/07 <a href='/zeroboard/zboard.php?id=kin&no=65'>게시판 금칙어 - 등에잇신 -_-;</font></b></a>[3]</span><br>
+</p>
+					  <!--KIN-END-------------------------------------------------------------------------------------------------------------->
+					  </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+     
+			</td>
+		  </tr>
+		</table>
+		<!--ZEROBOARD-END--------------------------------------------------------------------------------------------------->
+		
+
+ </td>
+    <td rowspan="2" valign="bottom" background="/zeroboard/images/main/ri_bg.gif"><img src="/zeroboard/images/main/ri_bottom.gif" width="40" height="40"></td>
+  </tr>
+  <tr>
+    <td background="/zeroboard/images/main/left_bg.gif" width="168" valign="bottom"></td>
+    <td width="1" valign="bottom" background="/zeroboard/images/main/left_00_bg.gif"></td>
+  </tr>
+</table>
+
+<table width="1000" border="0" cellspacing="0" cellpadding="0" background="/zeroboard/images/main/all_bg.gif">
+  <tr>
+    <td><!-- img src="/zeroboard/images/main/copy.gif" width="436" height="60"--></td>
+  </tr>
+</table>
+<!-- I-ON CONTENT LOG ANALYTICS SERVER SCRIPT FOR SETTING ENVIRONMENT V.5.4 :  / FILL THE VALUE TO SET. -->
+<!-- COPYRIGHT (C) 1998-2009 I-ON Communications Co.,Ltd. All rights reserved. -->
+<script language="JavaScript">
+
+// var contentPath = ""; /* Contents Path */
+// var catPath = ""; /* Category ID Full Path */
+// var artId = ""; /* Article ID */
+// var pageId = ""; /* Page Identity */
+// var item = ""; /* Product Name */
+// var maker = ""; /* Manufacture Name */
+// var orderedAmount = ""; /* Order Amount(s) with ';' Separated */
+// var orderedProduct = ""; /* Order Product(s) with ';' Separated */
+// var orderedQuantity = ""; /* Order EA with ';' Separated */
+// var campaignCode = ""; /* Campaign Code */
+// var sex = ""; /* Members Gender - M,F,U */
+// var age = ""; /* Members Age - A,B,C,D,E,F,G */
+// var innerSearchKey = ""; /* Inner Search Keyword */
+// var userId = "박정진"; /* Member ID */
+
+</script>
+<!-- END OF ENVIRONMENT SCRIPT -->
+
+<!-- I-ON CONTENT LOG ANALYTICS SERVER TRACKING SCRIPT VER 5.5 FOR im.i-on.net -->
+<!-- COPYRIGHT (C) 1998-2009 I-ON Communications Co.,Ltd. All rights reserved. -->
+<script type="text/javascript" id="jsiclas">
+/*
+var serviceId = "im";
+var serverUrl = "http://iclas5.i-on.net/iclas";
+
+iclasAddLoadEvent(iclasLoad);
+function iclasAddLoadEvent(func) {
+  var oldonload = window.onload;
+  if (typeof window.onload != 'function') { window.onload = func; }
+  else { window.onload = function() { oldonload(); func(); } }
+}
+
+function iclasLoad() {
+  try {
+    var head = document.getElementsByTagName('head')[0];
+    var script = document.createElement('script');
+    script.type = 'text/javascript'; script.charset = "UTF-8";
+    var loaded = false;
+    script.onreadystatechange = function () {
+      if (this.readyState == 'loaded' || this.readyState == 'complete') {
+        if (loaded) { return; } loaded = true; iclas.execute();
+      }
+    }
+    script.onload = function () { iclas.execute(); }
+    script.src = serverUrl + '/tracker/tracker.js';
+    head.appendChild(script);
+  } catch(e) {}
+}
+*/
+</script>
+<!--noscript><img src="http://iclas5.i-on.net/iclas/tracker.do?serviceId=im&js=N" width="0" height="0"/></noscript-->
+<!-- END OF ICLAS TRACKING SCRIPT -->
+
+
+
+</body>
+</html>
+<!-- <script src="/zeroboard/pcsmile.js"></script> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                

@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://gmpg.org/xfn/11"><link rel="stylesheet" type="text/css" href="http://www.mkyong.com/wp-content/w3tc/min/206ef5/default.include.1002934597.css" media="all" />
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<title>10 Java Regular Expression Examples You Should Know</title>
+<meta name="generator" content="WordPress 3.0" />
+
+<!-- enable comment reply ajax -->
+
+<!-- functions.php delete unnecessary info -->
+
+
+<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js?ver=1.4'></script>
+<script type='text/javascript' src='http://www.mkyong.com/wp-includes/js/comment-reply.js?ver=20090102'></script>
+<link rel='prev' title='How to extract HTML Links with regular expression' href='http://www.mkyong.com/regular-expressions/how-to-extract-html-links-with-regular-expression/' />
+<link rel='next' title='How to install Maven in Windows' href='http://www.mkyong.com/maven/how-to-install-maven-in-windows/' />
+<meta name="generator" content="WordPress 3.0" />
+<link rel='shortlink' href='http://www.mkyong.com/?p=2057' />
+
+<!-- All in One SEO Pack 1.6.12.1 by Michael Torbert of Semper Fi Web Design[282,342] -->
+<meta name="description" content="Regular expression is an art of the programing, it's hard to debug , learn and understand, but the powerful features are still attract many developers to code" />
+<meta name="keywords" content="regular expression,regular expressions" />
+<link rel="canonical" href="http://www.mkyong.com/regular-expressions/10-java-regular-expression-examples-you-should-know/" />
+<!-- /all in one seo pack -->
+<script type="text/javascript">
+//<![CDATA[
+var _wpcf7 = { cached: 1 };
+//]]>
+</script>
+<link rel="stylesheet" href="http://www.mkyong.com/wp-content/plugins/digg-digg/css/diggdigg-style.css?ver=4.2.2.1" type="text/css" media="screen" /><style type="text/css" media="screen">.dd_ajax_float{
+	background:none repeat scroll 0 0 #FFFFFF;
+	border:1px solid #DDDDDD;
+	float:left;
+	margin-left:-92px;
+	margin-right:10px;
+	margin-top:10px;
+	position:absolute;
+	z-index:1;
+}</style><script type="text/javascript">$j=jQuery.noConflict();
+
+$j(document).ready(function($) {
+
+	//put content div class, when scroll beyond this y, float it
+	var $postShare = $('.dd_ajax_float');
+	
+	if($('.dd_content_wrap').length > 0){
+	
+		var descripY = parseInt($('.dd_content_wrap').offset().top) - 20;
+		var pullX = $postShare.css('margin-left');
+	
+		$(window).scroll(function () { 
+		  
+			var scrollY = $(window).scrollTop();
+			var fixedShare = $postShare.css('position') == 'fixed';
+			
+			//make sure .post_share exists
+			if($('.dd_ajax_float').length > 0){
+			
+				if ( scrollY > descripY && !fixedShare ) {
+					$postShare.stop().css({
+						position: 'fixed',
+						top: 16
+					});
+				} else if ( scrollY < descripY && fixedShare ) {
+					$postShare.css({
+						position: 'absolute',
+						top: 92,
+						marginLeft: pullX
+					});
+				}
+				
+			}
+	
+		});
+	}
+});</script><style type="text/css">
+.wp-polls .pollbar {
+	margin: 1px;
+	font-size: 8px;
+	line-height: 10px;
+	height: 10px;
+	background-image: url('http://www.mkyong.com/wp-content/plugins/wp-polls/images/default_gradient/pollbg.gif');
+	border: 1px solid #c8c8c8;
+}
+</style>
+
+
+	<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+
+<!-- fav icon -->
+<link rel="shortcut icon" href="http://www.mkyong.com/image/favicon.ico?1" type="image/x-icon" />
+
+<!-- Rss Feed -->
+
+<script type="text/javascript" src="http://www.mkyong.com/wp-content/themes/mkyong/js/superfish.js"></script>
+
+<script type="text/javascript">
+
+jQuery(function(){
+	jQuery('ul.sf-menu').supersubs({ 
+            minWidth:    12,   // minimum width of sub-menus in em units 
+            maxWidth:    27,   // maximum width of sub-menus in em units 
+            extraWidth:  1     // extra width can ensure lines don't sometimes turn over 
+                               // due to slight rounding differences and font-family 
+        }).superfish({ 
+        delay:       100,                            // one second delay on mouseout 
+        animation:   {opacity:'show',height:'show'},  // fade-in and slide-down animation 
+        speed:       'fast'                        // faster animation speed 
+    }); 
+});
+
+function closeTopAds() {
+	jQuery('#announcements').slideUp(1000);
+	//document.getElementById("announcements").style.visibility = "hidden";
+}
+
+jQuery(function(){
+	jQuery('#announcements').slideDown(2000);
+});
+
+</script>
+
+<!-- CSS style -->
+<link rel="stylesheet" href="http://www.mkyong.com/wp-content/themes/mkyong/style.css?20" type="text/css" media="screen" />
+
+</head>
+<!-- end of the html header -->
+
+<!-- start of body -->
+<body>
+
+<!-- start of page wrapper -->
+<div id="page">
+
+<!-- start announcements -->
+<!--INFOLINKS_OFF-->
+<div id="announcements">
+
+<span class="free-magazine">FREE for Limited Time</span> - <a href="http://www.mkyong.com/recommend/free-oracle-magazine/" target="_blank">Oracle Magazine for Java developers and Database administrator</a>
+
+
+<!-- start of google analytics -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-752408-5");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+<!-- end of google analytics -->
+
+
+<!--infolink -->
+<script type="text/javascript">
+   var infolink_pid = 27184;
+   var infolink_wsid = 0;
+</script>
+<script type="text/javascript" src="http://resources.infolinks.com/js/infolinks_main.js"></script>
+<!--infolink -->
+
+
+<script type="text/javascript">function w3tc_load_js(u){var d=document,p=d.getElementsByTagName('HEAD')[0],c=d.createElement('script');c.type='text/javascript';c.src=u;p.appendChild(c);}</script><script type="text/javascript">w3tc_load_js('http://www.mkyong.com/wp-content/w3tc/min/206ef5/default.include-footer-nb.1746165409.js');</script></body>
+<!-- end of body -->
+
+</html><!-- end of footer -->
+
+</div>

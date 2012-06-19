@@ -1,0 +1,5 @@
+
+....
+Dir와 Analyzer는 쌍으로 움직이는가? 즉 한 Dir에 대해서 Analyzer는 고정적인가 ?>??
+
+

@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites>
+  <testsuite errors="3" failures="1" hostname="bleujin-PC" id="0" name="AllTest" package="net.ion.isearcher" tests="82" time="33.514" timestamp="2010-07-20T05:49:06">
+      <properties>
+          <property name="java.runtime.name" value="Java(TM) 2 Runtime Environment, Standard Edition" />
+
+          <property name="sun.boot.library.path" value="C:\Program Files (x86)\Java\jre1.5.0_22\bin" />
+
+          <property name="java.vm.version" value="1.5.0_22-b03" />
+
+          <property name="ant.library.dir" value="D:\eclipse\plugins\org.apache.ant_1.7.1.v20090120-1145\lib" />
+
+          <property name="ant.version" value="Apache Ant version 1.7.1 compiled on June 27 2008" />
+
+          <property name="ant.java.version" value="1.5" />
+
+          <property name="java.vm.vendor" value="Sun Microsystems Inc." />
+
+          <property name="java.vendor.url" value="http://java.sun.com/" />
+
+          <property name="path.separator" value=";" />
+
+          <property name="java.vm.name" value="Java HotSpot(TM) Client VM" />
+
+          <property name="file.encoding.pkg" value="sun.io" />
+
+          <property name="user.country" value="KR" />
+
+          <property name="sun.java.launcher" value="SUN_STANDARD" />
+
+          <property name="sun.os.patch.level" value="" />
+
+          <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
+
+          <property name="user.dir" value="D:\eclipse\workspace\ISearcher\lib" />
+
+          <property name="java.runtime.version" value="1.5.0_22-b03" />
+
+          <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment" />
+
+          <property name="eclipse.pdebuild.scripts" value="/D:/eclipse/plugins/org.eclipse.pde.build_3.5.2.R35x_20100114/scripts/" />
+
+          <property name="basedir" value="D:\eclipse\workspace\ISearcher\lib" />
+
+          <property name="java.endorsed.dirs" value="C:\Program Files (x86)\Java\jre1.5.0_22\lib\endorsed" />
+
+          <property name="os.arch" value="x86" />
+
+          <property name="java.io.tmpdir" value="C:\Users\bleujin\AppData\Local\Temp\" />
+
+          <property name="ant.core.lib" value="D:\eclipse\plugins\org.apache.ant_1.7.1.v20090120-1145\lib\ant.jar" />
+
+          <property name="line.separator" value=" " />
+
+          <property name="java.vm.specification.vendor" value="Sun Microsystems Inc." />
+
+          <property name="user.variant" value="" />
+
+          <property name="os.name" value="Windows 7" />
+
+          <property name="ant.home" value="D:\eclipse\plugins\org.apache.ant_1.7.1.v20090120-1145" />
+
+          <property name="eclipse.pdebuild.templates" value="/D:/eclipse/plugins/org.eclipse.pde.build_3.5.2.R35x_20100114/templates/" />
+
+          <property name="ant.project.name" value="Make FatJar(experimental)" />
+
+          <property name="sun.jnu.encoding" value="MS949" />
+
+          <property name="java.library.path" value="C:\Program Files (x86)\Java\jre1.5.0_22\bin;.;C:\Windows\system32;C:\Windows;C:/Program Files (x86)/Java/jre1.5.0_22/bin/client;C:/Program Files (x86)/Java/jre1.5.0_22/bin;c:\oracle\product\10.2.0\client\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;D:\java\jdk5_22\bin;C:\Program Files (x86)\CVSNT\" />
+
+          <property name="eclipse.pdebuild.home" value="/D:/eclipse/plugins/org.eclipse.pde.build_3.5.2.R35x_20100114/./" />
+
+          <property name="ant.file.Make FatJar(experimental)" value="D:\eclipse\workspace\ISearcher\lib\build_fat.xml" />
+
+          <property name="java.class.version" value="49.0" />
+
+          <property name="java.specification.name" value="Java Platform API Specification" />
+
+          <property name="sun.management.compiler" value="HotSpot Client Compiler" />
+
+          <property name="os.version" value="6.1" />
+
+          <property name="ant.file" value="D:\eclipse\workspace\ISearcher\lib\build_fat.xml" />
+
+          <property name="user.home" value="C:\Users\bleujin" />
+
+          <property name="user.timezone" value="" />
+
+          <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob" />
+
+          <property name="java.specification.version" value="1.5" />
+
+          <property name="file.encoding" value="MS949" />
+
+          <property name="java.class.path" value="D:\eclipse\workspace\ISearcher\lib\test\junit4_3.jar;D:\eclipse\workspace\ISearcher\lib\core_fat.jar;D:\eclipse\workspace\ISearcher\lib\core_lucene_fat.jar;D:\eclipse\workspace\ISearcher\lib\test\framework.jar;D:\eclipse\workspace\ISearcher\lib\etc\htmlparser.jar;D:\eclipse\workspace\ISearcher\lib\core\koreananalyzer-20100525.jar;D:\eclipse\workspace\ISearcher\lib\test\ojdbc14.jar;D:\eclipse\workspace\ISearcher\lib\server_fat.jar;D:\eclipse\workspace\ISearcher\bin;D:\eclipse\plugins\org.apache.ant_1.7.1.v20090120-1145\lib\ant-launcher.jar;D:\eclipse\plugins\org.apache.ant_1.7.1.v20090120-1145\lib\ant.jar;D:\eclipse\plugins\org.apache.ant_1.7.1.v20090120-1145\lib\ant-junit.jar" />
+
+          <property name="user.name" value="bleujin" />
+
+          <property name="binDir" value="../bin" />
+
+          <property name="java.vm.specification.version" value="1.0" />
+
+          <property name="java.home" value="C:\Program Files (x86)\Java\jre1.5.0_22" />
+
+          <property name="sun.arch.data.model" value="32" />
+
+          <property name="icssDir" value="../../ICSS5" />
+
+          <property name="user.language" value="ko" />
+
+          <property name="java.specification.vendor" value="Sun Microsystems Inc." />
+
+          <property name="awt.toolkit" value="sun.awt.windows.WToolkit" />
+
+          <property name="java.vm.info" value="mixed mode, sharing" />
+
+          <property name="java.version" value="1.5.0_22" />
+
+          <property name="java.ext.dirs" value="C:\Program Files (x86)\Java\jre1.5.0_22\lib\ext" />
+
+          <property name="sun.boot.class.path" value="C:\Program Files (x86)\Java\jre1.5.0_22\lib\rt.jar;C:\Program Files (x86)\Java\jre1.5.0_22\lib\i18n.jar;C:\Program Files (x86)\Java\jre1.5.0_22\lib\sunrsasign.jar;C:\Program Files (x86)\Java\jre1.5.0_22\lib\jsse.jar;C:\Program Files (x86)\Java\jre1.5.0_22\lib\jce.jar;C:\Program Files (x86)\Java\jre1.5.0_22\lib\charsets.jar;C:\Program Files (x86)\Java\jre1.5.0_22\classes" />
+
+          <property name="java.vendor" value="Sun Microsystems Inc." />
+
+          <property name="file.separator" value="\" />
+
+          <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi" />
+
+          <property name="sun.io.unicode.encoding" value="UnicodeLittle" />
+
+          <property name="sun.cpu.endian" value="little" />
+
+          <property name="baseDir" value="." />
+
+          <property name="icsDir" value="../../ICS5_R2" />
+
+          <property name="sun.desktop" value="windows" />
+
+          <property name="sun.cpu.isalist" value="pentium_pro+mmx pentium_pro pentium+mmx pentium i486 i386 i86" />
+
+      </properties>
+
+      <testcase classname="net.ion.framework.parse.html.HTMLTest" name="testInsensitive" time="0.037" />
+
+      <testcase classname="net.ion.framework.parse.html.HTMLTest" name="testEmpty" time="0.0" />
+
+      <testcase classname="net.ion.framework.parse.html.HTMLTest" name="testDocType" time="0.0080" />
+
+      <testcase classname="net.ion.framework.parse.html.HTMLTest" name="testOnlyText" time="0.0020" />
+
+      <testcase classname="net.ion.framework.parse.html.HTMLTest" name="testPrefix" time="0.0010" />
+
+      <testcase classname="net.ion.framework.parse.html.HTMLTest" name="testContent" time="0.0010" />
+
+      <testcase classname="net.ion.framework.parse.html.HTMLTest" name="testTagText" time="0.0010" />
+
+      <testcase classname="net.ion.framework.parse.html.HTMLTest" name="testDepth" time="0.0010" />
+
+      <testcase classname="net.ion.framework.parse.html.HTMLTest" name="testChild" time="0.0030" />
+
+      <testcase classname="net.ion.framework.parse.html.TestParser" name="testElementValue" time="0.0010" />
+
+      <testcase classname="net.ion.isearcher.CentralTest" name="testMakeSearcher" time="1.261" />
+
+      <testcase classname="net.ion.isearcher.CentralTest" name="testThread" time="5.253" />
+
+      <testcase classname="net.ion.isearcher.CentralTest" name="testWriteMulti" time="7.858" />
+
+      <testcase classname="net.ion.isearcher.crawler.auth.LoginURLInfoTest" name="testStart" time="0.0010" />
+
+      <testcase classname="net.ion.isearcher.crawler.filter.BeginningPathFilterTest" name="testNull" time="0.0010" />
+
+      <testcase classname="net.ion.isearcher.crawler.filter.BeginningPathFilterTest" name="testApplication" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.crawler.filter.BeginningPathFilterTest" name="testApplicationEndDir" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.crawler.filter.FileExtensionFilterTest" name="testCase" time="0.0010" />
+
+      <testcase classname="net.ion.isearcher.crawler.filter.FileExtensionFilterTest" name="testNull" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.crawler.filter.FileExtensionFilterTest" name="testHTML" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.crawler.filter.FileExtensionFilterTest" name="testOther" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.crawler.filter.FileExtensionFilterTest" name="testParameter" time="0.0010" />
+
+      <testcase classname="net.ion.isearcher.crawler.filter.ServerFilterTest" name="testNull" time="0.0010" />
+
+      <testcase classname="net.ion.isearcher.crawler.filter.ServerFilterTest" name="testApplication" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.crawler.filter.ServerFilterTest" name="testOtherHost" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.crawler.filter.SubDomainFilterTest" name="testNull" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.crawler.filter.SubDomainFilterTest" name="testHome" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.crawler.filter.SubDomainFilterTest" name="testOtherDomain" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.crawler.filter.SubDomainFilterTest" name="testOtherDomain2" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.crawler.link.ExtractLinkTest" name="testIMLink" time="0.0060">
+          <error message="samplesite\webapps\simple\download\im.htm (지정된 경로를 찾을 수 없습니다)" type="java.io.FileNotFoundException">java.io.FileNotFoundException: samplesite\webapps\simple\download\im.htm (지정된 경로를 찾을 수 없습니다)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.&lt;init&gt;(Unknown Source)
+	at net.ion.isearcher.crawler.link.ExtractLinkTest.testIMLink(ExtractLinkTest.java:39)
+</error>
+
+      </testcase>
+
+      <testcase classname="net.ion.isearcher.crawler.link.ExtractLinkTest" name="testBaseHref" time="0.0">
+          <error message="samplesite\webapps\simple\download\basehref.htm (지정된 경로를 찾을 수 없습니다)" type="java.io.FileNotFoundException">java.io.FileNotFoundException: samplesite\webapps\simple\download\basehref.htm (지정된 경로를 찾을 수 없습니다)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.&lt;init&gt;(Unknown Source)
+	at net.ion.isearcher.crawler.link.ExtractLinkTest.testBaseHref(ExtractLinkTest.java:52)
+</error>
+
+      </testcase>
+
+      <testcase classname="net.ion.isearcher.crawler.link.ExtractLinkTest" name="testEscapeHTML" time="0.0080" />
+
+      <testcase classname="net.ion.isearcher.crawler.link.ExtractLinkTest" name="testFilter" time="0.0010" />
+
+      <testcase classname="net.ion.isearcher.crawler.link.ExtractLinkTest" name="testComment" time="0.015" />
+
+      <testcase classname="net.ion.isearcher.crawler.link.ExtractLinkTest" name="testHttptHead" time="0.315" />
+
+      <testcase classname="net.ion.isearcher.crawler.link.LinkExtractorBleujinTest" name="testBuilderAddNull" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.crawler.link.LinkExtractorBleujinTest" name="testDefault" time="0.0010" />
+
+      <testcase classname="net.ion.isearcher.crawler.link.LinkExtractorBleujinTest" name="testDual" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.crawler.link.LinkExtractorBleujinTest" name="testExtract" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.crawler.link.LinkExtractorBleujinTest" name="testExtractImg" time="0.0050" />
+
+      <testcase classname="net.ion.isearcher.crawler.link.LinkExtractorBleujinTest" name="testLink" time="0.0010">
+          <error message="samplesite\webapps\simple\download\index.html (지정된 경로를 찾을 수 없습니다)" type="java.io.FileNotFoundException">java.io.FileNotFoundException: samplesite\webapps\simple\download\index.html (지정된 경로를 찾을 수 없습니다)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.&lt;init&gt;(Unknown Source)
+	at net.ion.isearcher.crawler.link.LinkExtractorBleujinTest.testLink(LinkExtractorBleujinTest.java:64)
+</error>
+
+      </testcase>
+
+      <testcase classname="net.ion.isearcher.crawler.link.LinkExtractorBleujinTest" name="testHead" time="0.0020" />
+
+      <testcase classname="net.ion.isearcher.crawler.util.HashFunctionTest" name="testHashValue" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.crawler.util.SmartInputStreamTest" name="testKorean" time="0.0020" />
+
+      <testcase classname="net.ion.isearcher.crawler.util.SmartInputStreamTest" name="testDetect" time="0.0040">
+          <failure message="null expected:&lt;[EUC-KR]&gt; but was:&lt;[UTF-8]&gt;" type="junit.framework.ComparisonFailure">junit.framework.ComparisonFailure: null expected:&lt;[EUC-KR]&gt; but was:&lt;[UTF-8]&gt;
+	at net.ion.isearcher.crawler.util.SmartInputStreamTest.testDetect(SmartInputStreamTest.java:46)
+</failure>
+
+      </testcase>
+
+      <testcase classname="net.ion.isearcher.crawler.util.SmartInputStreamTest" name="testDetectInputStream1" time="0.0030" />
+
+      <testcase classname="net.ion.isearcher.crawler.util.SmartInputStreamTest" name="testDetectInputStream2" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.crawler.util.SmartInputStreamTest" name="testURLDecode" time="0.0050" />
+
+      <testcase classname="net.ion.isearcher.indexer.channel.TestCollectorExecutor" name="testFile" time="0.829" />
+
+      <testcase classname="net.ion.isearcher.indexer.channel.TestCollectorExecutor" name="testDatabase" time="0.468" />
+
+      <testcase classname="net.ion.isearcher.indexer.channel.TestCollectorExecutor" name="testJoindQuery" time="0.051" />
+
+      <testcase classname="net.ion.isearcher.indexer.channel.TestCollectorExecutor" name="testJoindQueryEvent" time="0.063" />
+
+      <testcase classname="net.ion.isearcher.indexer.PolicyTest" name="testMergePolicy" time="4.753" />
+
+      <testcase classname="net.ion.isearcher.indexer.PolicyTest" name="testRecreatePolicy" time="4.659" />
+
+      <testcase classname="net.ion.isearcher.indexer.PolicyTest" name="testRecreateTermPolicy" time="4.701" />
+
+      <testcase classname="net.ion.isearcher.indexer.RollbackTest" name="testCollectorShutdown" time="0.209" />
+
+      <testcase classname="net.ion.isearcher.indexer.RollbackTest" name="testRollback" time="0.016" />
+
+      <testcase classname="net.ion.isearcher.indexer.RollbackTest" name="testReader" time="0.012" />
+
+      <testcase classname="net.ion.isearcher.indexer.channel.TestDocument" name="testDocument" time="0.022" />
+
+      <testcase classname="net.ion.isearcher.indexer.channel.TestDocument" name="testCaseSensitive" time="0.0090" />
+
+      <testcase classname="net.ion.isearcher.indexer.channel.TestDocument" name="testToLuceneDoc" time="0.011" />
+
+      <testcase classname="net.ion.isearcher.indexer.channel.TestDocument" name="testUnderBarDoc" time="0.011" />
+
+      <testcase classname="net.ion.isearcher.indexer.channel.TestDocument" name="testSerializable" time="0.0040" />
+
+      <testcase classname="net.ion.isearcher.indexer.channel.TestStackFile" name="testPush" time="0.0020" />
+
+      <testcase classname="net.ion.isearcher.indexer.IndexerTest" name="testCreate" time="0.875" />
+
+      <testcase classname="net.ion.isearcher.indexer.IndexerTest" name="testAfterClose" time="1.009" />
+
+      <testcase classname="net.ion.isearcher.impl.PostProcessorTest" name="testInit" time="0.0070" />
+
+      <testcase classname="net.ion.isearcher.impl.PostProcessorTest" name="testMultiThreadPostProcessor" time="0.0090" />
+
+      <testcase classname="net.ion.isearcher.searcher.FilterTest" name="testTermFilterAtRequest" time="0.012" />
+
+      <testcase classname="net.ion.isearcher.searcher.FilterTest" name="testTermFilterAtSearcher" time="0.01" />
+
+      <testcase classname="net.ion.isearcher.impl.SearcherTest" name="testExecute" time="0.827" />
+
+      <testcase classname="net.ion.isearcher.impl.SearcherTest" name="testSearchCount" time="0.0060" />
+
+      <testcase classname="net.ion.isearcher.impl.SearcherTest" name="testPage" time="0.0060" />
+
+      <testcase classname="net.ion.isearcher.impl.SearcherTest" name="testAllDoc" time="0.0070" />
+
+      <testcase classname="net.ion.isearcher.searcher.ReaderTest" name="testCommit" time="0.0070" />
+
+      <testcase classname="net.ion.isearcher.searcher.SortTest" name="testEmpty" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.searcher.SortTest" name="testOneField" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.searcher.SortTest" name="testOneField2" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.searcher.SortTest" name="testOneField3" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.searcher.SortTest" name="testTwoField" time="0.0" />
+
+      <testcase classname="net.ion.isearcher.searcher.SortTest" name="testKeyField" time="0.0010" />
+
+      <testcase classname="net.ion.isearcher.searcher.SortTest" name="testSort" time="0.023" />
+
+      <system-out />
+
+      <system-err><![CDATA[org.apache.lucene.store.LockObtainFailedException: exception.indexer.lock.obtain_failed:owner[20100720/DEFAULT/ion_page]
+	at net.ion.isearcher.impl.TemporaryWriter.begin(TemporaryWriter.java:60)
+	at net.ion.isearcher.indexer.DefaultIndexer.run(DefaultIndexer.java:84)
+	at java.lang.Thread.run(Unknown Source)
+2010. 7. 20 오후 2:49:21 net.ion.isearcher.crawler.model.MaxDepthModel <init>
+정보: Crawler model: net.ion.isearcher.crawler.model.MaxDepthModel
+2010. 7. 20 오후 2:49:21 net.ion.isearcher.crawler.model.MaxDepthModel <init>
+정보: - max depth=0
+2010. 7. 20 오후 2:49:21 net.ion.isearcher.crawler.model.MaxDepthModel <init>
+정보: - max iterations=4194304
+2010. 7. 20 오후 2:49:22 net.ion.framework.db.servant.ServantChannel <init>
+정보: init Channel : Thread-6(class net.ion.framework.db.servant.StdOutServant)
+2010. 7. 20 오후 2:49:22 net.ion.framework.db.DBController destroySelf
+정보: DBController : destroyed
+2010. 7. 20 오후 2:49:22 net.ion.framework.db.DBController destroySelf
+정보: DBController : destroyed
+2010. 7. 20 오후 2:49:22 net.ion.framework.db.DBController destroySelf
+정보: DBController : destroyed
+]]></system-err>
+
+  </testsuite>
+</testsuites>
