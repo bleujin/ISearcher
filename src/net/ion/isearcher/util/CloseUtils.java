@@ -19,7 +19,7 @@ public class CloseUtils {
 			if (closeable != null) {
 				closeable.close();
 			}
-		} catch (IOException ignore) {
+		} catch (Throwable ignore) {
 		}
 	}
 	
@@ -28,7 +28,7 @@ public class CloseUtils {
 			if (searcher != null) {
 				searcher.close();
 			}
-		} catch (IOException ignore) {
+		} catch (Throwable ignore) {
 		}
 	}
 	
@@ -37,7 +37,7 @@ public class CloseUtils {
 			if (writer != null) {
 				writer.close();
 			}
-		} catch (IOException ignore) {
+		} catch (Throwable ignore) {
 		}
 	}
 
@@ -46,7 +46,7 @@ public class CloseUtils {
 			if (reader != null) {
 				reader.close();
 			}
-		} catch (IOException ignore) {
+		} catch (Throwable ignore) {
 		}
 	}
 
@@ -55,7 +55,7 @@ public class CloseUtils {
 			if (dir != null) {
 				dir.close();
 			}
-		} catch (IOException ignore) {
+		} catch (Throwable ignore) {
 		}
 	}
 
@@ -64,7 +64,7 @@ public class CloseUtils {
 			if (iwrite != null) {
 				iwrite.close();
 			}
-		} catch (IOException ignore) {
+		} catch (Throwable ignore) {
 		}
 	}
 

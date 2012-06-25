@@ -81,13 +81,16 @@ public class SingleCentral extends Central {
 				} finally {
 					getMutex().reflectUpdate();
 				}
-			} else if (IndexReader.openIfChanged(reader) != null) {
-				this.isearcher = new IndexSearcher(getIndexReader());
-				this.filters.clear();
-			} else {
-				this.isearcher = new IndexSearcher(IndexReader.open(dir));
-				this.filters.clear();
+//			} else if (IndexReader.openIfChanged(reader) != null) {
+//				this.isearcher = new IndexSearcher(getIndexReader());
+//				this.filters.clear();
+//			} else {
+//				this.isearcher = new IndexSearcher(IndexReader.open(dir));
+//				this.filters.clear();
 
+				
+				
+				
 //				String[] files = dir.listAll() ;
 //				for (String file : files) {
 //					Debug.line('$', getIndexReader(), dir.fileLength(file)) ;

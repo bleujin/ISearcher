@@ -50,7 +50,7 @@ public class HTTPRequest {
 		HttpUriRequest request = createRequest(method);
 		HTTPResponse result = HTTPResponse.create(request, client.execute(request));
 		
-		if (client.getParams().getParameter(ClientPNames.HANDLE_REDIRECTS) == null && Boolean.TRUE.equals(client.getParams().getParameter(ClientPNames.HANDLE_REDIRECTS)) ){
+		if (client.getParams().getParameter(ClientPNames.HANDLE_REDIRECTS) == null || Boolean.TRUE.equals(client.getParams().getParameter(ClientPNames.HANDLE_REDIRECTS)) ){
 			return result ;
 		}
 		
