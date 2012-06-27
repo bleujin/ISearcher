@@ -13,14 +13,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import net.ion.framework.parse.gson.JsonElement;
 import net.ion.framework.parse.gson.JsonObject;
 import net.ion.framework.parse.gson.JsonUtil;
 import net.ion.framework.util.DateUtil;
-import net.ion.framework.util.Debug;
 import net.ion.framework.util.NumberUtil;
 import net.ion.framework.util.ObjectId;
 import net.ion.framework.util.StringUtil;
@@ -33,9 +31,9 @@ import net.ion.isearcher.indexer.handler.DocumentHandler;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.Fieldable;
 
 public final class MyDocument implements Serializable {
 
@@ -62,11 +60,13 @@ public final class MyDocument implements Serializable {
 	private String name ;
 	private boolean hasKey = false ;
 	private Action action = Action.Unknown;
+	private List<String> ignoreBodyField; 
 
 	private MyDocument(Document doc, String name, boolean hasKey) {
 		this.doc = doc;
 		this.name = name ;
 		this.hasKey = hasKey ;
+		this.ignoreBodyField = new ArrayList<String>();
 	}
 
 	public static MyDocument newDocument(CollectorEvent event, String name) throws IOException {
@@ -253,6 +253,10 @@ public final class MyDocument implements Serializable {
 		if (! hasKey) return YET_NOT_DEFINED ;
 		return get(ICollectorEvent.ISBody);
 	}
+	
+	public void setIgnoreBodyField(List<String> ignoreBodyField) {
+		this.ignoreBodyField = ignoreBodyField;
+	}
 
 	public Document toLuceneDoc() {
 		removeField(ISALL_FIELD) ;
@@ -262,6 +266,7 @@ public final class MyDocument implements Serializable {
 		List<Fieldable> fields = getFields() ;
 		
 		for (Fieldable field : fields) {
+			if( ignoreBodyField.contains(field.name())) continue ;
 			if( isReservedField(field.name())) continue ;
 			
 			if (field.isStored() && !field.isTokenized()) keyBuilder.append(field.stringValue() + "/");  
