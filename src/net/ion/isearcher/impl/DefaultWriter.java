@@ -2,10 +2,13 @@ package net.ion.isearcher.impl;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.ion.framework.util.ChainMap;
 import net.ion.framework.util.Debug;
+import net.ion.framework.util.MapUtil;
 import net.ion.isearcher.common.MyDocument;
 import net.ion.isearcher.common.MyDocument.Action;
 import net.ion.isearcher.indexer.write.AbstractIWriter;
@@ -46,7 +49,7 @@ public class DefaultWriter extends AbstractIWriter {
 
 	public void commit() throws IOException {
 		if (mutex.isOwner(this)){
-			getIndexWriter().commit() ;
+			getIndexWriter().commit(new ChainMap().put("name", "bleujin").put("date", new Date().toString()).toMap()) ;
 		}
 	}
 	
@@ -60,6 +63,7 @@ public class DefaultWriter extends AbstractIWriter {
 				throw new IOException(ex.getMessage());
 			} finally {
 				try {
+					Debug.line(this, modified) ;
 					mutex.unLock(this, modified);
 					modified = false;
 				} catch (LockObtainFailedException ignore) {
@@ -70,7 +74,7 @@ public class DefaultWriter extends AbstractIWriter {
 	}
 
 	public void optimize() throws IOException {
-		// getIndexWriter().optimize();
+		getIndexWriter().optimize();
 	}
 
 	public boolean isLocked() throws IOException {

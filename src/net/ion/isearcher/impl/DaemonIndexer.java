@@ -30,6 +30,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
@@ -262,6 +263,142 @@ class CacheWriter implements IWriter {
 		cacheCentral.destroySelf() ;
 	}
 
+
+}
+
+
+
+class CacheCopyWriter implements IWriter {
+
+	private static int BufferUnitCount = 3000; // expect 15M
+
+	private Central dest;
+	private Analyzer analyzer ;
+
+	private Central cacheCentral;
+	private List<Query> deleteQuery ;
+	private boolean commited ;
+	private IWriter cacheWriter ;
+	
+	private int count = 0 ;
+
+	CacheCopyWriter(Central dest, Analyzer analyzer) throws LockObtainFailedException, IOException {
+		this.dest = dest;
+		this.analyzer = analyzer ;
+	}
+
+	static CacheCopyWriter create(Central target, Analyzer analyzer) throws LockObtainFailedException, IOException {
+		return new CacheCopyWriter(target, analyzer);
+	}
+
+	public void begin(String owner) throws IOException {
+		this.cacheCentral = Central.createOrGet(new RAMDirectory()) ;
+		this.cacheWriter = cacheCentral.newIndexer(analyzer) ;
+		this.deleteQuery = ListUtil.newList();
+		cacheWriter.begin(owner) ;
+		this.commited = false ;
+	}
+
+	public void close() throws IOException {
+		end() ;
+	}
+
+	public void commit() throws IOException {
+		cacheWriter.commit() ;
+		cacheWriter.end() ;
+		
+		final Directory srcDir = cacheCentral.getDir() ;
+		
+		dest.newDaemonHander().addIndexJob(new JobEntry<Boolean>() {
+			public Analyzer getAnalyzer() {
+				return analyzer;
+			}
+			public Boolean handle(IWriter writer) throws IOException {
+				for (Query query : deleteQuery) {
+					writer.deleteQuery(query) ;
+				}
+				try {
+					List<MyDocument> docs = cacheCentral.newSearcher().searchTest("").getDocument() ;
+					Debug.line(docs) ;
+					for (MyDocument doc : docs) {
+						writer.insertDocument(doc) ;
+					}
+					cacheCentral.destroySelf() ;
+					return true;
+				} catch (ParseException e) {
+					throw new IllegalStateException(e) ;
+				}
+			}
+
+			public void onException(Throwable ex) {
+				ex.printStackTrace() ;
+			}
+		}) ;
+		
+		this.commited = true ;
+	}
+
+	private void waitForCommit(){
+		dest.newDaemonHander().waitForFlushed() ;
+	}
+	
+	public void end() throws IOException {
+		if (! commited) commit() ;
+		waitForCommit() ;
+	}
+
+	public Action deleteAll() throws IOException {
+		return deleteQuery(new MatchAllDocsQuery());
+	}
+
+	public Action deleteDocument(MyDocument doc) throws IOException {
+		return deleteQuery(new TermQuery(new Term(IKeywordField.ISKey, doc.getISKey())));
+	}
+
+	public Action deleteQuery(Query query) throws IOException {
+		deleteQuery.add(query);
+		return Action.Delete;
+	}
+	
+	public Action appendFrom(Directory srcDir) throws IOException {
+		return dest.newIndexer(analyzer).appendFrom(srcDir) ;
+	}		
+
+	public Action deleteTerm(Term term) throws IOException {
+		return deleteQuery(new TermQuery(term));
+	}
+
+	public Action insertDocument(MyDocument doc) throws IOException {
+		if (++count % BufferUnitCount == 0){
+			end() ;
+			begin("..ing") ;
+		}
+		
+		
+		return cacheWriter.insertDocument(doc);
+	}
+
+	public boolean isLocked() throws IOException {
+		return cacheWriter.isLocked();
+	}
+
+	public Map<String, HashBean> loadHashMap() throws IOException {
+		return cacheWriter.loadHashMap();
+	}
+
+	public Action updateDocument(MyDocument doc) throws IOException {
+		deleteQuery.add(new TermQuery(new Term(IKeywordField.ISKey, doc.getISKey()))) ;
+		insertDocument(doc) ;
+		return Action.Update;
+	}
+	
+	public void optimize() throws IOException {
+	}
+
+	public void rollback() throws IOException {
+		cacheWriter.rollback() ;
+		cacheCentral.destroySelf() ;
+	}
 
 }
 

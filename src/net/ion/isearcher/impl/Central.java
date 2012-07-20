@@ -138,7 +138,9 @@ public abstract class Central {
 	}
 	
 	public IWriter newDaemonIndexer(Analyzer analyzer) throws LockObtainFailedException, IOException {
-		return CacheWriter.create(this, analyzer) ;
+//		return CacheWriter.create(this, analyzer) ;
+		return CacheCopyWriter.create(this, analyzer) ;
+		
 		// return DaemonWriter.create(this, analyzer) ;
 	}
 

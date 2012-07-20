@@ -7,6 +7,7 @@ import net.ion.framework.db.Page;
 import net.ion.framework.util.Debug;
 import net.ion.isearcher.ISTestCase;
 import net.ion.isearcher.common.MyDocument;
+import net.ion.isearcher.common.MyField;
 import net.ion.isearcher.impl.Central;
 import net.ion.isearcher.impl.ISearcher;
 import net.ion.isearcher.indexer.collect.FileCollector;
@@ -16,6 +17,8 @@ import net.ion.isearcher.searcher.processor.StdOutProcessor;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.LockObtainFailedException;
+import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 
 public class IndexerTest extends ISTestCase {
@@ -53,6 +56,22 @@ public class IndexerTest extends ISTestCase {
 		List<MyDocument> docs = sr.getDocument() ;
 		Debug.debug(docs) ;
 		
+	}
+	
+	public void testOppsCommit() throws Exception {
+		Directory dir = new RAMDirectory() ;
+		Central c = Central.createOrGet(dir);
+		
+		IWriter writer = c.newDaemonIndexer(getAnalyzer()) ;
+		writer.begin("test") ;
+		MyDocument doc = MyDocument.testDocument();
+		writer.insertDocument(doc.add(MyField.keyword("name", "bleujin"))) ;
+		writer.end() ;
+		try {
+			writer.commit() ;
+			fail() ;
+		} catch(LockObtainFailedException ignore){
+		}
 	}
 
 
