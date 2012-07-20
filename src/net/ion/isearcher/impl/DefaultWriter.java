@@ -63,7 +63,6 @@ public class DefaultWriter extends AbstractIWriter {
 				throw new IOException(ex.getMessage());
 			} finally {
 				try {
-					Debug.line(this, modified) ;
 					mutex.unLock(this, modified);
 					modified = false;
 				} catch (LockObtainFailedException ignore) {
