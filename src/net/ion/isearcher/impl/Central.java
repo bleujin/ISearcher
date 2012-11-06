@@ -3,36 +3,24 @@ package net.ion.isearcher.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import net.ion.framework.logging.LogBroker;
-import net.ion.framework.util.Debug;
 import net.ion.isearcher.indexer.write.IWriter;
 import net.ion.isearcher.indexer.write.Mutex;
-import net.ion.isearcher.searcher.MyKoreanAnalyzer;
 import net.ion.isearcher.util.CloseUtils;
-import net.ion.isearcher.util.LRUMap;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.LimitTokenCountAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.LogMergePolicy;
-import org.apache.lucene.index.MergePolicy;
-import org.apache.lucene.index.IndexWriterConfig.OpenMode;
-import org.apache.lucene.search.CachingWrapperFilter;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;
-import org.apache.lucene.util.Version;
 
 public abstract class Central {
 
@@ -140,7 +128,6 @@ public abstract class Central {
 	public IWriter newDaemonIndexer(Analyzer analyzer) throws LockObtainFailedException, IOException {
 //		return CacheWriter.create(this, analyzer) ;
 		return CacheCopyWriter.create(this, analyzer) ;
-		
 		// return DaemonWriter.create(this, analyzer) ;
 	}
 
