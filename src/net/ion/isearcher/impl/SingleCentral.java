@@ -36,7 +36,7 @@ public class SingleCentral extends Central {
 	private IndexWriter iwriter;
 	private IndexSearcher isearcher;
 
-	private Map<Filter, Filter> filters = new LRUMap(128);
+	private CentralFilter filters = new CentralFilter() ;
 
 	SingleCentral(Directory dir) throws IOException {
 		this.dir = dir;
@@ -149,6 +149,43 @@ public class SingleCentral extends Central {
 		return this.dir;
 	}
 
+
+	public ICentralFilter centralFilter(){
+		return filters ;
+	}
+
+	public synchronized void copyFrom(Analyzer analyzer, Directory... srcDirs) throws IOException {
+		//getMutex().tryLock(iwriter);
+		try {
+			if (iwriter == null) {
+				createNewWriter(analyzer, newIndexer(analyzer));
+			}
+			iwriter.addIndexes(srcDirs);
+			iwriter.commit();
+		} finally {
+			//getMutex().unLock(iwriter, true);
+		}
+		
+//		IndexFileNameFilter filter = IndexFileNameFilter.getFilter();
+//		for (Directory src : srcDirs) {
+//			for (String file : src.listAll()) {
+//				if (filter.accept(null, file)) {
+//					src.copy(dir, file, file);
+//				}
+//			}
+//		}
+
+	}
+
+}
+
+
+
+
+class CentralFilter extends ICentralFilter{
+	
+	private Map<Filter, Filter> filters = new LRUMap(128);
+
 	public Filter getFilter(Filter filter) {
 		synchronized (filters) {
 			if (filters.containsKey(filter)) {
@@ -178,28 +215,8 @@ public class SingleCentral extends Central {
 	protected boolean existFilter(Filter filter) {
 		return filters.containsKey(filter);
 	}
-
-	public synchronized void copyFrom(Analyzer analyzer, Directory... srcDirs) throws IOException {
-		//getMutex().tryLock(iwriter);
-		try {
-			if (iwriter == null) {
-				createNewWriter(analyzer, newIndexer(analyzer));
-			}
-			iwriter.addIndexes(srcDirs);
-			iwriter.commit();
-		} finally {
-			//getMutex().unLock(iwriter, true);
-		}
-		
-//		IndexFileNameFilter filter = IndexFileNameFilter.getFilter();
-//		for (Directory src : srcDirs) {
-//			for (String file : src.listAll()) {
-//				if (filter.accept(null, file)) {
-//					src.copy(dir, file, file);
-//				}
-//			}
-//		}
-
+	
+	public void clear(){
+		filters.clear() ;
 	}
-
 }

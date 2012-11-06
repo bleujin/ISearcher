@@ -36,7 +36,7 @@ public class MultiCentral extends Central {
 	private IndexWriter iwriter;
 	private IndexSearcher isearcher;
 
-	private Map<Filter, Filter> filters = new LRUMap(128);
+	private CentralFilter centralFilter = new CentralFilter() ;
 
 	MultiCentral(Directory buffer, Directory store) throws IOException {
 		this.src = buffer;
@@ -81,7 +81,7 @@ public class MultiCentral extends Central {
 					getScheduler().schedule(new SearcherCloser(oldSearcher), 10, TimeUnit.SECONDS);
 				}
 				this.isearcher = new IndexSearcher(getIndexReader());
-				this.filters.clear();
+				this.centralFilter.clear();
 				getMutex().reflectUpdate();
 			}
 		}
@@ -155,34 +155,8 @@ public class MultiCentral extends Central {
 		this.iwriter = indexWriter;
 	}
 
-	public Filter getFilter(Filter filter) {
-		synchronized (filters) {
-			if (filters.containsKey(filter)) {
-				return filters.get(filter);
-			} else {
-				CachingWrapperFilter value = null;
-				if (filter instanceof CachingWrapperFilter) {
-					value = (CachingWrapperFilter) filter;
-				} else {
-					value = new CachingWrapperFilter(filter);
-				}
-				filters.put(filter, value);
-				return value;
-			}
-		}
-	}
-
-	public Filter getKeyFilter(Filter find) {
-		for (Entry<Filter, Filter> entry : filters.entrySet()) {
-			if (find.equals(entry.getValue())) {
-				return entry.getKey();
-			}
-		}
-		throw new IllegalArgumentException("NOT FOUND : " + find);
-	}
-
-	protected boolean existFilter(Filter filter) {
-		return filters.containsKey(filter);
+	public ICentralFilter centralFilter(){
+		return this.centralFilter ;
 	}
 
 	public void forceCopy() throws IOException {

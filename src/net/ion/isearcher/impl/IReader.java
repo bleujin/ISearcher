@@ -18,11 +18,9 @@ import org.apache.lucene.util.ReaderUtil;
 
 public class IReader {
 
-	private Central central ;
 	private IndexReader indexReader ;
-	IReader(Central central) throws CorruptIndexException, IOException {
-		this.central = central ;
-		this.indexReader = central.getIndexReader() ;
+	IReader(IndexReader reader) throws CorruptIndexException, IOException {
+		this.indexReader = reader;
 	}
 	
 	public Collection<IndexCommit> listCommits() throws IOException{

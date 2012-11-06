@@ -28,8 +28,8 @@ public class TestDeamonIndexer extends TestCase {
 		}
 		writer.end();
 
-		c.newSearcher().searchTest("", Page.ALL).debugPrint(Page.TEN);
-		assertEquals(1, c.newSearcher().searchTest("", Page.ALL).getTotalCount());
+		c.newSearcher().searchTest("").debugPrint(Page.TEN);
+		assertEquals(1, c.newSearcher().searchTest("").getTotalCount());
 	}
 
 	private static MyDocument testDocument() {

@@ -88,7 +88,7 @@ public class MyField implements Fieldable {
 	}
 
 	public static MyField date(String name, int yyyymmdd, int hh24miss) {
-		MyField result = new MyField(name, yyyymmdd + " " + StringUtil.leftPad(String.valueOf(hh24miss), 6, '0'), Store.YES, Index.NOT_ANALYZED); // text
+		MyField result = new MyField(name, yyyymmdd + " " + StringUtil.leftPad(String.valueOf(hh24miss), 6, '0'), Store.YES, Index.ANALYZED); // text
 		// result.addMoreField(new MyField(name, yyyymmdd + "-" + hh24miss, Store.YES, Index.NOT_ANALYZED)) ; // keyword
 
 		result.addMoreField(sort(name, yyyymmdd + "-" + StringUtil.leftPad(String.valueOf(hh24miss), 6, '0'))); // sort
@@ -97,9 +97,9 @@ public class MyField implements Fieldable {
 		day.setLongValue(yyyymmdd);
 		result.addMoreField(day);
 		//
-		// NumericField datetime = new NumericField(name + "time", Store.YES, true) ;
-		// datetime.setLongValue(yyyymmdd * 1000000L + hh24miss) ;
-		// result.addMoreField(datetime) ;
+		NumericField datetime = new NumericField(name + "time", Store.YES, true) ;
+		datetime.setLongValue(yyyymmdd * 1000000L + hh24miss) ;
+		result.addMoreField(datetime) ;
 
 		return result;
 	}
@@ -140,7 +140,7 @@ public class MyField implements Fieldable {
 		} else if ((d = DateFormatUtil.getDateIfMatchedType(value)) != null) {
 			Calendar c = DateUtil.dateToCalendar(d);
 			int yyyymmdd = c.get(Calendar.YEAR) * 10000 + (c.get(Calendar.MONTH) + 1) * 100 + c.get(Calendar.DATE);
-			int hh24miss = c.get(Calendar.HOUR) * 10000 + c.get(Calendar.MINUTE) * 100 + c.get(Calendar.SECOND);
+			int hh24miss = c.get(Calendar.HOUR_OF_DAY) * 10000 + c.get(Calendar.MINUTE) * 100 + c.get(Calendar.SECOND);
 			return MyField.date(name, yyyymmdd, hh24miss);
 		} else {
 			return MyField.text(name, value);

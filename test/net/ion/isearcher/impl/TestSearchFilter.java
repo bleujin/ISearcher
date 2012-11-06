@@ -10,7 +10,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.NumericRangeFilter;
 
-public class SearchFilterTest extends ISTestCase{
+public class TestSearchFilter extends ISTestCase{
 
 
 	private Central cen = null ; 
@@ -24,7 +24,7 @@ public class SearchFilterTest extends ISTestCase{
 		Filter filter = new TermFilter() ;
 		searcher.andFilter(filter) ;
 		
-		assertEquals(true, cen.existFilter(filter)) ;
+		assertEquals(true, cen.centralFilter().existFilter(filter)) ;
 	}
 	
 	
@@ -84,6 +84,9 @@ public class SearchFilterTest extends ISTestCase{
 
 		searcher.andFilter(filter) ;
 		ISearchRequest srequest = SearchRequest.test("name:date") ;
+		
+		Debug.line(searcher.search(srequest).allDocumentSet().list()) ;
+		
 		assertEquals(1, searcher.search(srequest).getTotalCount()) ;
 		
 		

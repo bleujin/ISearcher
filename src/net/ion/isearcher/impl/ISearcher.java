@@ -29,7 +29,36 @@ import org.apache.lucene.search.QueryWrapperFilter;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TopDocs;
 
-public class ISearcher {
+public interface ISearcher {
+
+	public ISearcher andFilter(final Filter filter) ;
+
+	public SearchResponse searchTest(final String query) throws ParseException, IOException ;
+	
+	public Set<Filter> confirmFilterSet(ISearchRequest srequest) ;
+	
+	public SearchResponse search(final ISearchRequest srequest) throws ParseException, IOException ;
+	
+	public SearchResponse searchLimit(final ISearchRequest srequest) throws ParseException, IOException ;
+
+	public MyDocument doc(final int docId) throws IOException ;
+	
+	public Explanation getDocumentExplain(final ISearchRequest srequest, final int docId) throws IOException, ParseException ;
+
+	
+	// use only test..
+	public void forceClose() throws IOException ;
+
+	public void reopen() throws IOException ;
+
+//	public boolean isModified(final ISearcher that) throws IOException ;
+	
+	public void addPostListener(final PostProcessor processor)  ;
+	public void addPreListener(final PreProcessor processor) ;
+}
+
+
+class MySearcher implements ISearcher {
 
 	private Central central ;
 	private Set<Filter> filters = new HashSet<Filter>();
@@ -38,13 +67,14 @@ public class ISearcher {
 	private Set<PostProcessor> postListeners = new HashSet<PostProcessor>();
 	private Set<PreProcessor> preListeners = new HashSet<PreProcessor>();
 
-	ISearcher(final Central central) throws IOException {
+	MySearcher(final Central central) throws IOException {
 		this.central = central ;
 	}
 
-	public final void andFilter(final Filter filter){
-		if (filter == null) return ;
-		filters.add(central.getFilter(filter)) ;
+	public final MySearcher andFilter(final Filter filter){
+		if (filter == null) return this;
+		filters.add(central.centralFilter().getFilter(filter)) ;
+		return this ;
 		// filters.add(filter) ;
 	}
 	
@@ -60,7 +90,7 @@ public class ISearcher {
 	public Set<Filter> confirmFilterSet(ISearchRequest srequest){
 		Set<Filter> result = new HashSet<Filter>() ;
 		for (Filter filter : filters) {
-			result.add(central.getKeyFilter(filter)) ;
+			result.add(central.centralFilter().getKeyFilter(filter)) ;
 		}
 		
 		if (srequest.getFilter() != null) {
@@ -141,7 +171,7 @@ public class ISearcher {
 
 	
 	// use only test..
-	final void forceClose() throws IOException{
+	public final void forceClose() throws IOException{
 		// CloseUtils.silentClose(this.dir) ;
 		CloseUtils.silentClose(getIndexSearcher()) ;
 	}
@@ -157,9 +187,9 @@ public class ISearcher {
 		this.searcher = central.getIndexSearcher() ;
 	}
 
-	public final boolean isModified(final ISearcher that) throws IOException{
-		return this.getIndexSearcher() != that.getIndexSearcher() ;
-	}
+//	public final boolean isModified(final ISearcher that) throws IOException{
+//		return this.getIndexSearcher() != that.getIndexSearcher() ;
+//	}
 	
 	final MyDocument[] allDocs() throws IOException {
 		List<MyDocument> list = ListUtil.newList() ;
@@ -177,5 +207,6 @@ public class ISearcher {
 	public final void addPreListener(final PreProcessor processor) {
 		preListeners.add(processor) ;
 	}
+
 
 }
