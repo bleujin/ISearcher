@@ -24,7 +24,7 @@ public class SearchFilterTest extends ISTestCase{
 		Filter filter = new TermFilter() ;
 		searcher.andFilter(filter) ;
 		
-		assertEquals(true, cen.centralFilter().existFilter(filter)) ;
+		assertEquals(true, cen.existFilter(filter)) ;
 	}
 	
 	

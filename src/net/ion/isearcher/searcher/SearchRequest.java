@@ -29,6 +29,8 @@ import org.apache.lucene.util.Version;
 
 public class SearchRequest implements ISearchRequest {
 
+	public static ISearchRequest ALL = new SearchRequest(new MatchAllDocsQuery(), null, new CJKAnalyzer(Version.LUCENE_36)).setPage(Page.ALL);
+	
 	private final String query;
 	private Query queryObj;
 	private final String sort;
@@ -37,9 +39,9 @@ public class SearchRequest implements ISearchRequest {
 
 	private Filter filter;
 	private Map<String, Object> param = new CaseInsensitiveHashMap<Object>();
-	private Page page = Page.TEN;
+	private Page page = Page.HUNDRED;
 	public final static String BLANK_QUERY_STRING = "<null/>";
-
+	
 	protected SearchRequest(Query queryObj, String sortfield, Analyzer analyzer) {
 		this.query = queryObj.toString();
 		this.queryObj = queryObj;
@@ -67,6 +69,10 @@ public class SearchRequest implements ISearchRequest {
 	public static ISearchRequest test(String query) throws ParseException {
 		return new SearchRequest(query, null, new CJKAnalyzer(Version.LUCENE_36));
 	}
+	
+	public static ISearchRequest test(String query, Page page) throws ParseException {
+		return new SearchRequest(query, null, new CJKAnalyzer(Version.LUCENE_36));
+	}	
 
 	public static ISearchRequest test(String query, String sortfield) throws ParseException {
 		return new SearchRequest(query, sortfield, new CJKAnalyzer(Version.LUCENE_36));

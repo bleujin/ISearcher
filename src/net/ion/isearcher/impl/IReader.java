@@ -13,13 +13,16 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.FieldInfo;
 import org.apache.lucene.index.IndexCommit;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.util.ReaderUtil;
 
 public class IReader {
 
+	private Central central ;
 	private IndexReader indexReader ;
-	IReader(IndexReader reader) throws CorruptIndexException, IOException {
-		this.indexReader = reader;
+	IReader(Central central) throws CorruptIndexException, IOException {
+		this.central = central ;
+		this.indexReader = central.getIndexReader() ;
 	}
 	
 	public Collection<IndexCommit> listCommits() throws IOException{
