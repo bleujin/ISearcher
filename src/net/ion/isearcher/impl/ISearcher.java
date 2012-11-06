@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.ion.framework.db.Page;
+import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.isearcher.common.MyDocument;
 import net.ion.isearcher.searcher.ISearchRequest;
@@ -47,10 +48,14 @@ public class ISearcher {
 		// filters.add(filter) ;
 	}
 	
-
+	@Deprecated
 	public final SearchResponse searchTest(final String query) throws ParseException, IOException {
-		return search(SearchRequest.test(query)) ; 
+		return searchTest(query, Page.HUNDRED); 
 	}
+	
+	public SearchResponse searchTest(final String query, Page page) throws ParseException, IOException {
+		return search(SearchRequest.test(query).setPage(page));
+	}	
 	
 	public Set<Filter> confirmFilterSet(ISearchRequest srequest){
 		Set<Filter> result = new HashSet<Filter>() ;
@@ -113,6 +118,7 @@ public class ISearcher {
 		if (srequest.getFilter() != null) {
 			currentFilter = FilterUtil.and(currentFilter, srequest.getFilter()) ;
 		}
+		
 		return currentFilter;
 	}
 	
@@ -171,4 +177,5 @@ public class ISearcher {
 	public final void addPreListener(final PreProcessor processor) {
 		preListeners.add(processor) ;
 	}
+
 }

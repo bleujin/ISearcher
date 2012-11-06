@@ -49,7 +49,8 @@ public class DefaultWriter extends AbstractIWriter {
 
 	public void commit() throws IOException {
 		if (mutex.isOwner(this)){
-			getIndexWriter().commit(new ChainMap().put("name", "bleujin").put("date", new Date().toString()).toMap()) ;
+			getIndexWriter().commit() ;
+//			getIndexWriter().commit(new ChainMap().put("owner", mutex.getOwner()).put("date", new Date().toString()).toMap()) ;
 		}
 	}
 	

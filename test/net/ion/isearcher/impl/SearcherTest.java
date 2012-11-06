@@ -10,6 +10,7 @@ import net.ion.isearcher.ISTestCase;
 import net.ion.isearcher.common.MyDocument;
 import net.ion.isearcher.indexer.NonBlockingListener;
 import net.ion.isearcher.indexer.collect.FileCollector;
+import net.ion.isearcher.searcher.ISearchRequest;
 import net.ion.isearcher.searcher.SearchRequest;
 import net.ion.isearcher.searcher.SearchResponse;
 import net.ion.isearcher.searcher.processor.StdOutProcessor;
@@ -75,8 +76,8 @@ public class SearcherTest extends ISTestCase {
 
 
 	public void testAllDoc() throws Exception {
-		MyDocument[] docs = searcher.allDocs();
-		assertEquals(24, docs.length) ;
+		List<MyDocument> docs = searcher.search(SearchRequest.test("").setPage(Page.ALL)).getDocument();
+		assertEquals(24, docs.size()) ;
 	}
 	
 	

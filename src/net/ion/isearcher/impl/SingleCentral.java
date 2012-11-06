@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
-import net.ion.framework.util.Debug;
 import net.ion.framework.util.ObjectUtil;
 import net.ion.isearcher.indexer.write.IWriter;
 import net.ion.isearcher.util.CloseUtils;
@@ -18,14 +17,15 @@ import org.apache.lucene.index.ConcurrentMergeScheduler;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.LogMergePolicy;
 import org.apache.lucene.index.MergePolicy;
 import org.apache.lucene.index.TieredMergePolicy;
-import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.search.CachingWrapperFilter;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.util.Version;
 
@@ -67,7 +67,6 @@ public class SingleCentral extends Central {
 		synchronized (this) {
 
 			if (isearcher == null) {
-				// new IndexSearcher(IndexReader.open(dir)) ;
 				this.isearcher = new IndexSearcher(getIndexReader());
 			} else if (getMutex().isUpdated()) {
 				try {
@@ -81,20 +80,9 @@ public class SingleCentral extends Central {
 				} finally {
 					getMutex().reflectUpdate();
 				}
-//			} else if (IndexReader.openIfChanged(reader) != null) {
-//				this.isearcher = new IndexSearcher(getIndexReader());
-//				this.filters.clear();
-//			} else {
-//				this.isearcher = new IndexSearcher(IndexReader.open(dir));
-//				this.filters.clear();
-
-				
-				
-				
-//				String[] files = dir.listAll() ;
-//				for (String file : files) {
-//					Debug.line('$', getIndexReader(), dir.fileLength(file)) ;
-//				}
+			} else if (dir instanceof FSDirectory && IndexReader.openIfChanged(reader) != null ) {
+				this.isearcher = new IndexSearcher(getIndexReader());
+				this.filters.clear();
 			}
 		}
 

@@ -1,5 +1,6 @@
 package net.ion.isearcher.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.lucene.analysis.kr.KoreanAnalyzer;
@@ -7,6 +8,10 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.NumericRangeFilter;
 import org.apache.lucene.store.Directory;
 
+import net.ion.framework.db.Page;
+import net.ion.framework.util.DateFormatUtil;
+import net.ion.framework.util.DateUtil;
+import net.ion.framework.util.Debug;
 import net.ion.isearcher.ISTestCase;
 import net.ion.isearcher.common.MyDocument;
 import net.ion.isearcher.common.MyField;
@@ -54,6 +59,17 @@ public class FieldTest extends ISTestCase{
 		// searcher.andFilter(filter) ;
 		ISearchRequest srequest = SearchRequest.test("test") ;
 		assertEquals(2, searcher.search(srequest).getTotalCount()) ;
+		
+		
+		// "date", 20100725, 232010))
+		searcher.searchTest("date:[\"20100725 16\" TO \"20100726 17\"]").debugPrint(Page.ALL) ;
+		//searcher.searchTest("date:\"20110530 164134\"").debugPrint(Page.ALL) ;
+		
+//		Date d = DateFormatUtil.getDateIfMatchedType("20110530-164134");
+//		Calendar c = DateUtil.dateToCalendar(d);
+//		int yyyymmdd = c.get(Calendar.YEAR) * 10000 + (c.get(Calendar.MONTH) + 1) * 100 + c.get(Calendar.DATE);
+//		int hh24miss = c.get(Calendar.HOUR) * 10000 + c.get(Calendar.MINUTE) * 100 + c.get(Calendar.SECOND);
+//		Debug.line(hh24miss);
 	}
 
 }

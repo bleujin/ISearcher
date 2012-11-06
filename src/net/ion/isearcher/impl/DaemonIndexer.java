@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 
+import net.ion.framework.db.Page;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.MapUtil;
@@ -20,6 +21,7 @@ import net.ion.isearcher.common.MyDocument;
 import net.ion.isearcher.common.MyDocument.Action;
 import net.ion.isearcher.indexer.write.AbstractIWriter;
 import net.ion.isearcher.indexer.write.IWriter;
+import net.ion.isearcher.searcher.SearchRequest;
 import net.ion.isearcher.searcher.processor.LimitedChannel;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -318,10 +320,11 @@ class CacheCopyWriter implements IWriter {
 					writer.deleteQuery(query) ;
 				}
 				try {
-					List<MyDocument> docs = cacheCentral.newSearcher().searchTest("").getDocument() ;
-					Debug.line(docs) ;
+					List<MyDocument> docs = cacheCentral.newSearcher().search(SearchRequest.ALL).getDocument();
+
 					for (MyDocument doc : docs) {
-						writer.insertDocument(doc) ;
+						//writer.insertDocument(doc) ;
+						writer.updateDocument(doc);
 					}
 					cacheCentral.destroySelf() ;
 					return true;

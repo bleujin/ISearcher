@@ -9,8 +9,12 @@ import net.ion.isearcher.common.MyField;
 import net.ion.isearcher.indexer.write.IWriter;
 import net.ion.isearcher.searcher.MyKoreanAnalyzer;
 
+import org.apache.lucene.analysis.cjk.CJKAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.util.Version;
 
 import junit.framework.TestCase;
 
@@ -81,6 +85,28 @@ public class TestCacheWriter extends TestCase{
 		assertEquals(1, searcher.searchTest("").getTotalCount()) ;
 		
 	}
+	
+
+	public void testDuplicated() throws Exception {
+		RAMDirectory ramDir = new RAMDirectory();
+		Central cen = Central.createOrGet(ramDir) ;
+		IWriter writer = cen.newIndexer(new MyKoreanAnalyzer()) ;
+		writer.begin("owner") ;
+		MyDocument doc = MyDocument.testDocument().add(MyField.number("index", 0)).add(MyField.keyword("name", "bleujin")) ;
+		writer.insertDocument(doc) ;
+		writer.end() ;
+		
+
+		CacheWriter cw = CacheWriter.create(cen, new MyKoreanAnalyzer()) ;
+		cw.begin("cache") ;
+		doc.add(MyField.number("index", 0)).add(MyField.keyword("name", "hero")) ;
+		cw.updateDocument(doc) ;
+		cw.end() ;
+
+		ISearcher searcher = cen.newSearcher() ;
+		assertEquals(1, searcher.searchTest("").getTotalCount()) ;
+		
+	}	
 	
 	
 	

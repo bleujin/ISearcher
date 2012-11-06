@@ -3,12 +3,9 @@ package net.ion.isearcher.impl;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import net.ion.isearcher.indexer.write.IWriter;
-import net.ion.isearcher.indexer.write.Mutex;
-import net.ion.isearcher.searcher.MyKoreanAnalyzer;
 import net.ion.isearcher.util.CloseUtils;
 import net.ion.isearcher.util.LRUMap;
 
@@ -19,10 +16,10 @@ import org.apache.lucene.index.IndexFileNameFilter;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.LogMergePolicy;
 import org.apache.lucene.index.MergePolicy;
 import org.apache.lucene.index.MultiReader;
-import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.search.CachingWrapperFilter;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
