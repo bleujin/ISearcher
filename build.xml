@@ -10,8 +10,8 @@
 	
 	<property name="manifes.main.class" value="" />
 	<property name="manifes.classpath" value="./" />
-	<property name="version.number" value="2"/>
-	<property name="build.number" value="2"/>
+	<property name="version.number" value="3"/>
+	<property name="build.number" value="0"/>
 
 
 	<target name="publish">

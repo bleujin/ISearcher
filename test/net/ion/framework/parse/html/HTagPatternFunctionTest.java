@@ -14,12 +14,12 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import junit.framework.TestCase;
+import net.ion.crawler.http.HTTPResponse;
+import net.ion.crawler.http.IHttpClient;
+import net.ion.crawler.http.MyHttpClient;
+import net.ion.crawler.parser.httpclient.DetectEncodingInputStream;
 import net.ion.framework.logging.LogBroker;
 import net.ion.framework.util.Debug;
-import net.ion.isearcher.crawler.parser.httpclient.DetectEncodingInputStream;
-import net.ion.isearcher.http.HTTPResponse;
-import net.ion.isearcher.http.IHttpClient;
-import net.ion.isearcher.http.MyHttpClient;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;

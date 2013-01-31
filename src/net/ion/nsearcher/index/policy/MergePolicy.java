@@ -1,0 +1,55 @@
+package net.ion.nsearcher.index.policy;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.MyDocument.Action;
+import net.ion.nsearcher.index.IndexSession;
+
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexReader;
+
+public class MergePolicy extends AbstractWritePolicy {
+
+	private Map<String, HashBean> hashData = new HashMap<String, HashBean>();
+
+	public void begin(IndexSession session) throws IOException {
+		
+		IndexReader reader = session.reader() ;
+		for (int i = 0, last = reader.maxDoc(); i < last; i++) {
+//			if (reader.isDeleted(i))
+//				continue;
+			Document doc = reader.document(i);
+			HashBean bean = new HashBean(session.getIdValue(doc), session.getBodyValue(doc));
+			hashData.put(session.getIdValue(doc), bean);
+		}
+	}
+	
+	public Action apply(final IndexSession writer, MyDocument doc) throws IOException {
+		try {
+			String idValue = doc.getIdValue();
+			String newValue = doc.getBodyValue();
+
+			if (doc.getAction().isDelete()) {
+				return writer.deleteDocument(doc);
+			}
+
+			if (hashData.containsKey(idValue)) {
+				String oldValue = hashData.get(idValue).getBodyValue();
+				if (oldValue.equals(newValue)) // same key and same body
+					return Action.Unknown;
+				else
+					return writer.updateDocument(doc);
+			} else {
+				return writer.insertDocument(doc);
+			}
+
+		} catch (NullPointerException ex) {
+			throw new IOException("exception.isearcher.document.index:" + ex.getMessage());
+		}
+
+	}
+
+}

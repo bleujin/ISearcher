@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Make FatJar(experimental)" default="search" basedir=".">
+<project name="Make FatJar(experimental)" default="search362" basedir=".">
 <!-- ====================================================================== 
      2012. 4. 11. 오전 10:59:20                                                        
 
@@ -21,28 +21,27 @@
 	<property name="baseDir" value="." />
 	<property name="targetDir" value="../lib" />
 	
-    <target name="search">
-    	<delete file="${targetDir}/search_fat.jar"></delete>
-        <fatjar.build output="${targetDir}/search_fat.jar">
+	<target name="search410">
+    	<delete file="${targetDir}/search410_fat.jar"></delete>
+        <fatjar.build output="${targetDir}/search410_fat.jar">
             <fatjar.manifest/>
-        	<fatjar.jarsource file="${basedir}\search\tm-extractors-0.4.jar" relpath=""/> 
-        	<fatjar.jarsource file="${basedir}\search\metadata-extractor-2.3.1.jar" relpath=""/> 
-        	<fatjar.jarsource file="${basedir}\search\lucene-analyzers-2.9.1.jar" relpath=""/> 
-        	<fatjar.jarsource file="${basedir}\search\lucene-core-2.9.1.jar" relpath=""/> 
-        	<fatjar.jarsource file="${basedir}\search\metadata-extractor-2.3.1.jar" relpath=""/>  
-        	<fatjar.jarsource file="${basedir}\search\koreananalyzer-20100525.jar" relpath=""/>  
-        	<fatjar.jarsource file="${basedir}\search\lucene-instantiated-2.9.3.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search410\lucene-core-4.1.0.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\search410\lucene-queries-4.1.0.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search410\lucene-queryparser-4.1.0.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search410\lucene-analyzers-4.1.0.jar" relpath=""/>  
         </fatjar.build>
     </target>
 
-    <target name="search36">
-    	<delete file="${targetDir}/search36_fat.jar"></delete>
-        <fatjar.build output="${targetDir}/search36_fat.jar">
+    <target name="search362">
+    	<delete file="${targetDir}/search362_fat.jar"></delete>
+        <fatjar.build output="${targetDir}/search362_fat.jar">
             <fatjar.manifest/>
-        	<fatjar.jarsource file="${basedir}\search36\lucene-core-3.6.0.jar" relpath=""/> 
-        	<fatjar.jarsource file="${basedir}\search36\koreananalyzer-3x-120223.jar" relpath=""/>  
-        	<fatjar.jarsource file="${basedir}\search36\lucene-instantiated-3.6.0.jar" relpath=""/>  
-        	<fatjar.jarsource file="${basedir}\search36\lucene-analyzers-3.6.0.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search362\lucene-core-3.6.2.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\search362\lucene-queries-3.6.2.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search362\lucene-queryparser-3.6.2.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search362\lucene-analyzers-3.6.2.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search362\lucene-instantiated-3.6.2.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search362\koreananalyzer-20100525.jar" relpath=""/>  
         </fatjar.build>
     </target>
 
@@ -51,11 +50,11 @@
     	<delete file="${targetDir}/search_util_fat.jar"></delete>
         <fatjar.build output="${targetDir}/search_util_fat.jar">
             <fatjar.manifest/>
-        	<fatjar.jarsource file="${basedir}\search_util\jericho-html-3.1.jar" relpath=""/> 
-        	<fatjar.jarsource file="${basedir}\search_util\ecs-1.4.2.jar" relpath=""/> 
-        	<fatjar.jarsource file="${basedir}\search_util\tidy.jar" relpath=""/> 
-        	<fatjar.jarsource file="${basedir}\search_util\htmllexer.jar" relpath=""/> 
-        	<fatjar.jarsource file="${basedir}\search_util\htmlparser.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\util\jericho-html-3.1.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\util\ecs-1.4.2.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\util\tidy.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\util\htmllexer.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\util\htmlparser.jar" relpath=""/> 
         </fatjar.build>
     </target>
 
