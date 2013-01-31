@@ -142,6 +142,10 @@ public class IndexSession {
 		return wconfig ;
 	}
 
+	public void appendFrom(Directory... dirs) throws CorruptIndexException, IOException {
+		writer.addIndexes(dirs) ;
+	}
+
 
 
 }

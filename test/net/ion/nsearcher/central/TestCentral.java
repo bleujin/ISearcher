@@ -1,21 +1,53 @@
 package net.ion.nsearcher.central;
 
+import java.io.IOException;
+import java.util.concurrent.Future;
+
 import net.ion.framework.util.Debug;
+import net.ion.framework.util.ListUtil;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.Searcher;
+import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.config.Central;
+import net.ion.nsearcher.config.CentralConfig;
+import net.ion.nsearcher.index.IndexJob;
+import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.index.NonBlockingListener;
 import net.ion.nsearcher.index.collect.FileCollector;
 import net.ion.nsearcher.index.report.DefaultReporter;
 import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SearchResponse;
+import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 import net.ion.nsearcher.search.processor.StdOutProcessor;
 
-import org.apache.lucene.store.LockObtainFailedException;
+import org.apache.lucene.analysis.Analyzer;
 
 public class TestCentral extends ISTestCase{
 
+	public void testCopy() throws Exception {
+		final Central cs = CentralConfig.newRam().build() ;
+		Central ct = CentralConfig.newRam().build() ;
+		
+		Analyzer anal = new MyKoreanAnalyzer() ;
+
+		Future<Boolean> f1 = cs.newIndexer().asyncIndex("hero", anal, new MyIndexJob("hero"));
+		f1.get() ;
+		
+		Future<Boolean> f2 = ct.newIndexer().asyncIndex("bleujin", anal, new MyIndexJob("bleujin"));
+		f2.get() ;
+		
+		ct.newIndexer().index(new MyKoreanAnalyzer(), new IndexJob<Void>() {
+			public Void handle(IndexSession session) throws Exception {
+				session.appendFrom(cs.dir()) ;
+				return null;
+			}
+		}) ;
+		assertEquals(10, ct.newSearcher().searchTest("").getTotalCount()) ;
+	}
+	
+	
 	public void testMakeSearcher() throws Exception {
 		Central central = writeDocument() ;
 		
@@ -110,4 +142,18 @@ public class TestCentral extends ISTestCase{
 		
 	}
 
+}
+
+class MyIndexJob implements IndexJob<Boolean> {
+	String name ;
+	MyIndexJob(String name){
+		this.name = name ;
+	}
+	
+	public Boolean handle(IndexSession session) throws IOException {
+		for (int i : ListUtil.rangeNum(5)) {
+			session.insertDocument(MyDocument.testDocument().add(MyField.number("index", i)).add(MyField.keyword("name", name))) ;
+		}
+		return true;
+	}
 }

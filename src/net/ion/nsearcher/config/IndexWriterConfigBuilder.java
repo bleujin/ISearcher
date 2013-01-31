@@ -107,7 +107,6 @@ public class IndexWriterConfigBuilder {
 		result.setMaxBufferedDeleteTerms(clone.getMaxBufferedDeleteTerms()) ;
 		result.setMaxThreadStates(clone.getMaxThreadStates()) ;
 		result.setMergedSegmentWarmer(clone.getMergedSegmentWarmer()) ;
-		Debug.line(clone.getMergePolicy()) ;
 //		result.setMergePolicy(clone.getMergePolicy()) ;
 		
 		result.setMergeScheduler(clone.getMergeScheduler()) ;

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import net.ion.framework.db.Page;
 import net.ion.framework.util.CaseInsensitiveHashMap;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.StringUtil;
@@ -43,6 +44,11 @@ public class SearchRequest {
 		return query;
 	}
 
+	public SearchRequest page(Page page){
+		this.skip(page.getStartLoc()).offset(page.getListNum()) ;
+		return this ;
+	}
+	
 	public SearchRequest offset(int offset){
 		this.offset = offset ;
 		return this ;

@@ -10,6 +10,7 @@ import net.ion.framework.util.ArrayUtil;
 import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.StringBuilderReader;
+import net.ion.nsearcher.common.SearchConstant;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -31,8 +32,8 @@ public class MyKoreanAnalyzer extends Analyzer {
 	}
 
 	
-	public MyKoreanAnalyzer(String[] stopword){
-		this.kor = new KoreanAnalyzer(stopword);
+	public MyKoreanAnalyzer(String[] stopword) throws IOException{
+		this.kor = new KoreanAnalyzer(SearchConstant.LuceneVersion, stopword);
 		this.stopword = stopword;
 	}
 

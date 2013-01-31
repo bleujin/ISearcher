@@ -60,6 +60,10 @@ public class Central implements Closeable{
 		IOUtil.closeQuietly(dir) ;
 	}
 
+	public Directory dir(){
+		return dir ;
+	}
+	
 	public InfoReader newReader() {
 		return singleSearcher.reader();
 	}

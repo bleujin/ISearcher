@@ -41,7 +41,7 @@
         	<fatjar.jarsource file="${basedir}\search362\lucene-queryparser-3.6.2.jar" relpath=""/>  
         	<fatjar.jarsource file="${basedir}\search362\lucene-analyzers-3.6.2.jar" relpath=""/>  
         	<fatjar.jarsource file="${basedir}\search362\lucene-instantiated-3.6.2.jar" relpath=""/>  
-        	<fatjar.jarsource file="${basedir}\search362\koreananalyzer-20100525.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search362\koreananalyzer-3x-120223.jar" relpath=""/>  
         </fatjar.build>
     </target>
 
