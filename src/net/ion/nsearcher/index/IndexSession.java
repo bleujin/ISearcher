@@ -5,7 +5,6 @@ import java.io.IOException;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.common.MyDocument.Action;
-import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.search.SingleSearcher;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -20,34 +19,28 @@ import org.apache.lucene.store.Directory;
 
 public class IndexSession {
 
-	private final CentralConfig config ;
-	private final Directory dir ;
-	private final Analyzer analyzer ;
 	private final SingleSearcher searcher;
-	
 	private IndexWriter writer ;
 	private final IndexWriterConfig wconfig ;
-	IndexSession(CentralConfig config, Directory dir, SingleSearcher searcher, Analyzer analyzer) {
-		this.config = config ;
-		this.dir = dir ;
+	private String owner;
+	
+	IndexSession(SingleSearcher searcher, Analyzer analyzer) {
 		this.searcher = searcher ;
-		this.analyzer = analyzer ;
-		this.wconfig = config.writerConfig().buildIndexWriter(analyzer);
+		this.wconfig = searcher.central().indexConfig().newIndexWriterConfig(analyzer);
 	}
 
-	public static IndexSession create(CentralConfig config, Directory dir, SingleSearcher searcher, Analyzer analyzer) {
-		return new IndexSession(config, dir, searcher, analyzer);
+	public static IndexSession create(SingleSearcher searcher, Analyzer analyzer) {
+		return new IndexSession(searcher, analyzer);
 	}
 
 	public void begin(String owner) throws IOException {
-		this.writer = new IndexWriter(dir, wconfig);
+		this.owner = owner ;
+		this.writer = new IndexWriter(searcher.central().dir(), wconfig);
 	}
 
 	public void release() {
 		
 	}
-	
-	
 
 	public IndexReader reader() throws IOException{
 		return searcher.indexReader() ;

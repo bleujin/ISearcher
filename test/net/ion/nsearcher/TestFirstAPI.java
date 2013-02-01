@@ -13,6 +13,7 @@ import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
+import net.ion.nsearcher.search.Searcher;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
@@ -33,7 +34,7 @@ public class TestFirstAPI extends TestCase {
 	
 	public void testCreateSearcher() throws Exception {
 		Searcher searcher = cen.newSearcher();
-		assertEquals(0, searcher.searchTest("").size()) ; 
+		assertEquals(0, searcher.search("").totalCount()) ; 
 	}
 
 	public void testCreateIndexer() throws Exception {
@@ -49,7 +50,7 @@ public class TestFirstAPI extends TestCase {
 		}) ;
 		
 		Searcher searcher = cen.newSearcher();
-		assertEquals(10, searcher.searchTest("").size()) ;
+		assertEquals(10, searcher.search("").totalCount()) ;
 	}
 	
 	

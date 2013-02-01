@@ -9,14 +9,14 @@ import net.ion.framework.db.manager.OracleDBManager;
 import net.ion.framework.db.procedure.IUserCommand;
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.collect.DatabaseCollector;
 import net.ion.nsearcher.search.SearchResponse;
+import net.ion.nsearcher.search.Searcher;
 import net.ion.nsearcher.search.processor.StdOutProcessor;
 
-public class PerformanceTest extends ISTestCase{
+public class TestPerformance extends ISTestCase{
 
 	private File dataFile = new File("d:/data/");
 	public void testIndex() throws Exception {
@@ -49,7 +49,7 @@ public class PerformanceTest extends ISTestCase{
 		Searcher searcher = central.newSearcher() ;
 		
 		searcher.addPostListener(new StdOutProcessor()) ;
-		SearchResponse result = searcher.searchTest("2271824") ;
+		SearchResponse result = searcher.search("2271824") ;
 	}
 	
 	public void testRuntime() throws Exception {

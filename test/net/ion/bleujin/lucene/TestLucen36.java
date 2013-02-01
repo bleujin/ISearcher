@@ -8,7 +8,6 @@ import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.ObjectUtil;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.config.Central;
@@ -18,6 +17,7 @@ import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SearchResponse;
+import net.ion.nsearcher.search.Searcher;
 import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 import net.ion.nsearcher.search.processor.PostProcessor;
 
@@ -110,8 +110,8 @@ public class TestLucen36 extends TestCase {
 								 }
 								long start = System.currentTimeMillis();
 								Searcher searcher = c.newSearcher();
-								SearchResponse sr = searcher.searchTest("name:bleujin");
-								Debug.line(start, System.currentTimeMillis(), sr.getTotalCount());
+								SearchResponse sr = searcher.search("name:bleujin");
+								Debug.line(start, System.currentTimeMillis(), sr.totalCount());
 
 								return true;
 							} catch (ParseException ex) {
@@ -145,9 +145,8 @@ public class TestLucen36 extends TestCase {
 				}
 			}) ;
 			
-			SearchRequest req = SearchRequest.create("name:bleujin", "mindex", new MyKoreanAnalyzer());
-			SearchResponse res = searcher.search(req);
-			Debug.line(System.currentTimeMillis(), res.getTotalCount(), res.getDocument());
+			SearchResponse res = searcher.createRequest("name:bleujin", new MyKoreanAnalyzer()).ascending("mindex") .find();
+			Debug.line(System.currentTimeMillis(), res.totalCount(), res.getDocument());
 			
 			
 		}

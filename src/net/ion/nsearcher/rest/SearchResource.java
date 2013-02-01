@@ -4,11 +4,11 @@ import java.io.File;
 import java.io.IOException;
 
 import net.ion.framework.util.PathMaker;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.reader.InfoReader;
+import net.ion.nsearcher.search.Searcher;
 import net.ion.radon.core.let.AbstractServerResource;
 
 public class SearchResource extends AbstractServerResource {

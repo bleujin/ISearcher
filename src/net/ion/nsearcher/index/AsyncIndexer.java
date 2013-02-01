@@ -65,7 +65,7 @@ public class AsyncIndexer {
 	}
 
 	public Future<Void> index() {
-		return indexer.asyncIndex("asyncIndexer", analyzer, new IndexJob<Void>() {
+		return indexer.asyncIndex(analyzer, new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws IOException {
 				try {
 					Debug.debug("writePolicy : " + getWritePolicy());

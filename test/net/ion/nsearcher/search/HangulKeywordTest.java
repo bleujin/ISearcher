@@ -6,7 +6,6 @@ import java.util.Set;
 
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.SearchConstant;
@@ -54,7 +53,7 @@ public class HangulKeywordTest extends ISTestCase {
 		Searcher searcher = c.newSearcher();
 		searcher.addPostListener(stdOutProcessor);
 
-		assertEquals(1, searcher.search(SearchRequest.create("급락", null, createKoreanAnalyzer())).getTotalCount());
+		assertEquals(1, searcher.createRequest("급락", createKoreanAnalyzer()).find().totalCount());
 	}
 	
 	public void testHangulKeyword() throws Exception {
@@ -98,40 +97,41 @@ public class HangulKeywordTest extends ISTestCase {
 		Searcher searcher = c.newSearcher();
 		searcher.addPostListener(stdOutProcessor);
 
-		assertEquals(1, searcher.search(SearchRequest.create("LG U+", null, searchAnal)).getTotalCount());
+		assertEquals(1, searcher.createRequest("LG U+", searchAnal).find().totalCount());
 
-		assertEquals(1, searcher.search(SearchRequest.create("2000년 9월", null, searchAnal)).getTotalCount());
+		assertEquals(1, searcher.createRequest("2000년 9월", searchAnal).find().totalCount());
 
-		assertEquals(1, searcher.search(SearchRequest.create("B500", null, searchAnal)).getTotalCount());
+		assertEquals(1, searcher.createRequest("B500", searchAnal).find().totalCount());
 
-		assertEquals(1, searcher.search(SearchRequest.create("BEST 중소형", null, searchAnal)).getTotalCount());
+		assertEquals(1, searcher.createRequest("BEST 중소형", searchAnal).find().totalCount());
 		
-		Debug.line(SearchRequest.create("급락", null, searchAnal).query()) ;
+		Debug.line(searcher.createRequest("급락", searchAnal).query()) ;
 		
 
-		assertEquals(1, searcher.search(SearchRequest.create("급락", null, searchAnal)).getTotalCount());
+		assertEquals(1, searcher.createRequest("급락", searchAnal).find().totalCount());
 
-		assertEquals(1, searcher.search(SearchRequest.create("조짐", null, searchAnal)).getTotalCount());
+		assertEquals(1, searcher.createRequest("조짐", searchAnal).find().totalCount());
 
-//		assertEquals(1, searcher.search(SearchRequest.create("소형", null, searchAnal)).getTotalCount());
+//		assertEquals(1, searcher.createRequest("소형", searchAnal)).getTotalCount());
 
-		assertEquals(1, searcher.search(SearchRequest.create("4.19 의거", null, searchAnal)).getTotalCount());
+		assertEquals(1, searcher.createRequest("4.19 의거", searchAnal).find().totalCount());
 
-		assertEquals(1, searcher.search(SearchRequest.create("正道", null, searchAnal)).getTotalCount());
+		assertEquals(1, searcher.createRequest("正道", searchAnal).find().totalCount());
 
-		assertEquals(1, searcher.search(SearchRequest.create("E플러스", null, searchAnal)).getTotalCount());
+		assertEquals(1, searcher.createRequest("E플러스", searchAnal).find().totalCount());
 
-		assertEquals(1, searcher.search(SearchRequest.create("name:E플러스", null, searchAnal)).getTotalCount());
+		assertEquals(1, searcher.createRequest("name:E플러스", searchAnal).find().totalCount());
 
-		assertEquals(1, searcher.search(SearchRequest.create("index:7756", null, searchAnal)).getTotalCount());
+		assertEquals(1, searcher.createRequest("index:7756", searchAnal).find().totalCount());
 
 	}
 	
 	
 	public void testQuery() throws Exception {
+		Central c = CentralConfig.newRam().build() ;
 		Analyzer anal = new KoreanAnalyzer();
 		// Analyzer anal = new KeywordAnalyzer();
-		SearchRequest req = SearchRequest.create("E플러스", null, anal) ;
+		SearchRequest req = c.newSearcher().createRequest("E플러스", anal) ;
 		
 		Debug.debug(req.query().toString()) ;
 	}
@@ -175,21 +175,17 @@ public class HangulKeywordTest extends ISTestCase {
 		Searcher searcher = c.newSearcher();
 		searcher.addPostListener(stdOutProcessor);
 
-		SearchRequest req = SearchRequest.create("n1:30", null, anal);
-		SearchResponse res = searcher.search(req);
-		assertEquals(1, res.getTotalCount());
+		SearchResponse res = searcher.createRequest("n1:30", anal).find();
+		assertEquals(1, res.totalCount());
 
-		req = SearchRequest.create("d1:20071231", null, anal);
-		res = searcher.search(req);
-		assertEquals(1, res.getTotalCount());
+		res = searcher.createRequest("d1:20071231", anal).find();
+		assertEquals(1, res.totalCount());
 
-		req = SearchRequest.create("n1:[29 TO 31]", null, anal);
-		res = searcher.search(req);
-		assertEquals(1, res.getTotalCount());
+		res = searcher.createRequest("n1:[29 TO 31]", anal).find();
+		assertEquals(1, res.totalCount());
 
-		req = SearchRequest.create("n1:[09 TO 31]", null, anal);
-		res = searcher.search(req);
-		assertEquals(1, res.getTotalCount());
+		res = searcher.createRequest("n1:[29 TO 31]", anal).find();
+		assertEquals(1, res.totalCount());
 	}
 
 	public void testFilter() throws Exception {
@@ -226,18 +222,18 @@ public class HangulKeywordTest extends ISTestCase {
 		QueryWrapperFilter newFilter = new QueryWrapperFilter(parser.parse("n1:30"));
 		Filter filter = newFilter;
 
-		SearchRequest req = SearchRequest.create("key:value", null, analyzer);
+		SearchRequest req = searcher.createRequest("key:value", analyzer);
 		req.setFilter(filter);
 
 		SearchResponse res = searcher.search(req);
-		assertEquals(2, res.getTotalCount());
+		assertEquals(2, res.totalCount());
 
 		newFilter = new QueryWrapperFilter(parser.parse("d1:[20071230 TO 20071231]"));
 		filter = newFilter;
 
 		req.setFilter(filter);
 		res = searcher.search(req);
-		assertEquals(1, res.getTotalCount());
+		assertEquals(1, res.totalCount());
 
 	}
 

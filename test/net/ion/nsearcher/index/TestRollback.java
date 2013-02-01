@@ -4,14 +4,14 @@ import java.io.File;
 import java.io.IOException;
 
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.index.collect.FileCollector;
 import net.ion.nsearcher.reader.InfoReader;
+import net.ion.nsearcher.search.Searcher;
 
-public class RollbackTest extends ISTestCase{
+public class TestRollback extends ISTestCase{
 	
 	public void testCollectorShutdown() throws Exception {
 		
@@ -46,7 +46,7 @@ public class RollbackTest extends ISTestCase{
 
 		Searcher searcher = central.newSearcher() ;
 		
-		searcher.searchTest("bleujin") ;
+		searcher.search("bleujin") ;
 		InfoReader reader = central.newReader() ;
 		
 		final MyDocument[] newDocs = makeTestMyDocument(10) ;
@@ -84,7 +84,7 @@ public class RollbackTest extends ISTestCase{
 	public void testReader() throws Exception {
 		Central central = writeDocument() ;
 		Searcher searcher = central.newSearcher() ;
-		searcher.searchTest("bleujin") ;
+		searcher.search("bleujin") ;
 		
 		InfoReader oldReader = central.newReader() ;
 		Indexer indexer = central.newIndexer() ;

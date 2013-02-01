@@ -2,15 +2,15 @@ package net.ion.nsearcher.impl;
 
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.index.channel.RelayChannel;
+import net.ion.nsearcher.search.Searcher;
 import net.ion.nsearcher.search.processor.LimitedChannel;
 import net.ion.nsearcher.search.processor.ProcessorAdaptor;
 import net.ion.nsearcher.search.processor.SearchTask;
 import net.ion.nsearcher.search.processor.StdOutProcessor;
 import net.ion.nsearcher.search.processor.ThreadProcessor;
 
-public class PostProcessorTest extends ISTestCase{
+public class TestPostProcessor extends ISTestCase{
 
 	private Searcher searcher;
 	public void setUp() throws Exception {
@@ -23,7 +23,7 @@ public class PostProcessorTest extends ISTestCase{
 
 	public void testInit() throws Exception {
 		searcher.addPostListener(new StdOutProcessor()) ;
-		searcher.searchTest("bleujin");
+		searcher.search("bleujin");
 	}
 	
 	public void testMultiThreadPostProcessor() throws Exception {
@@ -34,7 +34,7 @@ public class PostProcessorTest extends ISTestCase{
 		searcher.addPostListener(new ProcessorAdaptor(channel, tp)) ;
 		searcher.addPostListener(new StdOutProcessor()) ;
 		
-		searcher.searchTest("bleujin");
+		searcher.search("bleujin");
 	}
 }
 

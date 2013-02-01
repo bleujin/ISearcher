@@ -11,7 +11,7 @@ public class TestIndexWriteConfig extends ISTestCase{
 
 	
 	public void testSetGet() throws Exception {
-		CentralConfig config = CentralConfig.newRam().writerConfig().setMaxBufferedDocs(100).parent();
+		CentralConfig config = CentralConfig.newRam().indexConfigBuilder().setMaxBufferedDocs(100).parent();
 		Central cen = config.build() ;
 		cen.newIndexer().index(createDefaultAnalyzer(), new IndexJob<Void>() {
 

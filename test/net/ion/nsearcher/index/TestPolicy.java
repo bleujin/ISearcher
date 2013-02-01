@@ -16,7 +16,7 @@ import net.ion.nsearcher.index.report.DefaultReporter;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.store.LockObtainFailedException;
 
-public class PolicyTest extends ISTestCase{
+public class TestPolicy extends ISTestCase{
 	
 	public void testMergePolicy() throws Exception {
 		executeTest(new MergePolicy());

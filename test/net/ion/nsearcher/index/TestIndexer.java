@@ -6,16 +6,16 @@ import java.util.List;
 
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.collect.FileCollector;
 import net.ion.nsearcher.search.SearchResponse;
+import net.ion.nsearcher.search.Searcher;
 import net.ion.nsearcher.search.processor.StdOutProcessor;
 
-public class IndexerTest extends ISTestCase {
+public class TestIndexer extends ISTestCase {
 
 	File file = getTestDir("/ion_page");
 
@@ -45,7 +45,7 @@ public class IndexerTest extends ISTestCase {
 		}) ;
 		
 		c.newSearcher() ; // new Searcher..
-		SearchResponse sr = s1.searchTest("bleujin") ;
+		SearchResponse sr = s1.search("bleujin") ;
 		
 		List<MyDocument> docs = sr.getDocument() ;
 		Debug.debug(docs) ;

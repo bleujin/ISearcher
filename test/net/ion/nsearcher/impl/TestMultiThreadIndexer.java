@@ -37,7 +37,7 @@ public class TestMultiThreadIndexer extends TestCase {
 		}
 		
 		for (int i = 0; i < 10; i++) {
-			Debug.line(c.newSearcher().searchTest("").getTotalCount()) ;
+			Debug.line(c.newSearcher().search("").totalCount()) ;
 			Thread.sleep(500) ;
 		}
 	}

@@ -7,33 +7,44 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.exception.IndexException;
 import net.ion.nsearcher.search.SingleSearcher;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.store.Directory;
 
 public class Indexer {
 
-	private final CentralConfig config ;
-	private Directory dir;
+	private Central central;
 	private SingleSearcher searcher ;
 	
 	private ExecutorService singleExecutor = Executors.newSingleThreadExecutor() ;
 	private IndexExceptionHandler<Void> ehandler = IndexExceptionHandler.DEFAULT ;
 	
-	private Indexer(CentralConfig config, Directory dir, SingleSearcher searcher) {
-		this.config = config ;
-		this.dir = dir;
+	private Indexer(CentralConfig config, Central central, SingleSearcher searcher) {
+		this.central = central;
 		this.searcher = searcher ;
 	}
 
-	public static Indexer create(CentralConfig config, Directory dir, SingleSearcher searcher) {
-		return new Indexer(config, dir, searcher);
+	public static Indexer create(CentralConfig config, Central central, SingleSearcher searcher) {
+		return new Indexer(config, central, searcher);
 	}
 
-	public <T> T index(String name, Analyzer analyzer, IndexJob<T> indexJob) throws IndexException {
+	public <T> T index(IndexJob<T> indexJob) {
+		return index(central.indexConfig().indexAnalyzer(), indexJob) ;
+	}
+	
+	public <T> T index(Analyzer analyzer, IndexJob<T> indexJob) {
+		return index(analyzer, indexJob, new IndexExceptionHandler<T>() {
+			public T onException(Throwable ex) {
+				ehandler.onException(ex) ;
+				return null;
+			}
+		}) ;
+	}
+
+	public <T> T index(String name, Analyzer analyzer, IndexJob<T> indexJob) {
 		try {
 			return asyncIndex(name, analyzer, indexJob).get() ;
 		} catch (InterruptedException e) {
@@ -47,7 +58,7 @@ public class Indexer {
 	
 	public <T> T index(Analyzer analyzer, IndexJob<T> indexJob, IndexExceptionHandler<T> handler) {
 		try {
-			return asyncIndex("test", analyzer, indexJob).get() ;
+			return asyncIndex("emanon", analyzer, indexJob).get() ;
 		} catch (InterruptedException e) {
 			return handler.onException(e) ;
 		} catch (ExecutionException e) {
@@ -55,28 +66,32 @@ public class Indexer {
 		}
 	}
 
-	public <T> T index(Analyzer analyzer, IndexJob<T> indexJob) {
-		return index(analyzer, indexJob, new IndexExceptionHandler<T>() {
-			public T onException(Throwable ex) {
-				ehandler.onException(ex) ;
-				return null;
-			}
-		}) ;
-	}
 	
 	public Indexer onExceptionHander(IndexExceptionHandler<Void> ehandler){
 		this.ehandler = ehandler ;
 		return this ;
 	}
-	
-	
+
+	public <T> Future<T> asyncIndex(IndexJob<T> indexJob) {
+		return asyncIndex(central.indexConfig().indexAnalyzer(), indexJob) ;
+	}
+
+	public <T> Future<T> asyncIndex(final Analyzer analyzer, IndexJob<T> indexJob) {
+		return asyncIndex("emanon", analyzer, indexJob) ;
+	}
+
+
 	public <T> Future<T> asyncIndex(final String name, final Analyzer analyzer, final IndexJob<T> indexJob) {
+		return asyncIndex(name, analyzer, indexJob, ehandler) ;
+	}
+	
+	public <T> Future<T> asyncIndex(final String name, final Analyzer analyzer, final IndexJob<T> indexJob, final IndexExceptionHandler handler) {
 		return singleExecutor.submit(new Callable<T>(){
 			public T call() throws Exception {
 				IndexSession session = null ;
 				try {
 					
-					session = IndexSession.create(config, dir, searcher, analyzer);
+					session = IndexSession.create(searcher, analyzer);
 					session.begin(name) ;
 					T result = indexJob.handle(session);
 					
@@ -84,7 +99,7 @@ public class Indexer {
 					return result;
 				} catch(Throwable ex) {
 					try {if (session != null) session.rollback();} catch(IOException ignore){ignore.printStackTrace();} ;
-					ehandler.onException(ex) ;
+					handler.onException(ex) ;
 //					return null ;
 					throw new IndexException(ex.getMessage(), ex) ;
 				} finally {
@@ -97,5 +112,6 @@ public class Indexer {
 	public void close() {
 		singleExecutor.shutdown() ;
 	}
+
 	
 }

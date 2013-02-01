@@ -7,13 +7,13 @@ import java.io.Serializable;
 
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.common.IKeywordField;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.index.channel.persistor.ObjectPersistor;
 import net.ion.nsearcher.index.channel.persistor.StackFile;
 import net.ion.nsearcher.search.SearchResponse;
+import net.ion.nsearcher.search.Searcher;
 import net.ion.nsearcher.search.processor.StdOutProcessor;
 
 public class TestDocument extends ISTestCase{
@@ -42,8 +42,8 @@ public class TestDocument extends ISTestCase{
 		Searcher searcher  = central.newSearcher() ;
 		searcher.addPostListener(new StdOutProcessor()) ;
 		
-		assertEquals(0, searcher.searchTest("int:4").getTotalCount()) ;
-		assertEquals(1, searcher.searchTest("INT:4").getTotalCount()) ;
+		assertEquals(0, searcher.search("int:4").totalCount()) ;
+		assertEquals(1, searcher.search("INT:4").totalCount()) ;
 	}
 	
 	
@@ -51,7 +51,7 @@ public class TestDocument extends ISTestCase{
 		Central central = writeDocument() ;
 		Searcher searcher  = central.newSearcher() ;
 		searcher.addPostListener(new StdOutProcessor()) ;
-		SearchResponse result = searcher.search(createSearchRequest("int:3"));
+		SearchResponse result = searcher.search("int:3");
 		MyDocument mydoc = result.getDocument().get(0) ;
 		
 		String expected = mydoc.get(IKeywordField.ISALL_FIELD) ;
@@ -64,7 +64,7 @@ public class TestDocument extends ISTestCase{
 		Central central = writeDocument() ;
 		Searcher searcher  = central.newSearcher() ;
 		searcher.addPostListener(new StdOutProcessor()) ;
-		SearchResponse result = searcher.search(createSearchRequest("ud1:sky"));
+		SearchResponse result = searcher.search("ud1:sky");
 	}
 	
 	public void xtestSerializable() throws Exception {

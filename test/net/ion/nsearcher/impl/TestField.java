@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Date;
 
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.config.Central;
@@ -12,10 +11,11 @@ import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.search.SearchRequest;
+import net.ion.nsearcher.search.Searcher;
 
 import org.apache.lucene.search.NumericRangeFilter;
 
-public class FieldTest extends ISTestCase{
+public class TestField extends ISTestCase{
 
 	public void testUnknownNumber() throws Exception {
 		Central cen = writeDocument() ;
@@ -33,8 +33,7 @@ public class FieldTest extends ISTestCase{
 
 		Searcher searcher = cen.newSearcher() ;
 		searcher.andFilter(NumericRangeFilter.newLongRange("intkey", 8, 0L, 10000L, true, true)) ;
-		SearchRequest srequest = SearchRequest.create("test") ;
-		assertEquals(1, searcher.search(srequest).getTotalCount()) ;
+		assertEquals(1, searcher.createRequest("test").find().totalCount()) ;
 	}
 
 	public void testUnknownDate() throws Exception {
@@ -54,12 +53,11 @@ public class FieldTest extends ISTestCase{
 
 		Searcher searcher = cen.newSearcher() ;
 //		searcher.andFilter(NumericRangeFilter.newLongRange("datekey", 8, 20100101L, 20111231L, true, true)) ;
-		SearchRequest srequest = SearchRequest.create("test") ;
-		assertEquals(2, searcher.search(srequest).getTotalCount()) ;
+		assertEquals(2, searcher.search("test").totalCount()) ;
 		
 		
 		// "date", 20100725, 232010))
-		searcher.searchTest("date:[\"20100725 16\" TO \"20100726 17\"]").debugPrint() ;
+		searcher.search("date:[\"20100725 16\" TO \"20100726 17\"]").debugPrint() ;
 		//searcher.searchTest("date:\"20110530 164134\"").debugPrint(Page.ALL) ;
 		
 //		Date d = DateFormatUtil.getDateIfMatchedType("20110530-164134");

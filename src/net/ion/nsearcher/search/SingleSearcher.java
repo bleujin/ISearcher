@@ -2,24 +2,20 @@ package net.ion.nsearcher.search;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import net.ion.framework.util.SetUtil;
 import net.ion.nsearcher.common.MyDocument;
-import net.ion.nsearcher.config.CentralConfig;
+import net.ion.nsearcher.config.Central;
+import net.ion.nsearcher.config.SearchConfig;
 import net.ion.nsearcher.reader.InfoReader;
 
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.BooleanFilter;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.BooleanClause.Occur;
-import org.apache.lucene.store.Directory;
 
 public class SingleSearcher implements Closeable{
 
@@ -29,16 +25,16 @@ public class SingleSearcher implements Closeable{
 	private InfoReader reader ;
 	private CachedFilter filters = new CachedFilter() ;
 
-	private final CentralConfig config ;
-	private SingleSearcher(CentralConfig config, IndexReader ireader) {
-		this.config = config ;
+	private final Central central ;
+	private SingleSearcher(Central central, IndexReader ireader) {
+		this.central = central ;
 		this.ireader = ireader ;
 		this.isearcher = new IndexSearcher(ireader) ;
 		this.reader = InfoReader.create(this) ;
 	}
 
-	public static SingleSearcher create(CentralConfig config, Directory dir) throws IOException {
-		return new SingleSearcher(config, IndexReader.open(dir));
+	public static SingleSearcher create(Central central) throws IOException {
+		return new SingleSearcher(central, IndexReader.open(central.dir()));
 	}
 
 	public SearchResponse search(SearchRequest sreq, Filter filters) throws IOException {
@@ -85,8 +81,17 @@ public class SingleSearcher implements Closeable{
 
 	public CachedFilter cachedFilter(){
 		return filters ;
-	}	
+	}
 
+	public Central central() {
+		return this.central;
+	}	
+	
+	public SearchConfig searchConfig(){
+		return central.searchConfig() ;
+	}
+	
+	
 
 	
 }

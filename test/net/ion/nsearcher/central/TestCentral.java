@@ -6,7 +6,6 @@ import java.util.concurrent.Future;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.config.Central;
@@ -19,6 +18,7 @@ import net.ion.nsearcher.index.collect.FileCollector;
 import net.ion.nsearcher.index.report.DefaultReporter;
 import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SearchResponse;
+import net.ion.nsearcher.search.Searcher;
 import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 import net.ion.nsearcher.search.processor.StdOutProcessor;
 
@@ -44,7 +44,7 @@ public class TestCentral extends ISTestCase{
 				return null;
 			}
 		}) ;
-		assertEquals(10, ct.newSearcher().searchTest("").getTotalCount()) ;
+		assertEquals(10, ct.newSearcher().search("").totalCount()) ;
 	}
 	
 	
@@ -53,7 +53,7 @@ public class TestCentral extends ISTestCase{
 		
 		Searcher searcher = central.newSearcher() ;
 		searcher.addPostListener(new StdOutProcessor()) ;
-		searcher.searchTest("bleujin") ;
+		searcher.search("bleujin") ;
 	}
 	
 	public void testThread() throws Exception {
@@ -64,10 +64,10 @@ public class TestCentral extends ISTestCase{
 		// begin search 1
 		Searcher searcher1 = central.newSearcher() ;
 		searcher1.addPostListener(confirmProcessor) ;
-		SearchResponse sr = searcher1.search(SearchRequest.create("041820").descending("name")) ;
+		SearchResponse sr = searcher1.createRequest("041820").descending("name").find() ;
 		sr.awaitPostFuture()  ; 
 		
-		assertEquals(true, sr.getTotalCount() == 0) ;
+		assertEquals(true, sr.totalCount() == 0) ;
 		assertEquals(true, confirmProcessor.getTotalCount() == 0) ;
 		
 		
@@ -88,7 +88,7 @@ public class TestCentral extends ISTestCase{
 		// after search 2
 		Searcher s2 = central.newSearcher() ;
 		s2.addPostListener(confirmProcessor) ;
-		s2.search(createSearchRequest("041820")) ;
+		s2.search("041820") ;
 		assertEquals(true, confirmProcessor.getTotalCount() == 0) ;
 
 		indexListener.waitForCompleted() ; // first index end ;
@@ -100,9 +100,9 @@ public class TestCentral extends ISTestCase{
 		Searcher s3 = central.newSearcher() ;
 		s3.addPostListener(confirmProcessor) ;
 		
-		s3.search(SearchRequest.ALL) ;
+		s3.search("") ;
 		
-		final SearchResponse response = s3.search(createSearchRequest("tdump"));
+		final SearchResponse response = s3.search("tdump");
 		response.awaitPostFuture() ;
 		assertEquals(true, confirmProcessor.getTotalCount() > 0) ;
 		first.join() ;
@@ -133,7 +133,7 @@ public class TestCentral extends ISTestCase{
 
 		Searcher searcher = central.newSearcher() ;
 		searcher.addPostListener(confirmProcessor) ;
-		final SearchResponse response = searcher.search(createSearchRequest("tdump"));
+		final SearchResponse response = searcher.search("tdump");
 
 		response.awaitPostFuture() ;
 		

@@ -11,7 +11,7 @@ import net.ion.nsearcher.reader.InfoReader.InfoHandler;
 import org.apache.lucene.index.IndexCommit;
 import org.apache.lucene.index.IndexReader;
 
-public class ReaderTest extends ISTestCase {
+public class TestReader extends ISTestCase {
 
 	public void testCommit() throws Exception {
 		Central central = writeDocument();

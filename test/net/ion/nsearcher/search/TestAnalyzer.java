@@ -2,7 +2,6 @@ package net.ion.nsearcher.search;
 
 import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.SearchConstant;
@@ -64,15 +63,6 @@ public class TestAnalyzer extends TestCase {
 //		assertEquals(true, findKeyword(false, anal, stmt, "종류a")) ;
 //	}
 	
-	public void testQuery() throws Exception {
-		Analyzer anal = new MyKoreanAnalyzer() ;
-		SearchRequest mreq = SearchRequest.create("사람은 존재한다", null, anal);
-		SearchRequest kreq= SearchRequest.create("사람은 존재한다", null, new KoreanAnalyzer());
-		
-		Debug.debug(mreq.query()) ;
-		Debug.debug(kreq.query()) ;
-	}
-	
 	
 	
 	
@@ -97,8 +87,7 @@ public class TestAnalyzer extends TestCase {
 		Searcher searcher = c.newSearcher();
 		searcher.addPostListener(stdOutProcessor);
 
-		SearchRequest req = SearchRequest.create(term, null, anal);
-		return searcher.search(req).getTotalCount() > 0;
+		return searcher.createRequest(term, anal).find().totalCount() > 0;
 	}
 	
 	private void printTerm(IndexReader reader, String name) throws Exception {

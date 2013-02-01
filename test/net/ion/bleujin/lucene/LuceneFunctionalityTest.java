@@ -7,11 +7,11 @@ import java.util.List;
 
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SearchResponse;
+import net.ion.nsearcher.search.Searcher;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.document.CompressionTools;
@@ -36,13 +36,11 @@ public class LuceneFunctionalityTest extends ISTestCase {
 		Central cen = writeDocument();
 
 		Searcher newSearcher = cen.newSearcher() ;
-		SearchRequest sreq = SearchRequest.create("int:3") ;
-		sreq.offset(5) ;
-		SearchResponse result = newSearcher.search(sreq);
+		SearchResponse result = newSearcher.createRequest("int:3").offset(5).find() ;
 
 		List<MyDocument> docs = result.getDocument();
 		for (MyDocument doc : docs) {
-			Debug.debug(doc.get("name"), doc.get("subject"), doc.getFields().size(), result.getTotalCount());
+			Debug.debug(doc.get("name"), doc.get("subject"), doc.getFields().size(), result.totalCount());
 		}
 	}
 	

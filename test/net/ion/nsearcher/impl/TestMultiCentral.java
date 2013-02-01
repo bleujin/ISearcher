@@ -1,7 +1,6 @@
 package net.ion.nsearcher.impl;
 
 import junit.framework.TestCase;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.config.Central;
@@ -10,6 +9,7 @@ import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.search.SearchRequest;
+import net.ion.nsearcher.search.Searcher;
 import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -37,8 +37,7 @@ public class TestMultiCentral extends TestCase{
 
 		
 		Searcher searcher = mc.newSearcher() ;
-		SearchRequest req = SearchRequest.create("bleujin", "", new StandardAnalyzer(Version.LUCENE_36)) ;
-		assertEquals(10, searcher.search(req).getTotalCount()) ;
+		assertEquals(10, searcher.search("bleujin").totalCount()) ;
 		
 //		mc.forceCopy() ;
 //		

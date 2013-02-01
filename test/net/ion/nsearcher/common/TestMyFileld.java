@@ -7,12 +7,12 @@ import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.MapUtil;
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
+import net.ion.nsearcher.search.Searcher;
 
 import org.apache.lucene.document.Fieldable;
 
@@ -55,12 +55,12 @@ public class TestMyFileld extends ISTestCase{
 		}) ;
 		
 		Searcher searcher = cen.newSearcher() ;
-		assertEquals(1, searcher.searchTest("names:jin").getTotalCount()) ;
-		assertEquals(1, searcher.searchTest("names:hero").getTotalCount()) ;
+		assertEquals(1, searcher.search("names:jin").totalCount()) ;
+		assertEquals(1, searcher.search("names:hero").totalCount()) ;
 		
-		assertEquals(1, searcher.searchTest("address:20").getTotalCount()) ;
-		assertEquals(1, searcher.searchTest("address.bun:20").getTotalCount()) ;
-		assertEquals(1, searcher.searchTest("address.city:seoul").getTotalCount()) ;
-		assertEquals(1, searcher.searchTest("20").getTotalCount()) ;
+		assertEquals(1, searcher.search("address:20").totalCount()) ;
+		assertEquals(1, searcher.search("address.bun:20").totalCount()) ;
+		assertEquals(1, searcher.search("address.city:seoul").totalCount()) ;
+		assertEquals(1, searcher.search("20").totalCount()) ;
 	}
 }

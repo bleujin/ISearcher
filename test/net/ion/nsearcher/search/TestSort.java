@@ -4,13 +4,12 @@ import java.util.List;
 
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.config.Central;
 
 import org.apache.lucene.search.SortField;
 
-public class SortTest extends ISTestCase{
+public class TestSort extends ISTestCase{
 	
 	public void testEmpty() throws Exception {
 		
@@ -69,9 +68,7 @@ public class SortTest extends ISTestCase{
 		Central central = writeDocument();
 		
 		Searcher newSearcher = central.newSearcher() ;
-		SearchRequest request = SearchRequest.create("(name:bleujin) AND (int:[100 TO 200])").descending("int") ;
-		request.offset(5) ;
-		SearchResponse result = newSearcher.search(request) ;
+		SearchResponse result = newSearcher.createRequest("(name:bleujin) AND (int:[100 TO 200])").descending("int").offset(5).find() ;
 		
 		List<MyDocument> docs = result.getDocument() ;
 		Integer beforeValue = 200 ; // max

@@ -1,4 +1,4 @@
-package net.ion.nsearcher;
+package net.ion.nsearcher.search;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -6,15 +6,15 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-import net.ion.nsearcher.search.SearchRequest;
-import net.ion.nsearcher.search.SearchResponse;
-import net.ion.nsearcher.search.SingleSearcher;
+import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.search.filter.FilterUtil;
 import net.ion.nsearcher.search.processor.PostProcessor;
 import net.ion.nsearcher.search.processor.PreProcessor;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.Filter;
+import org.apache.lucene.search.MatchAllDocsQuery;
 
 public class Searcher {
 
@@ -25,6 +25,20 @@ public class Searcher {
 	public Searcher(SingleSearcher searcher) {
 		this.searcher = searcher ;
 	}
+	
+	public SearchRequest createRequest(String query) throws ParseException {
+		return createRequest(query, searcher.searchConfig().queryAnalyzer()) ;
+	}
+
+	public SearchRequest createRequest(String query, Analyzer analyzer) throws ParseException {
+		if (StringUtil.isBlank(query)){
+			return new SearchRequest(this, new MatchAllDocsQuery()) ;
+		}
+		
+		final SearchRequest result = new SearchRequest(this, searcher.searchConfig().parseQuery(analyzer, query));
+		return result;
+	}
+	
 
 	public SearchResponse search(final SearchRequest sreq) throws IOException, ParseException {
 		searcher.submit(new Callable<Void>(){
@@ -64,8 +78,8 @@ public class Searcher {
 	}
 	
 	
-	public SearchResponse searchTest(String query) throws IOException, ParseException {
-		return search(SearchRequest.create(query));
+	public SearchResponse search(String query) throws IOException, ParseException {
+		return search(createRequest(query));
 	}
 
 	public final void addPostListener(final PostProcessor processor) {

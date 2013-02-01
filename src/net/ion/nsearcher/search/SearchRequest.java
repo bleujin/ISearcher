@@ -1,5 +1,6 @@
 package net.ion.nsearcher.search;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -9,21 +10,15 @@ import net.ion.framework.db.Page;
 import net.ion.framework.util.CaseInsensitiveHashMap;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.StringUtil;
-import net.ion.nsearcher.common.SearchConstant;
 
 import org.apache.ecs.xml.XML;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 
 public class SearchRequest {
 
-	public static final SearchRequest ALL = new SearchRequest(new MatchAllDocsQuery());
 	private Query query ;
 	private int skip  = 0 ;
 	private int offset = 100;
@@ -31,7 +26,9 @@ public class SearchRequest {
 	private Map<String, Object> param = new CaseInsensitiveHashMap<Object>();
 	private Filter filter;
 	
-	private SearchRequest(Query query){
+	private final Searcher searcher ;
+	SearchRequest(Searcher searcher, Query query){
+		this.searcher = searcher ;
 		this.query = query ;
 	}
 	
@@ -80,20 +77,7 @@ public class SearchRequest {
 		sortExpression.add(field + " desc");
 		return this ;
 	}
-	
-	public static SearchRequest create(String query) throws ParseException {
-		return create(query, null, new StandardAnalyzer(SearchConstant.LuceneVersion)) ;
-	}
 
-	public static SearchRequest create(String query, String sortField, Analyzer analyzer) throws ParseException {
-		QueryParser parser = new QueryParser(SearchConstant.LuceneVersion, SearchConstant.ISALL_FIELD, analyzer) ;
-		if (StringUtil.isBlank(query)){
-			return new SearchRequest(new MatchAllDocsQuery()) ;
-		}
-		final SearchRequest result = new SearchRequest(parser.parse(query));
-		if (! StringUtil.isBlank(sortField)) result.sortExpression.add(sortField);
-		return result;
-	}
 
 
 	public void setParam(String key, Object value) {
@@ -112,6 +96,10 @@ public class SearchRequest {
 		return this.filter;
 	}
 
+	public SearchResponse find() throws IOException, ParseException{
+		return searcher.search(this) ;
+	}
+	
 
 	public XML toXML() {
 		XML request = new XML("request");

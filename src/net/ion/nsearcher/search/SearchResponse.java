@@ -18,23 +18,22 @@ public class SearchResponse {
 
 	private SearchRequest sreq;
 	private SingleSearcher searcher;
-	private TopDocs docs;
 	private final long startTime;
 	private Future<Void> postFuture ;
-	
-	private SearchResponse(SingleSearcher searcher, SearchRequest sreq, TopDocs docs, long startTime) {
+	private List<MyDocument> docs ;
+	private SearchResponse(SingleSearcher searcher, SearchRequest sreq, List<MyDocument> docs, long startTime) {
 		this.searcher = searcher ;
 		this.sreq = sreq ;
-		this.docs = docs ;
 		this.startTime = startTime;
+		this.docs = docs ;
 	}
 
-	public static SearchResponse create(SingleSearcher searcher, SearchRequest sreq, TopDocs docs, long startTime) {
-		return new SearchResponse(searcher, sreq, docs, startTime);
+	public static SearchResponse create(SingleSearcher searcher, SearchRequest sreq, TopDocs docs, long startTime) throws IOException {
+		return new SearchResponse(searcher, sreq, makeDocument(searcher, sreq, docs), startTime);
 	}
 
-	public int size() {
-		return docs.totalHits ;
+	public int totalCount() {
+		return docs.size() ;
 	}
 	
 	public SearchRequest request(){
@@ -42,36 +41,20 @@ public class SearchResponse {
 	}
 
 	public void debugPrint() throws IOException {
-		debugPrint(Page.ALL) ;
-	}
-
-	public void debugPrint(Page page) throws IOException {
-		List<MyDocument> docs = getDocument(page);
-		
 		for (MyDocument doc : docs) {
 			Debug.line(doc) ;
 		}
 	}
 	
-	private List<MyDocument> getDocument(Page page) throws IOException {
+	public List<MyDocument> getDocument(){
+		return docs ;
+	}
+
+	private static List<MyDocument> makeDocument(SingleSearcher searcher, SearchRequest sreq, TopDocs docs) throws IOException {
 		ScoreDoc[] sdocs = docs.scoreDocs;
 		List<MyDocument> result = new ArrayList<MyDocument>();
 
-		for (int i = page.getStartLoc(); i < Math.min(page.getEndLoc(), sdocs.length); i++) {
-			result.add(searcher.doc(sdocs[i].doc));
-		}
-		return result;
-	}
-
-	public int getTotalCount() {
-		return docs.totalHits;
-	}
-
-	public List<MyDocument> getDocument() throws IOException {
-		ScoreDoc[] sdocs = docs.scoreDocs;
-		List<MyDocument> result = new ArrayList<MyDocument>();
-
-		for (int i = sreq.skip(); i < Math.min(sreq.offset(), sdocs.length); i++) {
+		for (int i = sreq.skip(); i < Math.min(sreq.limit(), sdocs.length); i++) {
 			result.add(searcher.doc(sdocs[i].doc));
 		}
 		return result;
@@ -86,7 +69,7 @@ public class SearchResponse {
 
 		request.addAttribute("startTime", String.valueOf(startTime));
 		request.addAttribute("elapsedTime", String.valueOf(elapsedTime()));
-		request.addAttribute("totalCount", String.valueOf(getTotalCount()));
+		request.addAttribute("totalCount", String.valueOf(totalCount()));
 
 		return request;
 	}

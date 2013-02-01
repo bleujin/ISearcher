@@ -1,9 +1,9 @@
-package net.ion.nsearcher.impl;
+package net.ion.nsearcher.search;
 
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.search.SearchRequest;
+import net.ion.nsearcher.search.Searcher;
 import net.ion.nsearcher.search.filter.TermFilter;
 
 import org.apache.lucene.search.Filter;
@@ -40,18 +40,16 @@ public class TestSearchFilter extends ISTestCase{
 		TermFilter filter = new TermFilter("long", "1234") ;
 		
 		searcher.andFilter(filter) ;
-		assertEquals(1, searcher.search(SearchRequest.create("test")).getTotalCount()) ;
+		assertEquals(1, searcher.search("test").totalCount()) ;
 	}
 	
 	public void testRequestTermFilterAnd() throws Exception {
 		Searcher searcher = cen.newSearcher() ;
 		TermFilter filter = new TermFilter("long", "1234") ;
-		
-		SearchRequest srequest = SearchRequest.create("test").ascending("long") ;
 		searcher.andFilter(filter) ;
 		
 		
-		assertEquals(1, searcher.search(srequest).getTotalCount()) ;
+		assertEquals(1, searcher.createRequest("test").ascending("long") .find().totalCount()) ;
 	}
 	
 	public void testLongFilterCache() throws Exception {
@@ -59,9 +57,8 @@ public class TestSearchFilter extends ISTestCase{
 		//Filter filter = TermRangeFilter.("long", 256, 0L, 1000L, true, true) ;
 		
 		searcher.andFilter(NumericRangeFilter.newLongRange("long", 4, 0L, 10000L, true, true)) ;
-		SearchRequest srequest = SearchRequest.create("test").ascending("long") ;
 		
-		assertEquals(1, searcher.search(srequest).getTotalCount()) ;
+		assertEquals(1, searcher.createRequest("test").ascending("long").find().totalCount()) ;
 	}
 	
 	public void testRequestLongFilterCache() throws Exception {
@@ -71,10 +68,9 @@ public class TestSearchFilter extends ISTestCase{
 		//Filter filter = TermRangeFilter.("long", 256, 0L, 1000L, true, true) ;
 		
 		// searcher.addFilter(filter) ;
-		SearchRequest srequest = SearchRequest.create("test") ;
 		searcher.andFilter(filter) ;
 		
-		assertEquals(1, searcher.search(srequest).getTotalCount()) ;
+		assertEquals(1, searcher.search("test").totalCount()) ;
 	}
 	
 	// 20100725-232010
@@ -83,33 +79,29 @@ public class TestSearchFilter extends ISTestCase{
 		Filter filter = new TermFilter("date", "20100725") ;
 
 		searcher.andFilter(filter) ;
-		SearchRequest srequest = SearchRequest.create("name:date") ;
 		
-		searcher.search(srequest).debugPrint() ;
-		assertEquals(1, searcher.search(srequest).getTotalCount()) ;
+		searcher.search("name:date").debugPrint() ;
+		assertEquals(1, searcher.search("name:date").totalCount()) ;
 		
 		
 		// case 2
 		searcher = cen.newSearcher() ;
 		filter = new TermFilter("date", "20100725") ;
 
-		srequest = SearchRequest.create("name:date") ;
 		searcher.andFilter(filter) ;
-		assertEquals(1, searcher.search(srequest).getTotalCount()) ;
+		assertEquals(1, searcher.search("name:date").totalCount()) ;
 		
 		// case 3
 		searcher = cen.newSearcher() ;
 		filter = NumericRangeFilter.newLongRange("date", 32, 20100625L, 20100725L, true, true) ;
-		srequest = SearchRequest.create("name:date") ;
 		searcher.andFilter(filter) ;
-		assertEquals(1, searcher.search(srequest).getTotalCount()) ;
+		assertEquals(1, searcher.search("name:date").totalCount()) ;
 
 		// case 4
 		searcher = cen.newSearcher() ;
 		filter = NumericRangeFilter.newLongRange("date", 32, 20100625L, 20100724L, true, true) ;
-		srequest = SearchRequest.create("name:date") ;
 		searcher.andFilter(filter) ;
-		assertEquals(0, searcher.search(srequest).getTotalCount()) ;
+		assertEquals(0, searcher.search("name:date").totalCount()) ;
 
 //		searcher = cen.newSearcher() ;
 //		assertEquals(true, 20100700000000L < 20100725232010L) ;
@@ -132,7 +124,7 @@ public class TestSearchFilter extends ISTestCase{
 		Searcher searcher = cen.newSearcher();
 		Filter filter1 =  new TermRangeFilter("date", "20100725", "20100725-2327", true, true); // myDoc4.add(MyField.date("date", 20100725, 232010)) ;
 		searcher.andFilter(filter1) ;
-		assertEquals(1, searcher.search(SearchRequest.create("name:date")).getTotalCount()) ;
+		assertEquals(1, searcher.search("name:date").totalCount()) ;
 
 	}
 

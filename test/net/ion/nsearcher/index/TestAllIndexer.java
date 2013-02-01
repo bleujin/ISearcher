@@ -10,11 +10,11 @@ public class TestAllIndexer {
 	public static Test suite(){
 		TestSuite ts = new TestSuite("All Indexer") ;
 		
-		ts.addTestSuite(PolicyTest.class) ;
-		ts.addTestSuite(RollbackTest.class) ;
+		ts.addTestSuite(TestPolicy.class) ;
+		ts.addTestSuite(TestRollback.class) ;
 		ts.addTestSuite(TestDocument.class) ;
 		ts.addTestSuite(TestStackFile.class) ;
-		ts.addTestSuite(IndexerTest.class) ;
+		ts.addTestSuite(TestIndexer.class) ;
 		
 		return ts ;
 	} 

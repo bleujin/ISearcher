@@ -14,6 +14,6 @@ public class StdOutProcessor implements PostProcessor{
 	}
 	
 	public int getTotalCount() {
-		return task.getResult().getTotalCount() ;
+		return task.getResult().totalCount() ;
 	}
 }

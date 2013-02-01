@@ -300,5 +300,10 @@ public final class MyDocument implements Serializable {
 		return this;
 	}
 
+	public MyDocument addUnknown(String name, Object value) {
+		add(MyField.unknown(name, value)) ;
+		return this;
+	}
+
 
 }

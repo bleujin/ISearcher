@@ -106,12 +106,6 @@ public class ISTestCase extends TestCase{
         out.close() ;
 	}
 	
-	protected SearchRequest createSearchRequest(String query) throws ParseException {
-		return SearchRequest.create(query, null, createDefaultAnalyzer());
-	}
-
-	
-	
 	protected Central writeDocument() throws CorruptIndexException, LockObtainFailedException, IOException, IndexException, InterruptedException, ExecutionException {
 		return writeDocument(createDefaultAnalyzer()) ;
 	}
@@ -178,7 +172,7 @@ public class ISTestCase extends TestCase{
 		myDoc2.add(MyField.keyword("int", "3")) ;
 		myDoc2.add(MyField.number("int", 3)) ;
 		myDoc2.add(MyField.number("INT", 4)) ;
-		myDoc2.add(MyField.keyword("stop", "����")) ;
+		myDoc2.add(MyField.keyword("stop", "냐옹")) ;
 		myDoc2.add(MyField.keyword("date", DateUtils.formatDate(RandomUtil.nextCalendar(10).getTime(), "yyyyMMdd-HH24mmss"))) ;
 		myDoc2.add(MyField.keyword("name", "dup2")) ;
 		myDoc2.add(MyField.keyword("ud1", "sky_earth")) ;

@@ -21,7 +21,7 @@ public class TestFileCollect extends ISTestCase{
 		
 //		col.collect() ;
 		adapterListener.waitForCompleted() ;
-		assertEquals(0, cen.newSearcher().searchTest("").getTotalCount()) ;
+		assertEquals(0, cen.newSearcher().search("").totalCount()) ;
 	}
 	
 	public void testExecute() throws Exception {
@@ -36,7 +36,7 @@ public class TestFileCollect extends ISTestCase{
 		col.collect() ;
 		adapterListener.waitForCompleted() ;
 
-		assertEquals(3, cen.newSearcher().searchTest("").getTotalCount()) ;
+		assertEquals(3, cen.newSearcher().search("").totalCount()) ;
 	}
 
 }

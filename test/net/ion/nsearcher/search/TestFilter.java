@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.ion.framework.util.ListUtil;
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.Searcher;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.config.Central;
@@ -16,7 +15,7 @@ import net.ion.nsearcher.index.Indexer;
 import org.apache.lucene.search.FieldCacheTermsFilter;
 import org.apache.lucene.search.Filter;
 
-public class FilterTest extends ISTestCase {
+public class TestFilter extends ISTestCase {
 
 	public void testTermFilterAtRequest() throws Exception {
 		Central center = writeDocument();
@@ -24,14 +23,14 @@ public class FilterTest extends ISTestCase {
 		// no filter
 		Searcher newSearcher = center.newSearcher();
 
-		SearchResponse result = newSearcher.search(SearchRequest.create("novision").offset(20));
+		SearchResponse result = newSearcher.createRequest("novision").offset(20).find();
 		List<MyDocument> docs = result.getDocument();
 		assertEquals(6, docs.size());
 
 		// set filter
 		Filter filter = new FieldCacheTermsFilter("name", new String[] { "bleujin" });
 		newSearcher.andFilter(filter);
-		result = newSearcher.search(SearchRequest.create("novision").offset(20));
+		result = newSearcher.createRequest("novision").offset(20).find();
 		docs = result.getDocument();
 		assertEquals(1, docs.size());
 
@@ -39,7 +38,7 @@ public class FilterTest extends ISTestCase {
 
 		// reset filter
 		newSearcher = center.newSearcher();
-		result = newSearcher.search(SearchRequest.create("novision").offset(20));
+		result = newSearcher.createRequest("novision").offset(20).find();
 		docs = result.getDocument();
 		assertEquals(6, docs.size());
 	}
@@ -49,17 +48,15 @@ public class FilterTest extends ISTestCase {
 
 		// no filter
 		Searcher newSearcher = center.newSearcher();
-		SearchRequest searchRequest = SearchRequest.create("novision");
-		searchRequest.offset(20);
-
-		SearchResponse result = newSearcher.search(searchRequest);
+		final SearchRequest searchRequest = newSearcher.createRequest("novision").offset(20);
+		SearchResponse result = searchRequest.find();
 		List<MyDocument> docs = result.getDocument();
 		assertEquals(6, docs.size());
 
 		// set filter
 		Filter filter = new FieldCacheTermsFilter("name", new String[] { "bleujin" });
 		newSearcher.andFilter(filter);
-		result = newSearcher.search(searchRequest);
+		result = searchRequest.find() ;
 		docs = result.getDocument();
 		assertEquals(1, docs.size());
 
@@ -98,7 +95,7 @@ public class FilterTest extends ISTestCase {
 		Thread.sleep(100) ;
 		for (int i : ListUtil.rangeNum(10)) {
 //			searcher.reopen() ;
-			assertEquals(true, searcher.searchTest("bleujin").getTotalCount() > 0);
+			assertEquals(true, searcher.search("bleujin").totalCount() > 0);
 			Thread.sleep(50) ;
 		}
 	}
