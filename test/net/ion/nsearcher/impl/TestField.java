@@ -21,7 +21,7 @@ public class TestField extends ISTestCase{
 		Central cen = writeDocument() ;
 		
 		Indexer indexer = cen.newIndexer() ;
-		indexer.index(createKoreanAnalyzer(), new IndexJob<Void>() {
+		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws IOException {
 				MyDocument doc = MyDocument.testDocument() ;
 				doc.add(MyField.keyword("name", "test"));
@@ -40,7 +40,7 @@ public class TestField extends ISTestCase{
 		Central cen = writeDocument() ;
 		
 		Indexer indexer = cen.newIndexer() ;
-		indexer.index(createKoreanAnalyzer(), new IndexJob<Void>() {
+		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
 				MyDocument doc = MyDocument.testDocument() ;
 				doc.add(MyField.keyword("name", "test"));

@@ -29,7 +29,7 @@ public class IndexSession {
 		this.wconfig = searcher.central().indexConfig().newIndexWriterConfig(analyzer);
 	}
 
-	public static IndexSession create(SingleSearcher searcher, Analyzer analyzer) {
+	static IndexSession create(SingleSearcher searcher, Analyzer analyzer) {
 		return new IndexSession(searcher, analyzer);
 	}
 

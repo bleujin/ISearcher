@@ -28,7 +28,7 @@ public class IndexLet extends SearchResource{
 
 		Indexer indexer = getIndexer() ;
 		final Map<String, Object> map = getInnerRequest().getGeneralParameter();
-		indexer.index(new StandardAnalyzer(SearchConstant.LuceneVersion), new IndexJob<Void>() {
+		indexer.index(new IndexJob<Void>() {
 
 			public Void handle(IndexSession session) throws Exception {
 				MyDocument doc = MyDocument.testDocument();

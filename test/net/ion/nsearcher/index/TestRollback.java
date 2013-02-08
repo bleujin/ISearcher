@@ -52,7 +52,7 @@ public class TestRollback extends ISTestCase{
 		final MyDocument[] newDocs = makeTestMyDocument(10) ;
 		
 		Indexer indexer = central.newIndexer();
-		indexer.index(createDefaultAnalyzer(), new IndexJob<Void>() {
+		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws IOException {
 				for (MyDocument newdoc : newDocs) {
 					newdoc.add(MyField.keyword("name", "bleuher")) ;
@@ -70,7 +70,7 @@ public class TestRollback extends ISTestCase{
 		
 		
 		Indexer newIndexer = central.newIndexer();
-		newIndexer.index(createDefaultAnalyzer(), new IndexJob<Void>() {
+		newIndexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws IOException {
 				session.updateDocument(newDocs[0]) ;
 				session.rollback() ;
@@ -88,7 +88,7 @@ public class TestRollback extends ISTestCase{
 		
 		InfoReader oldReader = central.newReader() ;
 		Indexer indexer = central.newIndexer() ;
-		indexer.index(createDefaultAnalyzer(), new IndexJob<Void>() {
+		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws IOException {
 				MyDocument[] newDocs = makeTestMyDocument(10) ;
 				for (MyDocument newdoc : newDocs) {

@@ -10,6 +10,7 @@ import net.ion.framework.db.Page;
 import net.ion.framework.util.CaseInsensitiveHashMap;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.StringUtil;
+import net.ion.nsearcher.common.MyDocument;
 
 import org.apache.ecs.xml.XML;
 import org.apache.lucene.queryParser.ParseException;
@@ -100,6 +101,13 @@ public class SearchRequest {
 		return searcher.search(this) ;
 	}
 	
+	public MyDocument findOne() throws IOException, ParseException {
+		final List<MyDocument> docs = find().getDocument();
+		if (docs.size() == 0) return null ;
+		return docs.get(0) ;
+	}
+
+	
 
 	public XML toXML() {
 		XML request = new XML("request");
@@ -129,6 +137,7 @@ public class SearchRequest {
 	public String toString() {
 		return "QUERY:" + query + ",Filter:" + getFilter() + ",SORT:" + sort() + ", skip:" + skip() + ", offset:" + offset();
 	}
+
 
 
 }

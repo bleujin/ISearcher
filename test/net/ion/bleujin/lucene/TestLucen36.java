@@ -91,7 +91,7 @@ public class TestLucen36 extends TestCase {
 			runs[i] = new Runnable() {
 				public void run() {
 					Indexer indexer = c.newIndexer();
-					indexer.index(new MyKoreanAnalyzer(), new IndexJob<Boolean>() {
+					indexer.index(new IndexJob<Boolean>() {
 
 						public Boolean handle(IndexSession writer) throws IOException {
 							try {

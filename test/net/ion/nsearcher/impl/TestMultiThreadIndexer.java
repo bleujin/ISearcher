@@ -65,9 +65,7 @@ class Creater implements Runnable {
 			}
 			
 			Indexer di = central.newIndexer() ;
-			final Analyzer myanal = new MyKoreanAnalyzer() ;
-			
-			Integer integer = di.index(myanal, new IndexJob<Integer>(){
+			Integer integer = di.index(new IndexJob<Integer>(){
 				public Integer handle(IndexSession session) throws IOException {
 					for (int i : ListUtil.rangeNum(10)) {
 						MyDocument doc = MyDocument.testDocument() ;

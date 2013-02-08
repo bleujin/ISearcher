@@ -72,7 +72,7 @@ public class TestAnalyzer extends TestCase {
 		Central c = CentralConfig.newRam().build() ;
 
 		Indexer writer = c.newIndexer();
-		writer.index(new StandardAnalyzer(SearchConstant.LuceneVersion), new IndexJob<Void>() {
+		writer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
 				MyDocument doc = MyDocument.testDocument();
 				doc.add(MyField.text("name", stmt));

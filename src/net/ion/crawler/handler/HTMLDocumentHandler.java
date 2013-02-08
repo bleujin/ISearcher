@@ -41,7 +41,7 @@ public class HTMLDocumentHandler implements DocumentHandler {
 			}
 			
 			Link link = pageData.getLink();
-			MyDocument doc = MyDocument.newDocument(event, link.getURI());
+			MyDocument doc = MyDocument.newDocument(String.valueOf(event.getEventId())).event(event).text("uri" ,link.getURI());
 			for (MyField field : fields) {
 				doc.add(field) ;
 			}

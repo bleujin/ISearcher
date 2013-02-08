@@ -41,7 +41,7 @@ public class SearchHTMLFormater extends AbstractDocumentFormater implements Sear
 	public Rope toRope(List<MyDocument> docs) throws IOException {
 		RopeWriter rw = new RopeWriter() ;
 		for (MyDocument doc : docs) {
-			rw.write("<ul style='font-size: 10pt;'><li>", doc.getIdValue());
+			rw.write("<ul style='font-size: 10pt;'><li>", doc.idValue());
 			rw.write("<ul>");
 			List<Fieldable> fields = doc.getFields();
 			for (Fieldable field : fields) {

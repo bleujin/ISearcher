@@ -15,6 +15,7 @@ public class TestAllIndexer {
 		ts.addTestSuite(TestDocument.class) ;
 		ts.addTestSuite(TestStackFile.class) ;
 		ts.addTestSuite(TestIndexer.class) ;
+		ts.addTestSuite(TestIndexSession.class) ;
 		
 		return ts ;
 	} 

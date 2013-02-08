@@ -38,7 +38,7 @@ public class TestIndexer extends ISTestCase {
 		Searcher s1 = c.newSearcher() ;
 		s1.addPostListener(new StdOutProcessor()) ;
 		
-		c.newIndexer().index(createDefaultAnalyzer(), new IndexJob<Void>() {
+		c.newIndexer().index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws IOException {
 				return null;
 			}
@@ -56,7 +56,7 @@ public class TestIndexer extends ISTestCase {
 		Central c = CentralConfig.newRam().build() ;
 		
 		Indexer indexer = c.newIndexer() ;
-		indexer.index(createDefaultAnalyzer(), new IndexJob<Void>() {
+		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws IOException {
 				MyDocument doc = MyDocument.testDocument();
 				session.insertDocument(doc.add(MyField.keyword("name", "bleujin"))) ;

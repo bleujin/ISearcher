@@ -20,7 +20,7 @@ public class TestFirstAPI extends TestCase {
 	
 	public void testCreateSearcher() throws Exception {
 		Searcher searcher = cen.newSearcher();
-		assertEquals(0, searcher.searchTest("").size()) ; 
+		assertEquals(0, searcher.search("").totalCount()) ; 
 	}
 
 	public void testCreateIndexer() throws Exception {
@@ -28,7 +28,7 @@ public class TestFirstAPI extends TestCase {
 		indexer.index(new StandardAnalyzer(SearchConstant.LuceneVersion), new IndexJob<Void>(){
 			public Void handle(IndexSession session) throws IOException {
 				for (int i : ListUtil.rangeNum(10)) {
-					MyDocument doc = MyDocument.newDocument(new ObjectId().toString(), JsonObject.create().put("name", "bleujin").put("age", i));
+					MyDocument doc = MyDocument.newDocument(new ObjectId().toString()).add(JsonObject.create().put("name", "bleujin").put("age", i));
 					session.insertDocument(doc) ;
 				}
 				return null;
@@ -36,7 +36,7 @@ public class TestFirstAPI extends TestCase {
 		}) ;
 		
 		Searcher searcher = cen.newSearcher();
-		assertEquals(10, searcher.searchTest("").size()) ;
+		assertEquals(10, searcher.search("").totalCount()) ;
 	}
 	
 	

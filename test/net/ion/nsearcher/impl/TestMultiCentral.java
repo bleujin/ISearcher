@@ -23,7 +23,7 @@ public class TestMultiCentral extends TestCase{
 		Central mc = CentralConfig.newRam().build() ;
 
 		Indexer iw = mc.newIndexer() ;
-		iw.index(new MyKoreanAnalyzer(), new IndexJob<Void>() {
+		iw.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
 				for (int i = 0; i < 10; i++) {
 					MyDocument doc = MyDocument.testDocument();

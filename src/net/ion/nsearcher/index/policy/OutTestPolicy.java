@@ -33,7 +33,7 @@ public class OutTestPolicy extends AbstractWritePolicy implements IKeywordField 
 
 	public Action apply(final IndexSession writer, MyDocument doc) throws IOException {
 
-		String idValue = doc.getIdValue();
+		String idValue = doc.idValue();
 		if (hashData.containsKey(idValue)) {
 			String oldValue = hashData.get(idValue).getBodyValue();
 			String newValue = doc.get(ICollectorEvent.ISBody);

@@ -77,7 +77,7 @@ public class TestFilter extends ISTestCase {
 					for (int i : ListUtil.rangeNum(10)) {
 						Indexer iw = c.newIndexer();
 						final int idx = i ;
-						iw.index(createKoreanAnalyzer(), new IndexJob<Void>() {
+						iw.index(new IndexJob<Void>() {
 							public Void handle(IndexSession session) throws Exception {
 								session.insertDocument(MyDocument.testDocument().add(MyField.keyword("name", "bleujin")).add(MyField.number("index", idx))) ;
 								return null;

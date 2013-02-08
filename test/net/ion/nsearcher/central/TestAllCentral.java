@@ -11,7 +11,8 @@ public class TestAllCentral {
 		TestSuite ts = new TestSuite("ALL Central") ;
 		
 		ts.addTestSuite(TestCentral.class) ;
-		ts.addTestSuite(TestIndexWriteConfig.class) ;
+		ts.addTestSuite(TestIndexConfig.class) ;
+		ts.addTestSuite(TestThread.class) ;
 		
 		return ts ;
 	}

@@ -25,7 +25,7 @@ public class DataRowDocumentHandler implements DocumentHandler {
 			docName += keyValues.get(key) + "_" ;
 		}
 		
-		MyDocument doc = MyDocument.newDocument(event, docName);
+		MyDocument doc = MyDocument.newDocument(String.valueOf(event.getEventId())).event(event).name(docName);
 		for (String colName : keyValues.getKeySet()) {
 			Object value = keyValues.get(colName);
 			if (value != null) {

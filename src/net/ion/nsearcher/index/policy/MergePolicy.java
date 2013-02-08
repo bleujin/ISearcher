@@ -29,8 +29,8 @@ public class MergePolicy extends AbstractWritePolicy {
 	
 	public Action apply(final IndexSession writer, MyDocument doc) throws IOException {
 		try {
-			String idValue = doc.getIdValue();
-			String newValue = doc.getBodyValue();
+			String idValue = doc.idValue();
+			String newValue = doc.bodyValue();
 
 			if (doc.getAction().isDelete()) {
 				return writer.deleteDocument(doc);

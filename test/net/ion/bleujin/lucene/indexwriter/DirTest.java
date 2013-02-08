@@ -60,7 +60,7 @@ public class DirTest extends ISTestCase{
 	private Central write2Dir() throws LockObtainFailedException, IOException {
 		Central cen = CentralConfig.newRam().build() ;
 		Indexer writer = cen.newIndexer() ;
-		writer.index(createDefaultAnalyzer(), new IndexJob<Void>() {
+		writer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
 				for (int i = 0; i < 3 ; i++) {
 					MyDocument doc = MyDocument.testDocument() ;

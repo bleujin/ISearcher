@@ -8,6 +8,7 @@ import java.util.List;
 
 import net.ion.framework.util.DateFormatUtil;
 import net.ion.framework.util.DateUtil;
+import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.NumberUtil;
 import net.ion.framework.util.StringUtil;
 
@@ -21,22 +22,22 @@ import org.apache.lucene.index.FieldInfo.IndexOptions;
 
 public class MyField implements Fieldable {
 
-	private Fieldable field;
-	private List<Fieldable> more = null;
+	private Fieldable inner;
+	private List<Fieldable> more = ListUtil.newList() ;
 	public final static String SORT_POSTFIX = "_for_sort";
 
-	private MyField(Fieldable field) {
-		this.field = field;
+	private MyField(Fieldable inner) {
+		this.inner = inner;
 	}
 
 	protected MyField(String name, String value, Field.Store store, Field.Index index) {
 		this(new Field(name.toLowerCase(), value, store, index));
 	}
 
-	private static MyField create(String name, String value, Field.Store store, Field.Index index) {
-		return new MyField(name, value, store, index);
+	static MyField load(Fieldable field){
+		return new MyField(field) ;
 	}
-
+	
 	public static MyField keyword(String name, String value) {
 		MyField result = new MyField(name, value, Store.YES, Index.NOT_ANALYZED);
 
@@ -140,6 +141,10 @@ public class MyField implements Fieldable {
 		}
 	}
 
+	public static MyField manual(String name, String value, Store store, Index index){
+		return new MyField(new Field(name, split(value), store, index)) ;
+	}
+	
 	public static MyField text(String name, String value) {
 		String transValue = split(value) ;
 		MyField result = new MyField(name, transValue, Store.YES, Index.ANALYZED);
@@ -161,12 +166,10 @@ public class MyField implements Fieldable {
 	
 
 	private void addMoreField(Fieldable field) {
-		if (more == null)
-			more = new ArrayList<Fieldable>();
 		more.add(field);
 	}
 
-	private static MyField field(String name, String value, Store store, Index index) {
+	static MyField field(String name, String value, Store store, Index index) {
 		return new MyField(name, value, store, index);
 	}
 
@@ -259,11 +262,11 @@ public class MyField implements Fieldable {
 	}
 
 	public TokenStream tokenStreamValue() {
-		return field.tokenStreamValue();
+		return inner.tokenStreamValue();
 	}
 
 	public Fieldable getRealField() {
-		return field;
+		return inner;
 	}
 
 	public Fieldable[] getMoreField() {
@@ -273,9 +276,9 @@ public class MyField implements Fieldable {
 	}
 
 	public IndexOptions getIndexOptions() {
-		return field.getIndexOptions();
+		return inner.getIndexOptions();
 	}
 
 	public void setIndexOptions(IndexOptions option) {
-		field.setIndexOptions(option) ;
+		inner.setIndexOptions(option) ;
 	}}

@@ -40,14 +40,14 @@ public class TestMyFileld extends ISTestCase{
 		Map<String, Object> address = MapUtil.chainKeyMap().put("city", "seoul").put("bun", 20).toMap() ;
 		List<String> names = ListUtil.toList("jin", "hero") ;
 		Map<String, Object> values = MapUtil.chainKeyMap().put("name", "bleujin").put("address", address).put("names", names) .toMap() ;
-		MyDocument doc = MyDocument.newDocument("111", values) ;
+		MyDocument doc = MyDocument.newDocument("111").add(values) ;
 		return doc;
 	}
 	
 	public void testSearch() throws Exception {
 		Central cen = CentralConfig.newRam().build() ;
 		Indexer writer = cen.newIndexer() ;
-		writer.index(createKoreanAnalyzer(), new IndexJob<Void>() {
+		writer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
 				session.updateDocument(createSampleDoc()) ;
 				return null ;

@@ -24,7 +24,7 @@ public class TestDeamonIndexer extends TestCase {
 		Central c = CentralConfig.newRam().build() ;
 		Indexer indexer = c.newIndexer();
 
-		indexer.index(new CJKAnalyzer(SearchConstant.LuceneVersion), new IndexJob<Void>(){
+		indexer.index(new IndexJob<Void>(){
 			public Void handle(IndexSession session) throws Exception {
 				for (int i : ListUtil.rangeNum(123)) {
 					MyDocument doc = testDocument().add(MyField.keyword("test", "_" + i));

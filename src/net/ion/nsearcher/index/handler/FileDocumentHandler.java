@@ -20,7 +20,7 @@ public class FileDocumentHandler implements DocumentHandler {
 		FileEvent event = (FileEvent)_event ;
 
 		File file = event.getFile();
-		MyDocument doc = MyDocument.newDocument(event, file.getName());
+		MyDocument doc = MyDocument.newDocument(String.valueOf(event.getEventId())).event(event).name(file.getName());
 
 		MyField name = MyField.text("name", file.getName());
 		doc.add(name);
