@@ -19,12 +19,14 @@ public class SearchResponse {
 	private SearchRequest sreq;
 	private SingleSearcher searcher;
 	private final long startTime;
+	private final long endTime;
 	private Future<Void> postFuture ;
 	private List<MyDocument> docs ;
 	private SearchResponse(SingleSearcher searcher, SearchRequest sreq, List<MyDocument> docs, long startTime) {
 		this.searcher = searcher ;
 		this.sreq = sreq ;
 		this.startTime = startTime;
+		this.endTime = System.currentTimeMillis();
 		this.docs = docs ;
 	}
 
@@ -61,7 +63,7 @@ public class SearchResponse {
 	}
 
 	public long elapsedTime() {
-		return 0L;
+		return endTime - startTime;
 	}
 
 	public XML toXML() {
@@ -81,6 +83,10 @@ public class SearchResponse {
 
 	public void awaitPostFuture() throws InterruptedException, ExecutionException {
 		postFuture.get() ;
+	}
+
+	public long startTime() {
+		return startTime;
 	}
 	
 
