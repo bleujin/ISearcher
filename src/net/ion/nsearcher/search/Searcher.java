@@ -15,6 +15,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.Query;
 
 public class Searcher {
 
@@ -29,6 +30,11 @@ public class Searcher {
 	public SearchRequest createRequest(String query) throws ParseException {
 		return createRequest(query, searcher.searchConfig().queryAnalyzer()) ;
 	}
+
+	public SearchRequest createRequest(Query query) throws ParseException {
+		return new SearchRequest(this, query);
+	}
+
 
 	public SearchRequest createRequest(String query, Analyzer analyzer) throws ParseException {
 		if (StringUtil.isBlank(query)){
