@@ -76,6 +76,7 @@ public class SearchResponse {
 
 		request.addAttribute("startTime", String.valueOf(startTime));
 		request.addAttribute("elapsedTime", String.valueOf(elapsedTime()));
+		request.addAttribute("totalCount", String.valueOf(totalCount()));
 		request.addAttribute("size", String.valueOf(size()));
 
 		return request;
