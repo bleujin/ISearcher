@@ -124,7 +124,7 @@ public class TestSearchFilter extends ISTestCase{
 		Searcher searcher = cen.newSearcher();
 		Filter filter1 =  new TermRangeFilter("date", "20100725", "20100725-2327", true, true); // myDoc4.add(MyField.date("date", 20100725, 232010)) ;
 		searcher.andFilter(filter1) ;
-		assertEquals(1, searcher.search("name:date").totalCount()) ;
+		assertEquals(1, searcher.search("name:date").size()) ;
 
 	}
 
