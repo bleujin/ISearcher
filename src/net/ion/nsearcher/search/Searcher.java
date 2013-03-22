@@ -45,6 +45,9 @@ public class Searcher {
 		return result;
 	}
 	
+	public int totalCount(SearchRequest sreq) {
+		return searcher.totalCount(sreq, makeFilter(sreq)) ;
+	}
 
 	public SearchResponse search(final SearchRequest sreq) throws IOException, ParseException {
 		searcher.submit(new Callable<Void>(){
@@ -109,5 +112,6 @@ public class Searcher {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }

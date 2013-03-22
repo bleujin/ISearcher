@@ -29,7 +29,7 @@ public class TestSearcher extends ISTestCase {
 		searcher.addPostListener(new StdOutProcessor()) ;
 		SearchResponse result = searcher.search("bleujin");
 		List<MyDocument> docs = result.getDocument();
-		assertEquals(6, result.totalCount());
+		assertEquals(6, result.size());
 	}
 	
 

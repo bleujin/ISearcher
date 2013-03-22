@@ -11,6 +11,7 @@ import net.ion.framework.util.Debug;
 import net.ion.nsearcher.common.MyDocument;
 
 import org.apache.ecs.xml.XML;
+import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 
@@ -35,6 +36,10 @@ public class SearchResponse {
 	}
 
 	public int totalCount() {
+		return new Searcher(searcher).totalCount(sreq.resetClone(Integer.MAX_VALUE)) ;
+	}
+	
+	public int size(){
 		return docs.size() ;
 	}
 	
@@ -71,7 +76,7 @@ public class SearchResponse {
 
 		request.addAttribute("startTime", String.valueOf(startTime));
 		request.addAttribute("elapsedTime", String.valueOf(elapsedTime()));
-		request.addAttribute("totalCount", String.valueOf(totalCount()));
+		request.addAttribute("size", String.valueOf(size()));
 
 		return request;
 	}

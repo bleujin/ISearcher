@@ -33,7 +33,7 @@ public class TestField extends ISTestCase{
 
 		Searcher searcher = cen.newSearcher() ;
 		searcher.andFilter(NumericRangeFilter.newLongRange("intkey", 8, 0L, 10000L, true, true)) ;
-		assertEquals(1, searcher.createRequest("test").find().totalCount()) ;
+		assertEquals(1, searcher.createRequest("test").find().size()) ;
 	}
 
 	public void testUnknownDate() throws Exception {
@@ -53,7 +53,7 @@ public class TestField extends ISTestCase{
 
 		Searcher searcher = cen.newSearcher() ;
 //		searcher.andFilter(NumericRangeFilter.newLongRange("datekey", 8, 20100101L, 20111231L, true, true)) ;
-		assertEquals(2, searcher.search("test").totalCount()) ;
+		assertEquals(2, searcher.search("test").size()) ;
 		
 		
 		// "date", 20100725, 232010))

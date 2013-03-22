@@ -53,7 +53,7 @@ public class HangulKeywordTest extends ISTestCase {
 		Searcher searcher = c.newSearcher();
 		searcher.addPostListener(stdOutProcessor);
 
-		assertEquals(1, searcher.createRequest("급락", createKoreanAnalyzer()).find().totalCount());
+		assertEquals(1, searcher.createRequest("급락", createKoreanAnalyzer()).find().size());
 	}
 	
 	public void testHangulKeyword() throws Exception {
@@ -97,32 +97,32 @@ public class HangulKeywordTest extends ISTestCase {
 		Searcher searcher = c.newSearcher();
 		searcher.addPostListener(stdOutProcessor);
 
-		assertEquals(1, searcher.createRequest("LG U+", searchAnal).find().totalCount());
+		assertEquals(1, searcher.createRequest("LG U+", searchAnal).find().size());
 
-		assertEquals(1, searcher.createRequest("2000년 9월", searchAnal).find().totalCount());
+		assertEquals(1, searcher.createRequest("2000년 9월", searchAnal).find().size());
 
-		assertEquals(1, searcher.createRequest("B500", searchAnal).find().totalCount());
+		assertEquals(1, searcher.createRequest("B500", searchAnal).find().size());
 
-		assertEquals(1, searcher.createRequest("BEST 중소형", searchAnal).find().totalCount());
+		assertEquals(1, searcher.createRequest("BEST 중소형", searchAnal).find().size());
 		
 		Debug.line(searcher.createRequest("급락", searchAnal).query()) ;
 		
 
-		assertEquals(1, searcher.createRequest("급락", searchAnal).find().totalCount());
+		assertEquals(1, searcher.createRequest("급락", searchAnal).find().size());
 
-		assertEquals(1, searcher.createRequest("조짐", searchAnal).find().totalCount());
+		assertEquals(1, searcher.createRequest("조짐", searchAnal).find().size());
 
 //		assertEquals(1, searcher.createRequest("소형", searchAnal)).getTotalCount());
 
-		assertEquals(1, searcher.createRequest("4.19 의거", searchAnal).find().totalCount());
+		assertEquals(1, searcher.createRequest("4.19 의거", searchAnal).find().size());
 
-		assertEquals(1, searcher.createRequest("正道", searchAnal).find().totalCount());
+		assertEquals(1, searcher.createRequest("正道", searchAnal).find().size());
 
-		assertEquals(1, searcher.createRequest("E플러스", searchAnal).find().totalCount());
+		assertEquals(1, searcher.createRequest("E플러스", searchAnal).find().size());
 
-		assertEquals(1, searcher.createRequest("name:E플러스", searchAnal).find().totalCount());
+		assertEquals(1, searcher.createRequest("name:E플러스", searchAnal).find().size());
 
-		assertEquals(1, searcher.createRequest("index:7756", searchAnal).find().totalCount());
+		assertEquals(1, searcher.createRequest("index:7756", searchAnal).find().size());
 
 	}
 	
@@ -176,16 +176,16 @@ public class HangulKeywordTest extends ISTestCase {
 		searcher.addPostListener(stdOutProcessor);
 
 		SearchResponse res = searcher.createRequest("n1:30", anal).find();
-		assertEquals(1, res.totalCount());
+		assertEquals(1, res.size());
 
 		res = searcher.createRequest("d1:20071231", anal).find();
-		assertEquals(1, res.totalCount());
+		assertEquals(1, res.size());
 
 		res = searcher.createRequest("n1:[29 TO 31]", anal).find();
-		assertEquals(1, res.totalCount());
+		assertEquals(1, res.size());
 
 		res = searcher.createRequest("n1:[29 TO 31]", anal).find();
-		assertEquals(1, res.totalCount());
+		assertEquals(1, res.size());
 	}
 
 	public void testFilter() throws Exception {
@@ -226,14 +226,14 @@ public class HangulKeywordTest extends ISTestCase {
 		req.setFilter(filter);
 
 		SearchResponse res = searcher.search(req);
-		assertEquals(2, res.totalCount());
+		assertEquals(2, res.size());
 
 		newFilter = new QueryWrapperFilter(parser.parse("d1:[20071230 TO 20071231]"));
 		filter = newFilter;
 
 		req.setFilter(filter);
 		res = searcher.search(req);
-		assertEquals(1, res.totalCount());
+		assertEquals(1, res.size());
 
 	}
 

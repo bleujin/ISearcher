@@ -138,6 +138,10 @@ public class SearchRequest {
 		return "QUERY:" + query + ",Filter:" + getFilter() + ",SORT:" + sort() + ", skip:" + skip() + ", offset:" + offset();
 	}
 
+	public SearchRequest resetClone(int maxValue) {
+		return new SearchRequest(searcher, query).skip(0).offset(maxValue) ;
+	}
+
 
 
 }

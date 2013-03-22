@@ -95,7 +95,7 @@ public class TestFilter extends ISTestCase {
 		Thread.sleep(100) ;
 		for (int i : ListUtil.rangeNum(10)) {
 //			searcher.reopen() ;
-			assertEquals(true, searcher.search("bleujin").totalCount() > 0);
+			assertEquals(true, searcher.search("bleujin").size() > 0);
 			Thread.sleep(50) ;
 		}
 	}

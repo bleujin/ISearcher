@@ -55,12 +55,12 @@ public class TestMyFileld extends ISTestCase{
 		}) ;
 		
 		Searcher searcher = cen.newSearcher() ;
-		assertEquals(1, searcher.search("names:jin").totalCount()) ;
-		assertEquals(1, searcher.search("names:hero").totalCount()) ;
+		assertEquals(1, searcher.search("names:jin").size()) ;
+		assertEquals(1, searcher.search("names:hero").size()) ;
 		
-		assertEquals(1, searcher.search("address:20").totalCount()) ;
-		assertEquals(1, searcher.search("address.bun:20").totalCount()) ;
-		assertEquals(1, searcher.search("address.city:seoul").totalCount()) ;
-		assertEquals(1, searcher.search("20").totalCount()) ;
+		assertEquals(1, searcher.search("address:20").size()) ;
+		assertEquals(1, searcher.search("address.bun:20").size()) ;
+		assertEquals(1, searcher.search("address.city:seoul").size()) ;
+		assertEquals(1, searcher.search("20").size()) ;
 	}
 }

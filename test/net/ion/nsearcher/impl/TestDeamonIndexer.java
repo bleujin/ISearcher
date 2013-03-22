@@ -35,7 +35,7 @@ public class TestDeamonIndexer extends TestCase {
 		}) ;
 
 		c.newSearcher().search("").debugPrint();
-		assertEquals(1, c.newSearcher().search("").totalCount());
+		assertEquals(1, c.newSearcher().search("").size());
 	}
 
 	private static MyDocument testDocument() {

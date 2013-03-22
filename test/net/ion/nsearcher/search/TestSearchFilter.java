@@ -40,7 +40,7 @@ public class TestSearchFilter extends ISTestCase{
 		TermFilter filter = new TermFilter("long", "1234") ;
 		
 		searcher.andFilter(filter) ;
-		assertEquals(1, searcher.search("test").totalCount()) ;
+		assertEquals(1, searcher.search("test").size()) ;
 	}
 	
 	public void testRequestTermFilterAnd() throws Exception {
@@ -49,7 +49,7 @@ public class TestSearchFilter extends ISTestCase{
 		searcher.andFilter(filter) ;
 		
 		
-		assertEquals(1, searcher.createRequest("test").ascending("long") .find().totalCount()) ;
+		assertEquals(1, searcher.createRequest("test").ascending("long") .find().size()) ;
 	}
 	
 	public void testLongFilterCache() throws Exception {
@@ -58,7 +58,7 @@ public class TestSearchFilter extends ISTestCase{
 		
 		searcher.andFilter(NumericRangeFilter.newLongRange("long", 4, 0L, 10000L, true, true)) ;
 		
-		assertEquals(1, searcher.createRequest("test").ascending("long").find().totalCount()) ;
+		assertEquals(1, searcher.createRequest("test").ascending("long").find().size()) ;
 	}
 	
 	public void testRequestLongFilterCache() throws Exception {
@@ -70,7 +70,7 @@ public class TestSearchFilter extends ISTestCase{
 		// searcher.addFilter(filter) ;
 		searcher.andFilter(filter) ;
 		
-		assertEquals(1, searcher.search("test").totalCount()) ;
+		assertEquals(1, searcher.search("test").size()) ;
 	}
 	
 	// 20100725-232010
@@ -81,7 +81,7 @@ public class TestSearchFilter extends ISTestCase{
 		searcher.andFilter(filter) ;
 		
 		searcher.search("name:date").debugPrint() ;
-		assertEquals(1, searcher.search("name:date").totalCount()) ;
+		assertEquals(1, searcher.search("name:date").size()) ;
 		
 		
 		// case 2
@@ -89,19 +89,19 @@ public class TestSearchFilter extends ISTestCase{
 		filter = new TermFilter("date", "20100725") ;
 
 		searcher.andFilter(filter) ;
-		assertEquals(1, searcher.search("name:date").totalCount()) ;
+		assertEquals(1, searcher.search("name:date").size()) ;
 		
 		// case 3
 		searcher = cen.newSearcher() ;
 		filter = NumericRangeFilter.newLongRange("date", 32, 20100625L, 20100725L, true, true) ;
 		searcher.andFilter(filter) ;
-		assertEquals(1, searcher.search("name:date").totalCount()) ;
+		assertEquals(1, searcher.search("name:date").size()) ;
 
 		// case 4
 		searcher = cen.newSearcher() ;
 		filter = NumericRangeFilter.newLongRange("date", 32, 20100625L, 20100724L, true, true) ;
 		searcher.andFilter(filter) ;
-		assertEquals(0, searcher.search("name:date").totalCount()) ;
+		assertEquals(0, searcher.search("name:date").size()) ;
 
 //		searcher = cen.newSearcher() ;
 //		assertEquals(true, 20100700000000L < 20100725232010L) ;

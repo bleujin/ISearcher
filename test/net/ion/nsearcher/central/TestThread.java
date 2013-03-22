@@ -25,7 +25,7 @@ public class TestThread extends ISTestCase{
 		SearchResponse sr = searcher1.createRequest("041820").descending("name").find() ;
 		sr.awaitPostFuture()  ; // wait search listener
 		
-		assertEquals(true, sr.totalCount() == 0) ;
+		assertEquals(true, sr.size() == 0) ;
 		assertEquals(true, confirmProcessor.getTotalCount() == 0) ;
 
 		

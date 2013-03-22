@@ -42,8 +42,8 @@ public class TestDocument extends ISTestCase{
 		Searcher searcher  = central.newSearcher() ;
 		searcher.addPostListener(new StdOutProcessor()) ;
 		
-		assertEquals(0, searcher.search("int:4").totalCount()) ;
-		assertEquals(1, searcher.search("INT:4").totalCount()) ;
+		assertEquals(0, searcher.search("int:4").size()) ;
+		assertEquals(1, searcher.search("INT:4").size()) ;
 	}
 	
 	

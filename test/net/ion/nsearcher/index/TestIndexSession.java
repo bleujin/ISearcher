@@ -29,7 +29,7 @@ public class TestIndexSession extends TestCase{
 				return null;
 			}
 		}) ;
-		assertEquals(10, ct.newSearcher().search("").totalCount()) ;
+		assertEquals(10, ct.newSearcher().search("").size()) ;
 	}
 	
 }

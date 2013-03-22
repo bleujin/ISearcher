@@ -40,7 +40,7 @@ public class LuceneFunctionalityTest extends ISTestCase {
 
 		List<MyDocument> docs = result.getDocument();
 		for (MyDocument doc : docs) {
-			Debug.debug(doc.get("name"), doc.get("subject"), doc.getFields().size(), result.totalCount());
+			Debug.debug(doc.get("name"), doc.get("subject"), doc.getFields().size(), result.size());
 		}
 	}
 	

@@ -22,6 +22,6 @@ public class SearchTask {
 	}
 
 	public String toString(){
-		return " Request : " + response.request() + " Result Count : " + response.totalCount() + " Elapsed Time(ms) : " + response.elapsedTime() ;
+		return " Request : " + response.request() + " Result Count : " + response.size() + " Elapsed Time(ms) : " + response.elapsedTime() ;
 	}
 }

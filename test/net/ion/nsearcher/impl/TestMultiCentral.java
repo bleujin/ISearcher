@@ -37,7 +37,7 @@ public class TestMultiCentral extends TestCase{
 
 		
 		Searcher searcher = mc.newSearcher() ;
-		assertEquals(10, searcher.search("bleujin").totalCount()) ;
+		assertEquals(10, searcher.search("bleujin").size()) ;
 		
 //		mc.forceCopy() ;
 //		

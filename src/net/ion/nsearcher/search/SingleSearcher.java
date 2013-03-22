@@ -45,6 +45,18 @@ public class SingleSearcher implements Closeable{
 		return SearchResponse.create(this, sreq, docs, startTime) ;
 	}
 	
+	
+	public int totalCount(SearchRequest sreq, Filter filters) {
+		try {
+//			reloadReader() ;
+			TopDocs docs = isearcher.search(sreq.query(), filters, sreq.limit());
+			return docs.totalHits ;
+		} catch (IOException e) {
+			return -1 ;
+		}
+	}
+	
+	
 	public <T> Future<T> submit(Callable<T> task){
 		return es.submit(task) ;
 	}
@@ -90,6 +102,7 @@ public class SingleSearcher implements Closeable{
 	public SearchConfig searchConfig(){
 		return central.searchConfig() ;
 	}
+
 	
 	
 

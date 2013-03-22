@@ -111,7 +111,7 @@ public class TestLucen36 extends TestCase {
 								long start = System.currentTimeMillis();
 								Searcher searcher = c.newSearcher();
 								SearchResponse sr = searcher.search("name:bleujin");
-								Debug.line(start, System.currentTimeMillis(), sr.totalCount());
+								Debug.line(start, System.currentTimeMillis(), sr.size());
 
 								return true;
 							} catch (ParseException ex) {
@@ -146,7 +146,7 @@ public class TestLucen36 extends TestCase {
 			}) ;
 			
 			SearchResponse res = searcher.createRequest("name:bleujin", new MyKoreanAnalyzer()).ascending("mindex") .find();
-			Debug.line(System.currentTimeMillis(), res.totalCount(), res.getDocument());
+			Debug.line(System.currentTimeMillis(), res.size(), res.getDocument());
 			
 			
 		}

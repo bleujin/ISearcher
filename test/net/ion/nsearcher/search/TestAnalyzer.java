@@ -87,7 +87,7 @@ public class TestAnalyzer extends TestCase {
 		Searcher searcher = c.newSearcher();
 		searcher.addPostListener(stdOutProcessor);
 
-		return searcher.createRequest(term, anal).find().totalCount() > 0;
+		return searcher.createRequest(term, anal).find().size() > 0;
 	}
 	
 	private void printTerm(IndexReader reader, String name) throws Exception {

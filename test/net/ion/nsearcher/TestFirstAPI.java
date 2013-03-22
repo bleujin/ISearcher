@@ -34,7 +34,7 @@ public class TestFirstAPI extends TestCase {
 	
 	public void testCreateSearcher() throws Exception {
 		Searcher searcher = cen.newSearcher();
-		assertEquals(0, searcher.search("").totalCount()) ; 
+		assertEquals(0, searcher.search("").size()) ; 
 	}
 
 	public void testCreateIndexer() throws Exception {
@@ -50,7 +50,7 @@ public class TestFirstAPI extends TestCase {
 		}) ;
 		
 		Searcher searcher = cen.newSearcher();
-		assertEquals(10, searcher.search("").totalCount()) ;
+		assertEquals(10, searcher.search("").size()) ;
 	}
 	
 	
