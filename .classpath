@@ -10,6 +10,6 @@
 	<classpathentry kind="lib" path="lib/rest_fat.jar"/>
 	<classpathentry kind="lib" path="lib/search362_fat.jar"/>
 	<classpathentry kind="lib" path="lib/aradon_0.9.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.5.0_22"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk5_22"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
