@@ -69,7 +69,7 @@ public class IndexSession {
 	
 	private void commit() throws CorruptIndexException, IOException{
 		if (alreadyCancelled) return ;
-		writer.commit() ;
+		if (writer != null) writer.commit() ;
 	}
 	
 
@@ -82,7 +82,7 @@ public class IndexSession {
 	public IndexSession rollback() throws IOException {
 		if (alreadyCancelled) return this ;
 		this.alreadyCancelled = true ;
-		writer.rollback() ;
+		if (writer != null) writer.rollback() ;
 		return this ;
 	}
 

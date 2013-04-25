@@ -31,7 +31,7 @@ public class Searcher {
 		return createRequest(query, searcher.searchConfig().queryAnalyzer()) ;
 	}
 
-	public SearchRequest createRequest(Query query) throws ParseException {
+	public SearchRequest createRequest(Query query) {
 		return new SearchRequest(this, query);
 	}
 

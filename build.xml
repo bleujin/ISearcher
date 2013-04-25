@@ -47,8 +47,10 @@
 		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../AradonExtend/lib/" />
 		<echo>Copy to MongoSearch</echo>
 		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../MongoSearch/lib/" />
+		<echo>Copy to Craken</echo>
+		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../crakenSearch/lib/ref/" />
 		<echo>Copy to CrakenSearch</echo>
-		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../../workspace/crakenSearch/lib/search/" />
+		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../crakenSearch/lib/ref/" />
 	</target>
 
 	<target name="copy_novision" depends="publish">

@@ -62,7 +62,7 @@ public class SearchResponse {
 		List<MyDocument> result = new ArrayList<MyDocument>();
 
 		for (int i = sreq.skip(); i < Math.min(sreq.limit(), sdocs.length); i++) {
-			result.add(searcher.doc(sdocs[i].doc));
+			result.add(searcher.doc(sdocs[i].doc, sreq));
 		}
 		return result;
 	}
@@ -70,16 +70,24 @@ public class SearchResponse {
 	public long elapsedTime() {
 		return endTime - startTime;
 	}
+	
+	public long startTime() {
+		return startTime;
+	}
 
 	public XML toXML() {
-		XML request = new XML("response");
+		XML result = new XML("response");
 
-		request.addAttribute("startTime", String.valueOf(startTime));
-		request.addAttribute("elapsedTime", String.valueOf(elapsedTime()));
-		request.addAttribute("totalCount", String.valueOf(totalCount()));
-		request.addAttribute("size", String.valueOf(size()));
+		result.addAttribute("startTime", String.valueOf(startTime));
+		result.addAttribute("elapsedTime", String.valueOf(elapsedTime()));
+		result.addAttribute("totalCount", String.valueOf(totalCount()));
+		result.addAttribute("size", String.valueOf(size()));
 
-		return request;
+		return result;
+	}
+
+	public void awaitPostFuture() throws InterruptedException, ExecutionException {
+		postFuture.get() ;
 	}
 
 	public SearchResponse postFuture(Future<Void> postFuture) {
@@ -87,13 +95,7 @@ public class SearchResponse {
 		return this ;
 	}
 
-	public void awaitPostFuture() throws InterruptedException, ExecutionException {
-		postFuture.get() ;
-	}
 
-	public long startTime() {
-		return startTime;
-	}
 	
 
 }

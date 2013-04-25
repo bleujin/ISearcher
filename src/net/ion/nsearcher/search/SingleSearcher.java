@@ -12,10 +12,12 @@ import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.SearchConfig;
 import net.ion.nsearcher.reader.InfoReader;
 
+import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.AlreadyClosedException;
 
 public class SingleSearcher implements Closeable{
 
@@ -63,18 +65,25 @@ public class SingleSearcher implements Closeable{
 	
 	private synchronized void reloadReader() throws IOException {
 		IndexReader newReader = IndexReader.openIfChanged(ireader);
+//		try {
+//			newReader = IndexReader.openIfChanged(ireader);
+//		} catch(AlreadyClosedException e){
+//			newReader = IndexReader.open(central.dir()) ;
+//		}
+		
 		if (newReader != null){
 			// TODO : after closer
 			
 			ireader.close() ;
+			this.isearcher.close() ;
 			filters.clear() ;
 			this.ireader = newReader ;
 			this.isearcher = new IndexSearcher(this.ireader) ;
 		}
 	}
 	
-	public MyDocument doc(int docId) throws IOException{
-		return MyDocument.loadDocument(ireader.document(docId));
+	public synchronized MyDocument doc(int docId, SearchRequest request) throws IOException{
+		return MyDocument.loadDocument(ireader.document(docId, request.selector()));
 	}
 
 	public InfoReader reader() {
@@ -86,7 +95,7 @@ public class SingleSearcher implements Closeable{
 		return isearcher.getIndexReader();
 	}
 	
-	public void close() throws IOException {
+	public synchronized void close() throws IOException {
 		ireader.close() ;
 		isearcher.close() ;
 	}
