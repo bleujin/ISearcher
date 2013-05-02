@@ -1,5 +1,7 @@
 package net.ion.nsearcher.config;
 
+import net.ion.nsearcher.common.FieldIndexingStrategy;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.ReusableAnalyzerBase;
 import org.apache.lucene.index.IndexDeletionPolicy;

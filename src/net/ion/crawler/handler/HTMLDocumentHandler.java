@@ -83,7 +83,7 @@ public class HTMLDocumentHandler implements DocumentHandler {
 		MyField content = MyField.text("content", getOnlyText(tag, "body"));
 
 		// title boost * 2
-		title.setBoost(HEAD_BOOST);
+		title.indexField().setBoost(HEAD_BOOST);
 
 		result.add(url);
 		result.add(title);

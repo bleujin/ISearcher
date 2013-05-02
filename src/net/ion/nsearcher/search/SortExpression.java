@@ -6,6 +6,7 @@ import java.util.Map;
 
 import net.ion.framework.util.MapUtil;
 import net.ion.framework.util.StringUtil;
+import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.MyField;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -53,7 +54,7 @@ public class SortExpression {
 					sortFieldType =  getSortFieldType(sps[1]);
 					isRerverse = "desc".equals(sps[2]) ;
 				}
-				result.add(new SortField(MyField.makeSortFieldName(fieldName), sortFieldType, isRerverse)) ;
+				result.add(new SortField(FieldIndexingStrategy.makeSortFieldName(fieldName), sortFieldType, isRerverse)) ;
 			}
 		}
 		

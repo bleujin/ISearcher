@@ -54,24 +54,24 @@ public class WriteDocument extends MyDocument {
 		for (MyField field : fields.values()) {
 			if (field == null)
 				continue;
-			doc.add(field);
-			for (Fieldable more : field.getMoreField()) {
+			doc.add(field.indexField());
+			for (Fieldable more : field.indexField().getMoreField()) {
 				doc.add(more);
 			}
 
 			if (isReservedField(field.name()))
 				continue;
-			if (field.isIndexed() && field.isStored() && (!field.name().endsWith(MyField.SORT_POSTFIX))) {
-				bodyBuilder.append(field.stringValue() + " ");
+			if (field.indexField().isIndexed() && field.indexField().isStored() && (!field.name().endsWith(MyField.SORT_POSTFIX))) {
+				bodyBuilder.append(field.indexField().stringValue() + " ");
 			}
 		}
 
-		doc.add(MyField.manual(ISKey, docId(), Store.YES, Index.NOT_ANALYZED));
-		doc.add(MyField.manual(ISBody, String.valueOf(HashFunction.hashGeneral(bodyBuilder.toString())), Store.YES, Index.NOT_ANALYZED));
-		doc.add(MyField.manual(TIMESTAMP, String.valueOf(System.currentTimeMillis()), Store.YES, Index.NOT_ANALYZED));
+		doc.add(MyField.manual(ISKey, docId(), Store.YES, Index.NOT_ANALYZED).indexField());
+		doc.add(MyField.manual(ISBody, String.valueOf(HashFunction.hashGeneral(bodyBuilder.toString())), Store.YES, Index.NOT_ANALYZED).indexField());
+		doc.add(MyField.manual(TIMESTAMP, String.valueOf(System.currentTimeMillis()), Store.YES, Index.NOT_ANALYZED).indexField());
 
 		// @TODO : compress, Store.No
-		doc.add(MyField.manual(ISALL_FIELD, bodyBuilder.toString(), Store.NO, Index.ANALYZED));
+		doc.add(MyField.manual(ISALL_FIELD, bodyBuilder.toString(), Store.NO, Index.ANALYZED).indexField());
 
 		return doc;
 	}
@@ -85,8 +85,8 @@ public class WriteDocument extends MyDocument {
 				continue;
 			if (isReservedField(field.name()))
 				continue;
-			if (field.isIndexed() && field.isStored() && (!field.name().endsWith(MyField.SORT_POSTFIX))) {
-				bodyBuilder.append(field.stringValue() + " ");
+			if (field.indexField().isIndexed() && field.indexField().isStored() && (!field.name().endsWith(MyField.SORT_POSTFIX))) {
+				bodyBuilder.append(field.indexField().stringValue() + " ");
 			}
 		}
 		return String.valueOf(HashFunction.hashGeneral(bodyBuilder.toString())) ;
@@ -197,7 +197,7 @@ public class WriteDocument extends MyDocument {
 
 	private Fieldable getFirstField(String _name){
 		String name = StringUtil.lowerCase(_name) ;
-		return fields.get(name).size() < 1 ? null : fields.get(name).get(0) ;  
+		return fields.get(name).size() < 1 ? null : fields.get(name).get(0).indexField() ;  
 	}
 	
 	public void removeField(String _name) {
