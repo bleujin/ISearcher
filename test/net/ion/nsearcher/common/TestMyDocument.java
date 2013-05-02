@@ -44,8 +44,8 @@ public class TestMyDocument extends TestCase {
 		Document doc = writeDoc.toLuceneDoc() ;
 		ReadDocument loadDoc = MyDocument.loadDocument(doc) ;
 
-		for (Fieldable field : writeDoc.getFields()) {
-			assertEquals(field.stringValue(), loadDoc.get(field.name())) ;
+		for (MyField field : writeDoc.getFields()) {
+			assertEquals(field.indexField().stringValue(), loadDoc.get(field.name())) ;
 		}
 
 		for (Fieldable field : loadDoc.getFields()) {

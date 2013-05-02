@@ -23,7 +23,7 @@ public class TestMyFileld extends ISTestCase{
 		doc.add(MyField.unknown("double", 10.0d)) ;
 		doc.add(MyField.unknown("float", 10.0f)) ;
 
-		for(Fieldable f : doc.getFields()){
+		for(MyField f : doc.getFields()){
 			Debug.line(f) ;
 		} 
 	}
@@ -31,7 +31,7 @@ public class TestMyFileld extends ISTestCase{
 	public void testMap() throws Exception {
 		WriteDocument doc = createSampleDoc();
 
-		for(Fieldable f : doc.getFields()){
+		for(MyField f : doc.getFields()){
 			Debug.line(f) ;
 		} 
 	}
