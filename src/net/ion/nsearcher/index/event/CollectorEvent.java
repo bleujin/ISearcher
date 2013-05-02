@@ -2,7 +2,7 @@ package net.ion.nsearcher.index.event;
 
 import java.io.IOException;
 
-import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.index.collect.ICollector;
 
 public abstract class CollectorEvent implements ICollectorEvent{
@@ -21,7 +21,7 @@ public abstract class CollectorEvent implements ICollectorEvent{
 		return EventType.Normal;
 	}
 
-	public MyDocument[] makeDocument() throws IOException {
+	public WriteDocument[] makeDocument() throws IOException {
 		return getCollector().getDocumentHandler().makeDocument(this) ;
 	}
 	

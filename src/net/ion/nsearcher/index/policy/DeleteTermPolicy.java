@@ -2,7 +2,7 @@ package net.ion.nsearcher.index.policy;
 
 import java.io.IOException;
 
-import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.common.MyDocument.Action;
 import net.ion.nsearcher.index.IndexSession;
 
@@ -24,7 +24,7 @@ public class DeleteTermPolicy extends AbstractWritePolicy {
 		}
 	}
 	
-	public Action apply(IndexSession session, MyDocument doc) throws IOException {
+	public Action apply(IndexSession session, WriteDocument doc) throws IOException {
 		return Action.Delete;
 	}
 

@@ -12,6 +12,7 @@ import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.SetUtil;
 import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.ReadDocument;
 
 import org.apache.ecs.xml.XML;
 import org.apache.lucene.analysis.Analyzer;
@@ -112,8 +113,8 @@ public class SearchRequest {
 		return searcher.search(this) ;
 	}
 	
-	public MyDocument findOne() throws IOException, ParseException {
-		final List<MyDocument> docs = find().getDocument();
+	public ReadDocument findOne() throws IOException, ParseException {
+		final List<ReadDocument> docs = find().getDocument();
 		if (docs.size() == 0) return null ;
 		return docs.get(0) ;
 	}

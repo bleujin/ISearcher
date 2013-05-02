@@ -9,6 +9,7 @@ import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.SearchConstant;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
@@ -40,7 +41,7 @@ public class HangulKeywordTest extends ISTestCase {
 		Indexer writer = c.newIndexer() ;
 		writer.index(createKoreanAnalyzer(), new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
-				MyDocument doc2 = MyDocument.testDocument();
+				WriteDocument doc2 = MyDocument.testDocument();
 				doc2.add(MyField.text("name", val));
 				session.insertDocument(doc2);
 				return null;
@@ -70,7 +71,7 @@ public class HangulKeywordTest extends ISTestCase {
 		writer.index(indexAnal, new IndexJob<Void>() {
 
 			public Void handle(IndexSession session) throws Exception {
-				MyDocument doc2 = MyDocument.testDocument();
+				WriteDocument doc2 = MyDocument.testDocument();
 				doc2.add(MyField.text("index", "7756"));
 				doc2.add(MyField.text("name", "LG U+"));
 				doc2.add(MyField.text("name", "알리안츠Best중소형증권투자신탁[주]"));
@@ -79,7 +80,7 @@ public class HangulKeywordTest extends ISTestCase {
 				doc2.add(MyField.text("name", "한요가"));
 				session.insertDocument(doc2);
 
-				MyDocument doc1 = MyDocument.testDocument();
+				WriteDocument doc1 = MyDocument.testDocument();
 				doc1.add(MyField.text("name", "서울E플러스 펀드"));
 				doc1.add(MyField.text("name", "SCH-B500 1(주식)종류A "));
 				doc1.add(MyField.text("name", "2000년 9월 30일 그 일이 일어났다. "));
@@ -161,7 +162,7 @@ public class HangulKeywordTest extends ISTestCase {
 		writer.index(anal, new IndexJob<Void>() {
 
 			public Void handle(IndexSession session) throws Exception {
-				MyDocument doc2 = MyDocument.testDocument();
+				WriteDocument doc2 = MyDocument.testDocument();
 				doc2.add(MyField.text("n1", "30"));
 				doc2.add(MyField.text("d1", "20071231"));
 				doc2.add(MyField.text("t1", "20071231-0705010"));
@@ -198,12 +199,12 @@ public class HangulKeywordTest extends ISTestCase {
 		Indexer writer = c.newIndexer();
 		writer.index(analyzer, new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
-				MyDocument doc1 = MyDocument.testDocument();
+				WriteDocument doc1 = MyDocument.testDocument();
 				doc1.add(MyField.text("n1", "30"));
 				doc1.add(MyField.text("key", "value"));
 				session.insertDocument(doc1);
 
-				MyDocument doc2 = MyDocument.testDocument();
+				WriteDocument doc2 = MyDocument.testDocument();
 				doc2.add(MyField.text("n1", "30"));
 				doc2.add(MyField.text("d1", "20071231"));
 				doc2.add(MyField.text("key", "value"));

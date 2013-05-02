@@ -7,6 +7,7 @@ import org.apache.lucene.search.Filter;
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.search.filter.TermFilter;
 
@@ -24,8 +25,8 @@ public class TestRequestSelection extends ISTestCase {
 		
 		SearchResponse response = searcher.createRequest("").selections("name").lazySelections("int").find();
 		
-		List<MyDocument> docs = response.getDocument();
-		for (MyDocument doc : docs) {
+		List<ReadDocument> docs = response.getDocument();
+		for (ReadDocument doc : docs) {
 			Debug.debug(doc.get("name"), doc.get("int"), doc) ;
 		}
 		

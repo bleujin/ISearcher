@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.common.MyDocument.Action;
 import net.ion.nsearcher.index.IndexSession;
 
@@ -27,7 +27,7 @@ public class MergePolicy extends AbstractWritePolicy {
 		}
 	}
 	
-	public Action apply(final IndexSession writer, MyDocument doc) throws IOException {
+	public Action apply(final IndexSession writer, WriteDocument doc) throws IOException {
 		try {
 			String idValue = doc.idValue();
 			String newValue = doc.bodyValue();

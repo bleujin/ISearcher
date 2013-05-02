@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.index.event.CollectorEvent;
 import net.ion.nsearcher.index.event.FileEvent;
 
@@ -14,13 +15,13 @@ public class FileDocumentHandler implements DocumentHandler {
 	}
 
 
-	public MyDocument[] makeDocument(CollectorEvent _event) throws IOException {
-		if (! (_event instanceof FileEvent)) return new MyDocument[0] ;
+	public WriteDocument[] makeDocument(CollectorEvent _event) throws IOException {
+		if (! (_event instanceof FileEvent)) return new WriteDocument[0] ;
 
 		FileEvent event = (FileEvent)_event ;
 
 		File file = event.getFile();
-		MyDocument doc = MyDocument.newDocument(String.valueOf(event.getEventId())).event(event).name(file.getName());
+		WriteDocument doc = MyDocument.newDocument(String.valueOf(event.getEventId())).event(event).name(file.getName());
 
 		MyField name = MyField.text("name", file.getName());
 		doc.add(name);
@@ -28,6 +29,6 @@ public class FileDocumentHandler implements DocumentHandler {
 		doc.add(MyField.number("size", file.length()));
 		doc.add(MyField.text("path", file.getAbsolutePath()));
 
-		return new MyDocument[]{doc};
+		return new WriteDocument[]{doc};
 	}
 }

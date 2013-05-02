@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.ion.framework.rest.RopeRepresentation;
 import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.rest.formater.SearchDocumentFormater;
 import net.ion.nsearcher.search.SearchResponse;
 import net.ion.radon.core.annotation.DefaultValue;
@@ -21,7 +22,7 @@ public class ListLet extends SearchResource {
 
 		SearchResponse response = getSearcher().createRequest("").skip(skip).offset(offset).find();
 		
-		List<MyDocument> docs = response.getDocument() ;
+		List<ReadDocument> docs = response.getDocument() ;
 		Class clz = Class.forName("net.ion.nsearcher.rest.formater.Search" + format.toUpperCase() + "Formater");
 		SearchDocumentFormater af = (SearchDocumentFormater) clz.newInstance();
 		

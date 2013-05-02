@@ -12,6 +12,7 @@ import net.ion.framework.parse.html.NotFoundTagException;
 import net.ion.framework.rope.RopeReader;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.index.event.CollectorEvent;
 import net.ion.nsearcher.index.handler.DocumentHandler;
 
@@ -25,9 +26,9 @@ public class HTMLDocumentHandler implements DocumentHandler {
 	public HTMLDocumentHandler() {
 	}
 
-	public MyDocument[] makeDocument(CollectorEvent _event) throws IOException {
+	public WriteDocument[] makeDocument(CollectorEvent _event) throws IOException {
 		if (!(_event instanceof ParserEvent))
-			return new MyDocument[0];
+			return new WriteDocument[0];
 
 		ParserEvent event = (ParserEvent) _event;
 		PageData pageData = event.getPageData();
@@ -37,19 +38,19 @@ public class HTMLDocumentHandler implements DocumentHandler {
 			List<MyField> fields = makeFields(pageData) ;
 			
 			if (fields.size() == 0) {
-				return new MyDocument[0] ;
+				return new WriteDocument[0] ;
 			}
 			
 			Link link = pageData.getLink();
-			MyDocument doc = MyDocument.newDocument(String.valueOf(event.getEventId())).event(event).text("uri" ,link.getURI());
+			WriteDocument doc = MyDocument.newDocument(String.valueOf(event.getEventId())).event(event).text("uri" ,link.getURI());
 			for (MyField field : fields) {
 				doc.add(field) ;
 			}
 			// add the timestamp to the document
 			doc.add(MyField.keyword(LASTMODIFIED, DateTools.timeToString(link.getTimestamp(), DateTools.Resolution.MILLISECOND)));
-			return new MyDocument[] { doc };
+			return new WriteDocument[] { doc };
 		} else {
-			return new MyDocument[0];
+			return new WriteDocument[0];
 		}
 	}
 	

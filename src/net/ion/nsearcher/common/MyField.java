@@ -22,6 +22,7 @@ import org.apache.lucene.index.FieldInfo.IndexOptions;
 
 public class MyField implements Fieldable {
 
+	private static final long serialVersionUID = -7320846412631501001L;
 	private Fieldable inner;
 	private List<Fieldable> more = ListUtil.newList() ;
 	public final static String SORT_POSTFIX = "_for_sort";
@@ -98,7 +99,8 @@ public class MyField implements Fieldable {
 		return result;
 	}
 
-	public static MyField unknown(String name, Object obj) {
+	public static MyField unknown(String _name, Object obj) {
+		String name = StringUtil.lowerCase(_name) ;
 		if (obj == null) {
 			// throw new IllegalArgumentException("field value is not null") ;
 			return text(name, "N/A");
@@ -153,6 +155,13 @@ public class MyField implements Fieldable {
 
 		return result;
 	}
+	
+	
+	
+	
+	
+	
+	
 	
 	private static String split(String value) {
 
@@ -281,4 +290,6 @@ public class MyField implements Fieldable {
 
 	public void setIndexOptions(IndexOptions option) {
 		inner.setIndexOptions(option) ;
-	}}
+	}
+	
+}

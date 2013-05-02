@@ -7,7 +7,7 @@ import java.util.Map;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.common.IKeywordField;
-import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.common.MyDocument.Action;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.event.ICollectorEvent;
@@ -31,7 +31,7 @@ public class OutTestPolicy extends AbstractWritePolicy implements IKeywordField 
 		}
 	}
 
-	public Action apply(final IndexSession writer, MyDocument doc) throws IOException {
+	public Action apply(final IndexSession writer, WriteDocument doc) throws IOException {
 
 		String idValue = doc.idValue();
 		if (hashData.containsKey(idValue)) {

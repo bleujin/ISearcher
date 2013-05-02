@@ -19,58 +19,57 @@ import org.apache.lucene.document.Fieldable;
 public class TestMyDocument extends TestCase {
 
 	public void testNew() throws Exception {
-		MyDocument mdoc = MyDocument.newDocument("bleujin").addUnknown("test", "he programmer").addUnknown("age", 20);
+		WriteDocument mdoc = MyDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
 		assertEquals("bleujin", mdoc.idValue()) ;
-		assertEquals(true, mdoc.bodyValue() != null) ;
 		assertEquals(9, mdoc.toLuceneDoc().getFields().size()) ; // 1 + 2 + 3 + 2
 	}
 	
 	public void testBodyValue() throws Exception {
-		MyDocument mdoc = MyDocument.newDocument("bleujin").addUnknown("test", "he programmer").addUnknown("age", 20);
-		Document doc = mdoc.toLuceneDoc() ;
+		WriteDocument writedoc = MyDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
+		Document doc = writedoc.toLuceneDoc() ;
 		assertEquals(9, doc.getFields().size()) ; // 1 + 2 + 3 + 2 + 1
 		
-		assertEquals(mdoc.docId(), doc.get(IKeywordField.ISKey)) ;
+		assertEquals(writedoc.docId(), doc.get(IKeywordField.ISKey)) ;
 		
-		MyDocument loadDoc = MyDocument.loadDocument(doc) ;
+		ReadDocument loadDoc = MyDocument.loadDocument(doc) ;
 		assertEquals("bleujin", loadDoc.idValue()) ;
 		
-		assertEquals(mdoc.get(IKeywordField.ISALL_FIELD), loadDoc.get(IKeywordField.ISALL_FIELD)) ;
+		assertEquals(doc.get(IKeywordField.ISALL_FIELD), loadDoc.reserved(IKeywordField.ISALL_FIELD)) ;
 		
-		assertEquals(mdoc.bodyValue(), loadDoc.bodyValue()) ;
+		assertEquals(doc.get(IKeywordField.ISBody), loadDoc.bodyValue()) ;
 	}
 	
 	public void testAllSame() throws Exception {
-		MyDocument mdoc = MyDocument.newDocument("bleujin").addUnknown("test", "he programmer").addUnknown("age", 20);
-		Document doc = mdoc.toLuceneDoc() ;
+		WriteDocument writeDoc = MyDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
+		Document doc = writeDoc.toLuceneDoc() ;
+		ReadDocument loadDoc = MyDocument.loadDocument(doc) ;
 
-		MyDocument loadDoc = MyDocument.loadDocument(doc) ;
-
-		for (Fieldable field : mdoc.getFields()) {
+		for (Fieldable field : writeDoc.getFields()) {
 			assertEquals(field.stringValue(), loadDoc.get(field.name())) ;
 		}
 
 		for (Fieldable field : loadDoc.getFields()) {
-			assertEquals(field.stringValue(), mdoc.get(field.name())) ;
+			assertEquals(field.stringValue(), doc.get(field.name())) ;
 		}
 	}
 
 	public void testAllSameOnIndex() throws Exception {
-		final MyDocument mdoc = MyDocument.newDocument("bleujin").addUnknown("test", "he programmer").addUnknown("age", 20);
 		Central cen = CentralConfig.newRam().build();
 		
 		Indexer indexer = cen.newIndexer();
-		indexer.index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws Exception {
-				session.insertDocument(mdoc) ;
-				return null;
+		Document doc = indexer.index(new IndexJob<Document>() {
+			public Document handle(IndexSession session) throws Exception {
+				final WriteDocument writeDoc = MyDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
+				session.insertDocument(writeDoc) ;
+				return writeDoc.toLuceneDoc();
 			}
 		}) ;
 		
-		MyDocument findDoc = cen.newSearcher().createRequest("20").findOne() ;
+		ReadDocument findDoc = cen.newSearcher().createRequest("20").findOne() ;
 		
 		for (Fieldable field : findDoc.getFields()) {
-			assertEquals(field.stringValue(), mdoc.get(field.name())) ;
+			if (IKeywordField.TIMESTAMP.equals(field.name())) continue  ;
+			assertEquals(field.stringValue(), doc.get(field.name())) ;
 		}
 	}
 

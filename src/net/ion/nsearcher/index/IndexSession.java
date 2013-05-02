@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.SearchConstant;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.common.MyDocument.Action;
 import net.ion.nsearcher.search.SingleSearcher;
 
@@ -46,12 +47,12 @@ public class IndexSession {
 		return searcher.indexReader() ;
 	}
 	
-	public Action insertDocument(MyDocument doc) throws IOException {
+	public Action insertDocument(WriteDocument doc) throws IOException {
 		writer.addDocument(doc.toLuceneDoc()) ;
 		return Action.Insert ;
 	}
 	
-	public Action updateDocument(MyDocument doc) throws IOException{
+	public Action updateDocument(WriteDocument doc) throws IOException{
 		final Document idoc = doc.toLuceneDoc();
 		writer.updateDocument(new Term(SearchConstant.ISKey, idoc.get(SearchConstant.ISKey)), idoc) ;
 		return Action.Update ;

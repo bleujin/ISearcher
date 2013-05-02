@@ -19,7 +19,7 @@ import org.apache.lucene.document.Fieldable;
 public class TestMyFileld extends ISTestCase{
 
 	public void testUnknown() throws Exception {
-		MyDocument doc = MyDocument.testDocument() ;
+		WriteDocument doc = MyDocument.testDocument() ;
 		doc.add(MyField.unknown("double", 10.0d)) ;
 		doc.add(MyField.unknown("float", 10.0f)) ;
 
@@ -29,18 +29,18 @@ public class TestMyFileld extends ISTestCase{
 	}
 	
 	public void testMap() throws Exception {
-		MyDocument doc = createSampleDoc();
+		WriteDocument doc = createSampleDoc();
 
 		for(Fieldable f : doc.getFields()){
 			Debug.line(f) ;
 		} 
 	}
 
-	private MyDocument createSampleDoc() {
+	private WriteDocument createSampleDoc() {
 		Map<String, Object> address = MapUtil.chainKeyMap().put("city", "seoul").put("bun", 20).toMap() ;
 		List<String> names = ListUtil.toList("jin", "hero") ;
 		Map<String, Object> values = MapUtil.chainKeyMap().put("name", "bleujin").put("address", address).put("names", names) .toMap() ;
-		MyDocument doc = MyDocument.newDocument("111").add(values) ;
+		WriteDocument doc = MyDocument.newDocument("111").add(values) ;
 		return doc;
 	}
 	

@@ -6,11 +6,11 @@ import java.util.Date;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
-import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.Searcher;
 
 import org.apache.lucene.search.NumericRangeFilter;
@@ -23,7 +23,7 @@ public class TestField extends ISTestCase{
 		Indexer indexer = cen.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws IOException {
-				MyDocument doc = MyDocument.testDocument() ;
+				WriteDocument doc = MyDocument.testDocument() ;
 				doc.add(MyField.keyword("name", "test"));
 				doc.add(MyField.unknown("intkey", 123));
 				session.updateDocument(doc) ;
@@ -42,7 +42,7 @@ public class TestField extends ISTestCase{
 		Indexer indexer = cen.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
-				MyDocument doc = MyDocument.testDocument() ;
+				WriteDocument doc = MyDocument.testDocument() ;
 				doc.add(MyField.keyword("name", "test"));
 				doc.add(MyField.unknown("datekey", new Date()));
 				

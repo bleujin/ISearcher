@@ -11,6 +11,7 @@ import net.ion.framework.rest.IResponse;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.SearchConstant;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
@@ -31,7 +32,7 @@ public class IndexLet extends SearchResource{
 		indexer.index(new IndexJob<Void>() {
 
 			public Void handle(IndexSession session) throws Exception {
-				MyDocument doc = MyDocument.testDocument();
+				WriteDocument doc = WriteDocument.testDocument();
 				for (Entry<String, Object> entry : map.entrySet()) {
 					doc.add(MyField.unknown(entry.getKey(), entry.getValue())) ;
 				}

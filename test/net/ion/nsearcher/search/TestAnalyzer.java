@@ -4,20 +4,17 @@ import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
-import net.ion.nsearcher.common.SearchConstant;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
-import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 import net.ion.nsearcher.search.processor.StdOutProcessor;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.kr.KoreanAnalyzer;
 import org.apache.lucene.analysis.kr.morph.WordEntry;
 import org.apache.lucene.analysis.kr.utils.DictionaryUtil;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermEnum;
@@ -74,7 +71,7 @@ public class TestAnalyzer extends TestCase {
 		Indexer writer = c.newIndexer();
 		writer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
-				MyDocument doc = MyDocument.testDocument();
+				WriteDocument doc = MyDocument.testDocument();
 				doc.add(MyField.text("name", stmt));
 				session.insertDocument(doc);
 				return null;

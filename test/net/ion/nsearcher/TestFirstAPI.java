@@ -8,6 +8,7 @@ import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.ObjectId;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.SearchConstant;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
@@ -42,7 +43,7 @@ public class TestFirstAPI extends TestCase {
 		indexer.index(new StandardAnalyzer(SearchConstant.LuceneVersion), new IndexJob<Void>(){
 			public Void handle(IndexSession session) throws IOException {
 				for (int i : ListUtil.rangeNum(10)) {
-					MyDocument doc = MyDocument.newDocument(new ObjectId().toString()).add(JsonObject.create().put("name", "bleujin").put("age", i));
+					WriteDocument doc = MyDocument.newDocument(new ObjectId().toString()).add(JsonObject.create().put("name", "bleujin").put("age", i));
 					session.insertDocument(doc) ;
 				}
 				return null;

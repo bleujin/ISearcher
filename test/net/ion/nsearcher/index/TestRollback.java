@@ -6,6 +6,7 @@ import java.io.IOException;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.index.collect.FileCollector;
 import net.ion.nsearcher.reader.InfoReader;
@@ -49,12 +50,12 @@ public class TestRollback extends ISTestCase{
 		searcher.search("bleujin") ;
 		InfoReader reader = central.newReader() ;
 		
-		final MyDocument[] newDocs = makeTestMyDocument(10) ;
+		final WriteDocument[] newDocs = makeTestMyDocument(10) ;
 		
 		Indexer indexer = central.newIndexer();
 		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws IOException {
-				for (MyDocument newdoc : newDocs) {
+				for (WriteDocument newdoc : newDocs) {
 					newdoc.add(MyField.keyword("name", "bleuher")) ;
 					session.updateDocument(newdoc) ;
 				}
@@ -90,8 +91,8 @@ public class TestRollback extends ISTestCase{
 		Indexer indexer = central.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws IOException {
-				MyDocument[] newDocs = makeTestMyDocument(10) ;
-				for (MyDocument newdoc : newDocs) {
+				WriteDocument[] newDocs = makeTestMyDocument(10) ;
+				for (WriteDocument newdoc : newDocs) {
 					newdoc.add(MyField.keyword("name", "bleuher")) ;
 					session.updateDocument(newdoc) ;
 				}

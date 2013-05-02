@@ -9,6 +9,7 @@ import java.util.concurrent.Future;
 import net.ion.framework.db.Page;
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.ReadDocument;
 
 import org.apache.ecs.xml.XML;
 import org.apache.lucene.queryParser.ParseException;
@@ -22,8 +23,8 @@ public class SearchResponse {
 	private final long startTime;
 	private final long endTime;
 	private Future<Void> postFuture ;
-	private List<MyDocument> docs ;
-	private SearchResponse(SingleSearcher searcher, SearchRequest sreq, List<MyDocument> docs, long startTime) {
+	private List<ReadDocument> docs ;
+	private SearchResponse(SingleSearcher searcher, SearchRequest sreq, List<ReadDocument> docs, long startTime) {
 		this.searcher = searcher ;
 		this.sreq = sreq ;
 		this.startTime = startTime;
@@ -53,13 +54,13 @@ public class SearchResponse {
 		}
 	}
 	
-	public List<MyDocument> getDocument(){
+	public List<ReadDocument> getDocument(){
 		return docs ;
 	}
 
-	private static List<MyDocument> makeDocument(SingleSearcher searcher, SearchRequest sreq, TopDocs docs) throws IOException {
+	private static List<ReadDocument> makeDocument(SingleSearcher searcher, SearchRequest sreq, TopDocs docs) throws IOException {
 		ScoreDoc[] sdocs = docs.scoreDocs;
-		List<MyDocument> result = new ArrayList<MyDocument>();
+		List<ReadDocument> result = new ArrayList<ReadDocument>();
 
 		for (int i = sreq.skip(); i < Math.min(sreq.limit(), sdocs.length); i++) {
 			result.add(searcher.doc(sdocs[i].doc, sreq));

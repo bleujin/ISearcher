@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.index.event.CollectorEvent;
 import net.ion.nsearcher.index.event.DataRowEvent;
 import net.ion.nsearcher.index.event.KeyValues;
@@ -13,8 +14,8 @@ public class DataRowDocumentHandler implements DocumentHandler {
 	public DataRowDocumentHandler() {
 	}
 
-	public MyDocument[] makeDocument(CollectorEvent _event) throws IOException {
-		if (! (_event instanceof DataRowEvent)) return new MyDocument[0] ;
+	public WriteDocument[] makeDocument(CollectorEvent _event) throws IOException {
+		if (! (_event instanceof DataRowEvent)) return new WriteDocument[0] ;
 		
 		DataRowEvent event = (DataRowEvent)_event ;
 		KeyValues keyValues = event.getKeyValues();
@@ -25,7 +26,7 @@ public class DataRowDocumentHandler implements DocumentHandler {
 			docName += keyValues.get(key) + "_" ;
 		}
 		
-		MyDocument doc = MyDocument.newDocument(String.valueOf(event.getEventId())).event(event).name(docName);
+		WriteDocument doc = MyDocument.newDocument(String.valueOf(event.getEventId())).event(event).name(docName);
 		for (String colName : keyValues.getKeySet()) {
 			Object value = keyValues.get(colName);
 			if (value != null) {
@@ -35,7 +36,7 @@ public class DataRowDocumentHandler implements DocumentHandler {
 				doc.add(MyField.unknown(colName, value));
 			}
 		}
-		return new MyDocument[]{doc};
+		return new WriteDocument[]{doc};
 	}
 
 

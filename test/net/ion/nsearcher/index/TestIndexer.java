@@ -8,6 +8,8 @@ import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
+import net.ion.nsearcher.common.ReadDocument;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.collect.FileCollector;
@@ -47,7 +49,7 @@ public class TestIndexer extends ISTestCase {
 		c.newSearcher() ; // new Searcher..
 		SearchResponse sr = s1.search("bleujin") ;
 		
-		List<MyDocument> docs = sr.getDocument() ;
+		List<ReadDocument> docs = sr.getDocument() ;
 		Debug.debug(docs) ;
 		
 	}
@@ -58,7 +60,7 @@ public class TestIndexer extends ISTestCase {
 		Indexer indexer = c.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws IOException {
-				MyDocument doc = MyDocument.testDocument();
+				WriteDocument doc = MyDocument.testDocument();
 				session.insertDocument(doc.add(MyField.keyword("name", "bleujin"))) ;
 				return null;
 			}

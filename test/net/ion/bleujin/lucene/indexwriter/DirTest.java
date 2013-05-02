@@ -7,6 +7,7 @@ import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.IKeywordField;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
@@ -63,7 +64,7 @@ public class DirTest extends ISTestCase{
 		writer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
 				for (int i = 0; i < 3 ; i++) {
-					MyDocument doc = MyDocument.testDocument() ;
+					WriteDocument doc = MyDocument.testDocument() ;
 					doc.add(MyField.text("name", "bleujin")) ;
 					session.insertDocument(doc) ;
 				}

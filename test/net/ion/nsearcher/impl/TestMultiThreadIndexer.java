@@ -12,14 +12,12 @@ import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.RandomUtil;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
-import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
-
-import org.apache.lucene.analysis.Analyzer;
 
 public class TestMultiThreadIndexer extends TestCase {
 
@@ -68,7 +66,7 @@ class Creater implements Runnable {
 			Integer integer = di.index(new IndexJob<Integer>(){
 				public Integer handle(IndexSession session) throws IOException {
 					for (int i : ListUtil.rangeNum(10)) {
-						MyDocument doc = MyDocument.testDocument() ;
+						WriteDocument doc = MyDocument.testDocument() ;
 						doc.add(MyField.number("index", i)) ;
 						session.insertDocument(doc) ;
 					}

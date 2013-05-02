@@ -3,14 +3,15 @@ package net.ion.nsearcher.search;
 import java.util.Collections;
 import java.util.List;
 
-import net.ion.framework.util.CollectionUtil;
+import junit.framework.TestCase;
 import net.ion.framework.util.ListUtil;
 import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.ReadDocument;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
-import junit.framework.TestCase;
 
 public class TestSearcherPaging extends TestCase {
 
@@ -19,13 +20,13 @@ public class TestSearcherPaging extends TestCase {
 		
 		cen.newIndexer().index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
-				List<MyDocument> docs = ListUtil.newList();
+				List<WriteDocument> docs = ListUtil.newList();
 				for (int i : ListUtil.rangeNum(100)) {
-					docs.add(MyDocument.testDocument().addUnknown("idx", i).addUnknown("name", "bleujin"));
+					docs.add(MyDocument.testDocument().unknown("idx", i).unknown("name", "bleujin"));
 				}
 				Collections.shuffle(docs) ;
 
-				for (MyDocument doc : docs) {
+				for (WriteDocument doc : docs) {
 					session.insertDocument(doc) ;
 				}
 				
@@ -35,7 +36,7 @@ public class TestSearcherPaging extends TestCase {
 		SearchResponse response = cen.newSearcher().createRequest("bleujin").descending("idx").skip(4).offset(3).find();
 		assertEquals(3, response.size()) ;
 		assertEquals(100, response.totalCount()) ;
-		List<MyDocument> list = response.getDocument();
+		List<ReadDocument> list = response.getDocument();
 		
 		assertEquals("95", list.get(0).get("idx")) ;
 		assertEquals("94", list.get(1).get("idx")) ;

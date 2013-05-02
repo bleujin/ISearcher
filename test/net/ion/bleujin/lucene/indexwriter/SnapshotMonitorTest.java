@@ -7,6 +7,7 @@ import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.RandomUtil;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.WriteDocument;
 
 import org.apache.lucene.analysis.kr.KoreanAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
@@ -168,9 +169,9 @@ class SelfWriterThread implements Runnable {
 	public void run() {
 		IndexWriter writer  = null ;
 		try {
-			MyDocument[] docs = ISTestCase.makeTestDocument(maxCount) ;
+			WriteDocument[] docs = ISTestCase.makeTestDocument(maxCount) ;
 			writer  = new IndexWriter(dir, new KoreanAnalyzer(), IndexWriter.MaxFieldLength.LIMITED); 
-			for (MyDocument doc : docs) {
+			for (WriteDocument doc : docs) {
 				writer.addDocument(doc.toLuceneDoc()) ;
 				try {
 					Thread.sleep(50) ;
@@ -206,9 +207,9 @@ class OnlyWriterThread implements Runnable {
 	
 	public void run() {
 		try {
-			MyDocument[] docs = ISTestCase.makeTestDocument(maxCount) ;
+			WriteDocument[] docs = ISTestCase.makeTestDocument(maxCount) ;
 			
-			for (MyDocument doc : docs) {
+			for (WriteDocument doc : docs) {
 				writer.addDocument(doc.toLuceneDoc()) ;
 				try {
 					Thread.sleep(50) ;
@@ -241,9 +242,9 @@ class WriterThread implements Runnable {
 	public void run() {
 		IndexWriter writer = null ;
 		try {
-			MyDocument[] docs = ISTestCase.makeTestDocument(maxCount) ;
+			WriteDocument[] docs = ISTestCase.makeTestDocument(maxCount) ;
 			
-			for (MyDocument doc : docs) {
+			for (WriteDocument doc : docs) {
 				writer = new IndexWriter(dir, new KoreanAnalyzer(), IndexWriter.MaxFieldLength.LIMITED);
 				writer.addDocument(doc.toLuceneDoc()) ;
 				try {

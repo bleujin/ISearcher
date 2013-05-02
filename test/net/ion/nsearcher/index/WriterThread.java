@@ -2,7 +2,7 @@ package net.ion.nsearcher.index;
 
 import java.io.IOException;
 
-import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.index.channel.RelayChannel;
 import net.ion.nsearcher.index.policy.IWritePolicy;
 
@@ -10,9 +10,9 @@ public class WriterThread extends Thread {
 
 	private IndexSession writer;
 	private IWritePolicy policy ;
-	private RelayChannel<MyDocument> channel;
+	private RelayChannel<WriteDocument> channel;
 
-	public WriterThread(String name, RelayChannel<MyDocument> channel, IWritePolicy policy, IndexSession iw) {
+	public WriterThread(String name, RelayChannel<WriteDocument> channel, IWritePolicy policy, IndexSession iw) {
 		super(name);
 		this.channel = channel;
 		this.policy = policy ;
@@ -28,7 +28,7 @@ public class WriterThread extends Thread {
 					break;
 
 				try {
-					MyDocument doc = channel.pollMessage();
+					WriteDocument doc = channel.pollMessage();
 					
 					getPolicy().apply(getWriter(), doc) ;
 				} catch (IOException ignore) {

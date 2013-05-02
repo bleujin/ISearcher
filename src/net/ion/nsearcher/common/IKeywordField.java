@@ -1,5 +1,7 @@
 package net.ion.nsearcher.common;
 
+import net.ion.framework.util.ArrayUtil;
+
 
 public interface IKeywordField {
 
@@ -12,5 +14,13 @@ public interface IKeywordField {
 	public final static String TIMESTAMP = "timestamp" ;
 
 	public final static String[] KEYWORD_FIELD = new String[]{ISKey, ISBody, ISCollectorName, ISEventType, ISEventName, TIMESTAMP, ISALL_FIELD} ;
+	public final static String[] KEYWORD_MANDATORY_FIELD = new String[]{ISKey, ISBody, TIMESTAMP} ;
+	
+	public final static class Field {
+		
+		public static boolean reservedId(String fieldName){
+			return ArrayUtil.contains(KEYWORD_FIELD, fieldName) ;
+		}
+	} 
 
 }

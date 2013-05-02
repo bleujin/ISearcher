@@ -7,6 +7,7 @@ import java.util.concurrent.Future;
 
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.index.channel.RelayChannel;
 import net.ion.nsearcher.index.collect.IndexCancelException;
 import net.ion.nsearcher.index.event.ApplyEvent;
@@ -92,8 +93,8 @@ public class AsyncIndexer {
 							} else if (event.getEventType().isShutDown()) {
 								throw new IndexCancelException(event.toString());
 							} else if (event.getEventType().isNormal()) {
-								MyDocument[] docs = ((CollectorEvent) event).makeDocument();
-								for (MyDocument doc : docs) {
+								WriteDocument[] docs = ((CollectorEvent) event).makeDocument();
+								for (WriteDocument doc : docs) {
 									beforeHandle((CollectorEvent) event, doc);
 									getWritePolicy().apply(session, doc);
 									afterHandle(new ApplyEvent(doc));

@@ -6,6 +6,7 @@ import net.ion.framework.util.ListUtil;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
+import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
@@ -24,7 +25,7 @@ public class TestFilter extends ISTestCase {
 		Searcher newSearcher = center.newSearcher();
 
 		SearchResponse result = newSearcher.createRequest("novision").offset(20).find();
-		List<MyDocument> docs = result.getDocument();
+		List<ReadDocument> docs = result.getDocument();
 		assertEquals(6, docs.size());
 
 		// set filter
@@ -50,7 +51,7 @@ public class TestFilter extends ISTestCase {
 		Searcher newSearcher = center.newSearcher();
 		final SearchRequest searchRequest = newSearcher.createRequest("novision").offset(20);
 		SearchResponse result = searchRequest.find();
-		List<MyDocument> docs = result.getDocument();
+		List<ReadDocument> docs = result.getDocument();
 		assertEquals(6, docs.size());
 
 		// set filter

@@ -11,7 +11,7 @@
 	<property name="manifes.main.class" value="" />
 	<property name="manifes.classpath" value="./" />
 	<property name="version.number" value="3"/>
-	<property name="build.number" value="0"/>
+	<property name="build.number" value="6"/>
 
 
 	<target name="publish">
@@ -48,7 +48,7 @@
 		<echo>Copy to MongoSearch</echo>
 		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../MongoSearch/lib/" />
 		<echo>Copy to Craken</echo>
-		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../crakenSearch/lib/ref/" />
+		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../craken/lib/ref/" />
 		<echo>Copy to CrakenSearch</echo>
 		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../crakenSearch/lib/ref/" />
 	</target>

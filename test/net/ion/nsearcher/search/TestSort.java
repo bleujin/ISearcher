@@ -2,9 +2,8 @@ package net.ion.nsearcher.search;
 
 import java.util.List;
 
-import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.config.Central;
 
 import org.apache.lucene.search.SortField;
@@ -70,9 +69,9 @@ public class TestSort extends ISTestCase{
 		Searcher newSearcher = central.newSearcher() ;
 		SearchResponse result = newSearcher.createRequest("(name:bleujin) AND (int:[100 TO 200])").descending("int").offset(5).find() ;
 		
-		List<MyDocument> docs = result.getDocument() ;
+		List<ReadDocument> docs = result.getDocument() ;
 		Integer beforeValue = 200 ; // max
-		for (MyDocument doc : docs) {
+		for (ReadDocument doc : docs) {
 			Integer currValue = Integer.valueOf(doc.get("int")) ;
 			assertEquals(true, beforeValue >= currValue) ;
 			beforeValue = currValue ;

@@ -9,6 +9,7 @@ import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.IKeywordField;
 import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.index.channel.persistor.ObjectPersistor;
 import net.ion.nsearcher.index.channel.persistor.StackFile;
@@ -52,10 +53,10 @@ public class TestDocument extends ISTestCase{
 		Searcher searcher  = central.newSearcher() ;
 		searcher.addPostListener(new StdOutProcessor()) ;
 		SearchResponse result = searcher.search("int:3");
-		MyDocument mydoc = result.getDocument().get(0) ;
+		ReadDocument read = result.getDocument().get(0) ;
 		
-		String expected = mydoc.get(IKeywordField.ISALL_FIELD) ;
-		String actual = mydoc.toLuceneDoc().get(IKeywordField.ISALL_FIELD) ;
+		String expected = read.reserved(IKeywordField.ISALL_FIELD) ;
+		String actual = read.toLuceneDoc().get(IKeywordField.ISALL_FIELD) ;
 		Debug.debug(expected, actual) ;
 	}
 	

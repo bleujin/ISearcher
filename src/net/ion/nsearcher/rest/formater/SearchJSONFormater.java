@@ -14,7 +14,7 @@ import net.ion.framework.parse.gson.JsonParser;
 import net.ion.framework.rope.Rope;
 import net.ion.framework.rope.RopeWriter;
 import net.ion.framework.util.XMLToJSON;
-import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SearchResponse;
 
@@ -64,9 +64,9 @@ public class SearchJSONFormater extends AbstractDocumentFormater implements Sear
 	 * 
 	 * private CharSequence convert(XML xml) throws IOException { return XMLToJSON.toJSONObject(xml.toString()).toString() ; }
 	 */
-	private JsonObject toJSON(List<MyDocument> docs, JsonObject parent) throws SQLException {
+	private JsonObject toJSON(List<ReadDocument> docs, JsonObject parent) throws SQLException {
 		List<Map<String, Object>> nodeList = new ArrayList<Map<String, Object>>();
-		for (MyDocument doc : docs) {
+		for (ReadDocument doc : docs) {
 			Map<String, Object> node = new HashMap<String, Object>();
 			List<Fieldable> fields = doc.getFields();
 			for (Fieldable field : fields) {
@@ -84,10 +84,10 @@ public class SearchJSONFormater extends AbstractDocumentFormater implements Sear
 		return parent;
 	}
 
-	public Rope toRope(List<MyDocument> docs) throws IOException {
+	public Rope toRope(List<ReadDocument> docs) throws IOException {
 		RopeWriter rw = new RopeWriter();
 		List<Map<String, Object>> nodeList = new ArrayList<Map<String, Object>>();
-		for (MyDocument doc : docs) {
+		for (ReadDocument doc : docs) {
 			Map<String, Object> node = new HashMap<String, Object>();
 			List<Fieldable> fields = doc.getFields();
 			for (Fieldable field : fields) {

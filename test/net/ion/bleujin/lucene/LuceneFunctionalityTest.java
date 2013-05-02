@@ -8,6 +8,7 @@ import java.util.List;
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SearchResponse;
@@ -38,8 +39,8 @@ public class LuceneFunctionalityTest extends ISTestCase {
 		Searcher newSearcher = cen.newSearcher() ;
 		SearchResponse result = newSearcher.createRequest("int:3").offset(5).find() ;
 
-		List<MyDocument> docs = result.getDocument();
-		for (MyDocument doc : docs) {
+		List<ReadDocument> docs = result.getDocument();
+		for (ReadDocument doc : docs) {
 			Debug.debug(doc.get("name"), doc.get("subject"), doc.getFields().size(), result.size());
 		}
 	}

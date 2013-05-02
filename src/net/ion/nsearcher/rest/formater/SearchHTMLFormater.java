@@ -8,6 +8,7 @@ import net.ion.framework.rope.Rope;
 import net.ion.framework.rope.RopeWriter;
 import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SearchResponse;
 
@@ -21,7 +22,7 @@ public class SearchHTMLFormater extends AbstractDocumentFormater implements Sear
 	public Representation toRepresentation(SearchResponse iresponse) throws IOException {
 
 		SearchRequest irequest = iresponse.request();
-		List<MyDocument> docs = iresponse.getDocument();
+		List<ReadDocument> docs = iresponse.getDocument();
 		RopeWriter rw = new RopeWriter();
 		rw.write("<html><head><title>HTMLFormater</title></head><body>");
 
@@ -38,9 +39,9 @@ public class SearchHTMLFormater extends AbstractDocumentFormater implements Sear
 		return result;
 	}
 
-	public Rope toRope(List<MyDocument> docs) throws IOException {
+	public Rope toRope(List<ReadDocument> docs) throws IOException {
 		RopeWriter rw = new RopeWriter() ;
-		for (MyDocument doc : docs) {
+		for (ReadDocument doc : docs) {
 			rw.write("<ul style='font-size: 10pt;'><li>", doc.idValue());
 			rw.write("<ul>");
 			List<Fieldable> fields = doc.getFields();

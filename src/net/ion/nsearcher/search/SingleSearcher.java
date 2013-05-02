@@ -7,17 +7,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.SearchConfig;
 import net.ion.nsearcher.reader.InfoReader;
 
-import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.store.AlreadyClosedException;
 
 public class SingleSearcher implements Closeable{
 
@@ -82,8 +80,8 @@ public class SingleSearcher implements Closeable{
 		}
 	}
 	
-	public synchronized MyDocument doc(int docId, SearchRequest request) throws IOException{
-		return MyDocument.loadDocument(ireader.document(docId, request.selector()));
+	public synchronized ReadDocument doc(int docId, SearchRequest request) throws IOException{
+		return ReadDocument.loadDocument(ireader.document(docId, request.selector()));
 	}
 
 	public InfoReader reader() {

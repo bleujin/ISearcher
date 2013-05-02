@@ -1,7 +1,5 @@
 package net.ion.nsearcher.config;
 
-import net.ion.nsearcher.common.SearchConstant;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.ReusableAnalyzerBase;
 import org.apache.lucene.index.IndexDeletionPolicy;
@@ -28,8 +26,9 @@ public class IndexConfig {
 
 	private Version version ;
 	private ReusableAnalyzerBase analyzer ;
+	private FieldIndexingStrategy fiStrategy;
 	
-	IndexConfig(Version version, ReusableAnalyzerBase analyzer, IndexWriterConfig clone) {
+	IndexConfig(Version version, ReusableAnalyzerBase analyzer, IndexWriterConfig clone, FieldIndexingStrategy fiStrategy) {
 		this.version = version ;
 		this.analyzer = analyzer;
 		
@@ -49,6 +48,7 @@ public class IndexConfig {
 		this.similarity = clone.getSimilarity();
 		this.termIndexInterval = clone.getTermIndexInterval();
 		this.writeLockTimeout = clone.getWriteLockTimeout();
+		this.fiStrategy = fiStrategy ;
 	}
 
 	public IndexDeletionPolicy getIndexDeletionPolicy() {

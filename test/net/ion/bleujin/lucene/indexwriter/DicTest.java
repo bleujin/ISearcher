@@ -5,6 +5,7 @@ import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
@@ -27,7 +28,7 @@ public class DicTest extends ISTestCase{
 
 			public Void handle(IndexSession session) throws Exception {
 				session.deleteAll() ;
-				MyDocument doc = MyDocument.testDocument() ;
+				WriteDocument doc = MyDocument.testDocument() ;
 				doc.add(MyField.text("bleujin", "태극기가 바람에 펄럭입니다. 오영준 삼성신한생명LGU+보증보험")) ;
 				session.updateDocument(doc) ;
 				return null;

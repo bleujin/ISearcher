@@ -10,6 +10,7 @@ import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.ObjectUtil;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
@@ -96,7 +97,7 @@ public class TestLucen36 extends TestCase {
 						public Boolean handle(IndexSession writer) throws IOException {
 							try {
 								for (int i : ListUtil.rangeNum(10)) {
-									MyDocument doc = MyDocument.testDocument();
+									WriteDocument doc = MyDocument.testDocument();
 									doc.add(MyField.number("mindex", i));
 									doc.add(MyField.keyword("name", "bleujin"));
 									writer.insertDocument(doc);

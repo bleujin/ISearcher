@@ -1,16 +1,16 @@
 package net.ion.nsearcher.index.event;
 
-import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.WriteDocument;
 
 public class ApplyEvent implements IIndexEvent{
 
-	private MyDocument doc ;
+	private WriteDocument doc ;
 	private long startTime ;
-	public ApplyEvent(MyDocument doc){
+	public ApplyEvent(WriteDocument doc){
 		this.doc = doc ;
 		this.startTime = System.currentTimeMillis() ;
 	}
-	public MyDocument getDocument() {
+	public WriteDocument getDocument() {
 		return doc;
 	}
 	public String getDocumentField(String fieldName) {

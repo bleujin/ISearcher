@@ -7,6 +7,7 @@ import net.ion.framework.rest.RopeRepresentation;
 import net.ion.framework.rope.Rope;
 import net.ion.framework.rope.RopeWriter;
 import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SearchResponse;
 
@@ -46,9 +47,9 @@ public class SearchXMLFormater extends AbstractDocumentFormater implements Searc
 		return rw;
 	}
 
-	private void appendChild(XML nodes, List<MyDocument> docs) throws IOException {
+	private void appendChild(XML nodes, List<ReadDocument> docs) throws IOException {
 
-		for (MyDocument doc : docs) {
+		for (ReadDocument doc : docs) {
 			XML node = new XML("node");
 			List<Fieldable> fields = doc.getFields();
 			for (Fieldable field : fields) {
@@ -65,7 +66,7 @@ public class SearchXMLFormater extends AbstractDocumentFormater implements Searc
 
 	}
 
-	public Rope toRope(List<MyDocument> docs) throws IOException {
+	public Rope toRope(List<ReadDocument> docs) throws IOException {
 		XML result = new XML("result");
 
 		XML nodes = new XML("nodes");

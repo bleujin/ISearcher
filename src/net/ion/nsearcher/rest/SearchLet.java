@@ -18,7 +18,7 @@ public class SearchLet extends SearchResource{
 	public Representation search(@DefaultValue("html") @PathParam("format") String format, @FormParam("query") String query, @FormParam("sort") String sort, 
 				@DefaultValue("0") @FormParam("skip") int skip, @DefaultValue("100") @FormParam("offset") int offset) throws Exception {
 		
-		SearchResponse response = getSearcher().createRequest(query, new StandardAnalyzer(SearchConstant.LuceneVersion)).ascending(sort).skip(skip).offset(offset).find() ;
+		SearchResponse response = getSearcher().createRequest(query).ascending(sort).skip(skip).offset(offset).find() ;
 		
 		Class clz = Class.forName("net.ion.nsearcher.rest.formater.Search" + format.toUpperCase() + "Formater");
 		SearchResponseFormater af = (SearchResponseFormater) clz.newInstance();

@@ -27,6 +27,7 @@ import net.ion.framework.util.RandomUtil;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.SearchConstant;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.exception.IndexException;
@@ -39,14 +40,12 @@ import net.ion.nsearcher.index.channel.MemoryChannel;
 import net.ion.nsearcher.index.event.ICollectorEvent;
 import net.ion.nsearcher.index.policy.ExceptionPolicy;
 import net.ion.nsearcher.index.policy.MergePolicy;
-import net.ion.nsearcher.search.SearchRequest;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.http.impl.cookie.DateUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.store.LockObtainFailedException;
 
 public class ISTestCase extends TestCase{
@@ -120,8 +119,8 @@ public class ISTestCase extends TestCase{
 		
 		indexer.index(analyzer, new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws IOException {
-				MyDocument[] docs = ISTestCase.makeTestMyDocument(20) ;
-				for (MyDocument doc : docs) {
+				WriteDocument[] docs = ISTestCase.makeTestMyDocument(20) ;
+				for (WriteDocument doc : docs) {
 					session.insertDocument(doc) ;	
 				}
 				return null;
@@ -145,11 +144,11 @@ public class ISTestCase extends TestCase{
 		return adapterListener;
 	}
 	
-	public static MyDocument[] makeTestMyDocument(int count){
+	public static WriteDocument[] makeTestMyDocument(int count){
 		List<MyDocument> list = new ArrayList<MyDocument>() ;
 		String[] ranName = new String[]{"bleujin", "novision", "iihi", "k2sun"} ;
 		for (int j = 0; j < count; j++) {
-			MyDocument myDoc = MyDocument.testDocument() ;
+			WriteDocument myDoc = MyDocument.testDocument() ;
 			// int : 100 - 200
 			myDoc.add(MyField.number("int", 100 + RandomUtil.nextInt(100))) ;
 			myDoc.add(MyField.keyword("date", DateUtils.formatDate(RandomUtil.nextCalendar(10).getTime(), "yyyyMMdd-HH24mmss"))) ;
@@ -158,7 +157,7 @@ public class ISTestCase extends TestCase{
 			list.add(myDoc) ;
 		}
 		
-		MyDocument myDoc1 = MyDocument.testDocument() ;
+		WriteDocument myDoc1 = MyDocument.testDocument() ;
 		//myDoc1.add(MyField.number("int", 2)) ;
 		//myDoc1.add(MyField.text("int", "2")) ;
 		myDoc1.add(MyField.number("int", 3)) ;
@@ -168,7 +167,7 @@ public class ISTestCase extends TestCase{
 		myDoc1.add(MyField.text("content", RandomStringUtils.random(400, new char[]{'A','B','C','D','E', ' '}))) ;
 		list.add(myDoc1) ;
 
-		MyDocument myDoc2 = MyDocument.testDocument() ;
+		WriteDocument myDoc2 = MyDocument.testDocument() ;
 		myDoc2.add(MyField.keyword("int", "3")) ;
 		myDoc2.add(MyField.number("int", 3)) ;
 		myDoc2.add(MyField.number("INT", 4)) ;
@@ -182,29 +181,29 @@ public class ISTestCase extends TestCase{
 		list.add(myDoc2) ;
 
 		
-		MyDocument myDoc3 = MyDocument.testDocument() ;
+		WriteDocument myDoc3 = MyDocument.testDocument() ;
 		myDoc3.add(MyField.number("long", 1234L)) ;
 		myDoc3.add(MyField.keyword("key", "long")) ;
 		myDoc3.add(MyField.keyword("name", "test")) ;
 		list.add(myDoc3) ;
 
-		MyDocument myDoc4 = MyDocument.testDocument() ;
+		WriteDocument myDoc4 = MyDocument.testDocument() ;
 		myDoc4.add(MyField.date("date", 20100725, 232010)) ;
 		myDoc4.add(MyField.keyword("name", "date")) ;
 		list.add(myDoc4) ;
 
 
-		return (MyDocument[])list.toArray(new MyDocument[0]);	}
+		return (WriteDocument[])list.toArray(new WriteDocument[0]);	}
 	
 	
-	public static MyDocument[] makeTestDocument(int count) {
+	public static WriteDocument[] makeTestDocument(int count) {
 		MyDocument[] mydocs = makeTestMyDocument(count) ;
 		List<MyDocument> list = ListUtil.newList() ;
 		
 		for (MyDocument mydoc : mydocs) {
 			list.add(mydoc) ;
 		}
-		return (MyDocument[])list.toArray(new MyDocument[0]);
+		return (WriteDocument[])list.toArray(new WriteDocument[0]);
 	}
 
 	public Analyzer createDefaultAnalyzer() {

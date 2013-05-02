@@ -23,6 +23,7 @@ public class IndexConfigBuilder {
 	private CentralConfig centralConfig ;
 	private IndexWriterConfig clone = new IndexWriterConfig(SearchConstant.LuceneVersion, new StandardAnalyzer(SearchConstant.LuceneVersion)) ;
 	private ReusableAnalyzerBase analyzer ;
+	private FieldIndexingStrategy fiStrategy = FieldIndexingStrategy.DEFAULT ;
 	
 	IndexConfigBuilder(CentralConfig centralConfig) {
 		this.centralConfig = centralConfig ;
@@ -108,7 +109,7 @@ public class IndexConfigBuilder {
 	
 	
 	IndexConfig buildSelf(CentralConfig config){
-		return new IndexConfig(config.version(), indexAnalyzer(config.version()), clone) ;
+		return new IndexConfig(config.version(), indexAnalyzer(config.version()), clone, this.fiStrategy) ;
 	}
 
 	private ReusableAnalyzerBase indexAnalyzer(Version version) {
@@ -124,6 +125,10 @@ public class IndexConfigBuilder {
 		return this ;
 	}
 	
+	public IndexConfigBuilder fieldIndexingStrategy(FieldIndexingStrategy fiStrategy){
+		this.fiStrategy = fiStrategy ;
+		return this ;
+	}
 	 
 
 }
