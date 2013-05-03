@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.index.BeforeIndexHandler;
 import net.ion.nsearcher.index.event.CollectorEvent;
 import net.ion.nsearcher.index.event.ICollectorEvent;
@@ -30,8 +31,8 @@ public class DefaultDocumentReporter  extends AbstractCollectListener {
 		try {
 			
 			
-			MyDocument[] docs = ((CollectorEvent)event).makeDocument() ;
-			for (MyDocument doc : docs) {
+			WriteDocument[] docs = ((CollectorEvent)event).makeDocument() ;
+			for (WriteDocument doc : docs) {
 				handleBeforeProcessor((CollectorEvent) event, doc);
 				count.incrementAndGet() ;
 				Debug.debug(doc) ;
@@ -41,7 +42,7 @@ public class DefaultDocumentReporter  extends AbstractCollectListener {
 		}
 	}
 	
-	private void handleBeforeProcessor(CollectorEvent event, MyDocument mydoc) {
+	private void handleBeforeProcessor(CollectorEvent event, WriteDocument mydoc) {
 		for (BeforeIndexHandler before : ibefores) {
 			before.handleDoc(event, mydoc);
 		}

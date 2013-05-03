@@ -53,7 +53,7 @@ public class AsyncIndexer {
 		iafters.add(iafter);
 	}
 
-	private void beforeHandle(CollectorEvent event, MyDocument mydoc) {
+	private void beforeHandle(CollectorEvent event, WriteDocument mydoc) {
 		for (BeforeIndexHandler before : ibefores) {
 			before.handleDoc(event, mydoc);
 		}
