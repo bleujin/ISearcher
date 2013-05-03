@@ -69,7 +69,6 @@ public abstract class MyDocument implements Serializable {
 	}
 	
 	public abstract String docId()  ; 
-	public abstract Fieldable getField(String name) ;
 
 	// Only Test
 	public String toString() {

@@ -27,13 +27,13 @@ public class MergePolicy extends AbstractWritePolicy {
 		}
 	}
 	
-	public Action apply(final IndexSession writer, WriteDocument doc) throws IOException {
+	public Action apply(final IndexSession wsession, WriteDocument doc) throws IOException {
 		try {
 			String idValue = doc.idValue();
 			String newValue = doc.bodyValue();
 
 			if (doc.getAction().isDelete()) {
-				return writer.deleteDocument(doc);
+				return wsession.deleteDocument(doc);
 			}
 
 			if (hashData.containsKey(idValue)) {
@@ -41,9 +41,9 @@ public class MergePolicy extends AbstractWritePolicy {
 				if (oldValue.equals(newValue)) // same key and same body
 					return Action.Unknown;
 				else
-					return writer.updateDocument(doc);
+					return wsession.updateDocument(doc);
 			} else {
-				return writer.insertDocument(doc);
+				return wsession.insertDocument(doc);
 			}
 
 		} catch (NullPointerException ex) {

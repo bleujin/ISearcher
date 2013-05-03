@@ -2,12 +2,10 @@ package net.ion.nsearcher.common;
 
 import java.util.List;
 
+import junit.framework.TestCase;
 import net.ion.framework.util.ArrayUtil;
-import net.ion.framework.util.Debug;
 
 import org.apache.lucene.document.Fieldable;
-
-import junit.framework.TestCase;
 
 public class TestCaseInsensitiveInReadDocument extends TestCase {
 
@@ -17,7 +15,7 @@ public class TestCaseInsensitiveInReadDocument extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		WriteDocument wdoc = MyDocument.testDocument().unknown("NAME", "bleujin").unknown("Age", 20) ;
-		this.rdoc = ReadDocument.loadDocument(wdoc.toLuceneDoc());
+		this.rdoc = ReadDocument.loadDocument(wdoc.toLuceneDoc(FieldIndexingStrategy.DEFAULT));
 	}
 	
 	public void testGet() throws Exception {

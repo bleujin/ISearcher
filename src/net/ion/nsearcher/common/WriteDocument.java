@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import net.ion.framework.parse.gson.JsonElement;
 import net.ion.framework.parse.gson.JsonObject;
 import net.ion.framework.parse.gson.JsonUtil;
+import net.ion.framework.util.Debug;
 import net.ion.framework.util.MapUtil;
 import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.index.event.CollectorEvent;
@@ -46,32 +47,30 @@ public class WriteDocument extends MyDocument {
 
 		return docId;
 	}
-
-	public Document toLuceneDoc() {
+	
+	public Document toLuceneDoc(FieldIndexingStrategy strategy) {
+		
 		Document doc = new Document();
 		StringBuilder bodyBuilder = new StringBuilder(docId + " ");
 
 		for (MyField field : fields.values()) {
+			
 			if (field == null)
 				continue;
-			doc.add(field.indexField());
-			for (Fieldable more : field.indexField().getMoreField()) {
-				doc.add(more);
-			}
+			final IndexField indexField = field.indexField(strategy);
+			indexField.addTo(doc) ;
 
-			if (isReservedField(field.name()))
+			if (isReservedField(field.name())) // except timestamp
 				continue;
-			if (field.indexField().isIndexed() && field.indexField().isStored() && (!field.name().endsWith(MyField.SORT_POSTFIX))) {
-				bodyBuilder.append(field.indexField().stringValue() + " ");
-			}
+			bodyBuilder.append(field.stringValue() + " ");
 		}
 
-		doc.add(MyField.manual(ISKey, docId(), Store.YES, Index.NOT_ANALYZED).indexField());
-		doc.add(MyField.manual(ISBody, String.valueOf(HashFunction.hashGeneral(bodyBuilder.toString())), Store.YES, Index.NOT_ANALYZED).indexField());
-		doc.add(MyField.manual(TIMESTAMP, String.valueOf(System.currentTimeMillis()), Store.YES, Index.NOT_ANALYZED).indexField());
+		doc.add(MyField.manual(ISKey, docId(), Store.YES, Index.NOT_ANALYZED).indexField(strategy));
+		doc.add(MyField.manual(ISBody, String.valueOf(HashFunction.hashGeneral(bodyBuilder.toString())), Store.YES, Index.NOT_ANALYZED).indexField(strategy));
+		doc.add(MyField.manual(TIMESTAMP, String.valueOf(System.currentTimeMillis()), Store.YES, Index.NOT_ANALYZED).indexField(strategy));
 
 		// @TODO : compress, Store.No
-		doc.add(MyField.manual(ISALL_FIELD, bodyBuilder.toString(), Store.NO, Index.ANALYZED).indexField());
+		doc.add(MyField.manual(ISALL_FIELD, bodyBuilder.toString(), Store.NO, Index.ANALYZED).indexField(strategy));
 
 		return doc;
 	}
@@ -83,11 +82,9 @@ public class WriteDocument extends MyDocument {
 		for (MyField field : fields.values()) {
 			if (field == null)
 				continue;
-			if (isReservedField(field.name()))
+			if (isReservedField(field.name())) // except timestamp
 				continue;
-			if (field.indexField().isIndexed() && field.indexField().isStored() && (!field.name().endsWith(MyField.SORT_POSTFIX))) {
-				bodyBuilder.append(field.indexField().stringValue() + " ");
-			}
+			bodyBuilder.append(field.stringValue() + " ");
 		}
 		return String.valueOf(HashFunction.hashGeneral(bodyBuilder.toString())) ;
 	}
@@ -175,13 +172,18 @@ public class WriteDocument extends MyDocument {
 		return this;
 	}
 
+	public WriteDocument unknown(String name, String value) {
+		add(MyField.unknown(name, value));
+		return this;
+	}
+
 
 	public WriteDocument merge(MyField field) {
 		removeField(field.name());
 		return add(field);
 	}
 
-	public Fieldable getField(String name) {
+	public MyField myField(String name) {
 		return getFirstField(name) ;
 	}
 
@@ -195,19 +197,17 @@ public class WriteDocument extends MyDocument {
 		return fields.values();
 	}
 
-	private Fieldable getFirstField(String _name){
+	private MyField getFirstField(String _name){
 		String name = StringUtil.lowerCase(_name) ;
-		return fields.get(name).size() < 1 ? null : fields.get(name).get(0).indexField() ;  
+		return fields.get(name).size() < 1 ? null : fields.get(name).get(0)  ;  
 	}
 	
-	public void removeField(String _name) {
-		String name = StringUtil.lowerCase(_name) ;
-		fields.removeAll(name);
+	public void removeField(String name) {
+		fields.removeAll(StringUtil.lowerCase(name));
 	}
 
-	public List<MyField> getFields(String _name) {
-		String name = StringUtil.lowerCase(_name) ;
-		return fields.get(name) ;
+	public List<MyField> getFields(String name) {
+		return fields.get(StringUtil.lowerCase(name)) ;
 	}
 
 }

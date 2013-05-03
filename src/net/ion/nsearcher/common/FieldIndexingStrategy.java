@@ -9,6 +9,7 @@ import net.ion.framework.util.NumberUtil;
 import net.ion.framework.util.StringUtil;
 
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.NumericField;
@@ -19,7 +20,7 @@ public abstract class FieldIndexingStrategy {
 	public static final FieldIndexingStrategy DEFAULT = new FieldIndexingStrategy() {
 		
 		public IndexField keyword(String name, String value) {
-			IndexField result = new IndexField(FieldType.Keyword, name, value, Store.YES, Index.NOT_ANALYZED);
+			IndexField result = createField(FieldType.Keyword, name, value, Store.YES, Index.NOT_ANALYZED);
 
 			result.addMoreField(sort(name, value));
 			return result;
@@ -28,7 +29,7 @@ public abstract class FieldIndexingStrategy {
 		public IndexField number(String name, long number) {
 			NumericField f = new NumericField(name, Store.YES, true); // number
 			f.setLongValue(number);
-			IndexField result = new IndexField(f);
+			IndexField result = createField(f);
 
 			result.addMoreField(new Field(name, String.valueOf(number), Store.NO, Index.NOT_ANALYZED));
 
@@ -42,7 +43,7 @@ public abstract class FieldIndexingStrategy {
 		public IndexField number(String name, double number) {
 			NumericField f = new NumericField(name, Store.YES, true); // number
 			f.setDoubleValue(number);
-			IndexField result = new IndexField(f);
+			IndexField result = createField(f);
 
 			result.addMoreField(new Field(name, String.valueOf(number), Store.NO, Index.NOT_ANALYZED));
 
@@ -54,7 +55,7 @@ public abstract class FieldIndexingStrategy {
 		}
 
 		public IndexField date(String name, int yyyymmdd, int hh24miss) {
-			IndexField result = new IndexField(FieldType.Date, name, yyyymmdd + " " + StringUtil.leftPad(String.valueOf(hh24miss), 6, '0'), Store.YES, Index.ANALYZED); // text
+			IndexField result = createField(FieldType.Date, name, yyyymmdd + " " + StringUtil.leftPad(String.valueOf(hh24miss), 6, '0'), Store.YES, Index.ANALYZED); // text
 			// result.addMoreField(new MyField(name, yyyymmdd + "-" + hh24miss, Store.YES, Index.NOT_ANALYZED)) ; // keyword
 
 			result.addMoreField(sort(name, yyyymmdd + "-" + StringUtil.leftPad(String.valueOf(hh24miss), 6, '0'))); // sort
@@ -72,7 +73,7 @@ public abstract class FieldIndexingStrategy {
 		
 		public IndexField text(String name, String value) {
 			String transValue = split(value) ;
-			IndexField result = new IndexField(FieldType.Text, name, transValue, Store.YES, Index.ANALYZED);
+			IndexField result = createField(FieldType.Text, name, transValue, Store.YES, Index.ANALYZED);
 
 			result.addMoreField(sort(name, StringUtil.substring(value, 0, 40)));
 
@@ -81,7 +82,7 @@ public abstract class FieldIndexingStrategy {
 		
 		
 		public IndexField noStoreText(String name, String value) {
-			return new IndexField(FieldType.Text, name, value, Store.NO, Index.ANALYZED);
+			return createField(FieldType.Text, name, value, Store.NO, Index.ANALYZED);
 		}
 		
 		public IndexField unknown(String _name, Object obj){
@@ -131,13 +132,17 @@ public abstract class FieldIndexingStrategy {
 		
 		
 		public IndexField manual(String name, String value, Store store, Index index) {
-			return new IndexField(FieldType.Manual, name, value, store, index) ;
+			return createField(FieldType.Manual, name, value, store, index) ;
 		}
 
 	};
 	
 	public enum FieldType {
-		Keyword, Number, Date, Manual, Text
+		Keyword {
+			public IndexField toIndexField(FieldIndexingStrategy strategy, String name, String value){
+				return strategy.keyword(name, value) ;
+			} 
+		}, Number, Date, Manual, Text
 	}
 	
 	public abstract IndexField keyword(String name, String value) ;
@@ -151,6 +156,14 @@ public abstract class FieldIndexingStrategy {
 	public abstract IndexField manual(String name, String value, Store store, Index index) ;
 	
 	
+	public IndexField createField(FieldType fieldType, String name, String value, Field.Store store, Field.Index index){
+		return new IndexField(fieldType, name, value, store, index) ;
+	}
+
+	public IndexField createField(Fieldable field){
+		return new IndexField(field) ;
+	}
+
 	protected final IndexField sort(String name, String value) {
 		return new IndexField(FieldType.Keyword, makeSortFieldName(name), value, Store.YES, Index.NOT_ANALYZED);
 	}

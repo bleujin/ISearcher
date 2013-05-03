@@ -2,6 +2,7 @@ package net.ion.nsearcher.index;
 
 import java.io.IOException;
 
+import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.common.WriteDocument;
@@ -24,10 +25,12 @@ public class IndexSession {
 	private IndexWriter writer ;
 	private final IndexWriterConfig wconfig ;
 	private String owner;
+	private FieldIndexingStrategy fieldIndexingStrategy;
 	
 	IndexSession(SingleSearcher searcher, Analyzer analyzer) {
 		this.searcher = searcher ;
 		this.wconfig = searcher.central().indexConfig().newIndexWriterConfig(analyzer);
+		this.fieldIndexingStrategy = searcher.central().indexConfig().getFieldIndexingStrategy() ;
 	}
 
 	static IndexSession create(SingleSearcher searcher, Analyzer analyzer) {
@@ -42,18 +45,22 @@ public class IndexSession {
 	public void release() {
 		
 	}
+	
+	public FieldIndexingStrategy fieldIndexingStrategy(){
+		return fieldIndexingStrategy ;
+	}
 
 	public IndexReader reader() throws IOException{
 		return searcher.indexReader() ;
 	}
 	
 	public Action insertDocument(WriteDocument doc) throws IOException {
-		writer.addDocument(doc.toLuceneDoc()) ;
+		writer.addDocument(doc.toLuceneDoc(fieldIndexingStrategy)) ;
 		return Action.Insert ;
 	}
 	
 	public Action updateDocument(WriteDocument doc) throws IOException{
-		final Document idoc = doc.toLuceneDoc();
+		final Document idoc = doc.toLuceneDoc(fieldIndexingStrategy);
 		writer.updateDocument(new Term(SearchConstant.ISKey, idoc.get(SearchConstant.ISKey)), idoc) ;
 		return Action.Update ;
 	}
@@ -68,7 +75,7 @@ public class IndexSession {
 		return this ;
 	}
 	
-	private void commit() throws CorruptIndexException, IOException{
+	public void commit() throws CorruptIndexException, IOException{
 		if (alreadyCancelled) return ;
 		if (writer != null) writer.commit() ;
 	}

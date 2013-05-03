@@ -3,10 +3,12 @@ package net.ion.nsearcher.common;
 import java.io.Reader;
 import java.util.List;
 
+import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy.FieldType;
 
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.index.FieldInfo.IndexOptions;
@@ -22,7 +24,7 @@ public class IndexField implements Fieldable {
 		this.inner = inner;
 	}
 
-	protected IndexField(FieldType fieldType, String name, String value, Field.Store store, Field.Index index) {
+	IndexField(FieldType fieldType, String name, String value, Field.Store store, Field.Index index) {
 		this(new Field(fieldType == FieldType.Manual ? name : name.toLowerCase(), value, store, index));
 	}
 
@@ -139,6 +141,15 @@ public class IndexField implements Fieldable {
 
 	public void setIndexOptions(IndexOptions option) {
 		inner.setIndexOptions(option) ;
+	}
+
+	public IndexField addTo(Document doc) {
+		doc.add(this);
+		for (Fieldable more : this.getMoreField()) {
+			doc.add(more);
+		}
+
+		return this ;
 	}
 
 }

@@ -8,9 +8,16 @@ import net.ion.framework.util.RandomUtil;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.WriteDocument;
+import net.ion.nsearcher.config.Central;
+import net.ion.nsearcher.config.CentralConfig;
+import net.ion.nsearcher.index.IndexJob;
+import net.ion.nsearcher.index.IndexSession;
+import net.ion.nsearcher.index.Indexer;
+import net.ion.nsearcher.search.Searcher;
 
 import org.apache.lucene.analysis.kr.KoreanAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.search.IndexSearcher;
@@ -21,51 +28,40 @@ import org.apache.lucene.store.RAMDirectory;
 public class SnapshotMonitorTest extends ISTestCase{
 
 	
-	private Directory dir = null ;
+	private Central central = null ;
 	private int maxCount = 20;
 	
 	public void setUp() throws Exception {
-		dir = new RAMDirectory() ;
+		this.central = CentralConfig.newRam().build() ;
 	}
 	
 	
 	
 	public void testReadWriting() throws Exception {
 		
-		createInit() ;
-		
-		Thread writer = new Thread(new WriterThread(dir, maxCount)) ;
-		writer.start() ;
+		Thread writerThread = new Thread(new WriterThread(central, maxCount)) ;
+		writerThread.start() ;
 
-		Thread reader = new Thread(new ReaderThread(dir, maxCount)) ;
-		reader.start() ;
+		Thread readerThread = new Thread(new ReaderThread(central, maxCount)) ;
+		readerThread.start() ;
 
-		Thread newreader = new Thread(new NewReaderThread(dir, maxCount)) ;
-		newreader.start() ;
+		Thread newreaderThread = new Thread(new NewReaderThread(central, maxCount)) ;
+		newreaderThread.start() ;
 		
 
-		writer.join() ;
-		reader.join() ;
-		newreader.join() ;
+		writerThread.join() ;
+		readerThread.join() ;
+		newreaderThread.join() ;
 	}
 
 	
-	private void createInit() throws CorruptIndexException, LockObtainFailedException, IOException {
-		IndexWriter writer = new IndexWriter(dir, new KoreanAnalyzer(), true, MaxFieldLength.LIMITED) ;
-		writer.commit();
-		writer.close() ;
-	}
-
 
 
 	public void testWriteWrite() throws Exception {
-		IndexWriter writer = new IndexWriter(dir, new KoreanAnalyzer(), IndexWriter.MaxFieldLength.LIMITED);
-		
-		
 		int threadCount = 5;
 		Thread[] writerThread = new Thread[threadCount] ;
 		for (int i = 0; i < threadCount; i++) {
-			writerThread[i] = new Thread(new OnlyWriterThread(maxCount, writer)) ;
+			writerThread[i] = new Thread(new OnlyWriterThread(maxCount, central)) ;
 			writerThread[i].start() ;
 		}
 
@@ -73,7 +69,7 @@ public class SnapshotMonitorTest extends ISTestCase{
 			writerThread[i].join() ;
 		}
 		
-		new ReaderThread(dir, 1).run() ;
+		new ReaderThread(central, 1).run() ;
 	}
 	
 	
@@ -82,7 +78,7 @@ public class SnapshotMonitorTest extends ISTestCase{
 		int threadCount = 5;
 		Thread[] writerThread = new Thread[threadCount] ;
 		for (int i = 0; i < threadCount; i++) {
-			writerThread[i] = new Thread(new SelfWriterThread(dir, maxCount)) ;
+			writerThread[i] = new Thread(new SelfWriterThread(central, maxCount)) ;
 			writerThread[i].start() ;
 		}
 
@@ -90,27 +86,27 @@ public class SnapshotMonitorTest extends ISTestCase{
 			writerThread[i].join() ;
 		}
 		
-		new ReaderThread(dir, 1).run() ;
+		new ReaderThread(central, 1).run() ;
 	}
 	
 }
 
 class ReaderThread implements Runnable {
 
-	private Directory dir ;
+	private Central central ;
 	private int maxCount ;
-	ReaderThread(Directory dir, int maxCount){
-		this.dir = dir ;
+	ReaderThread(Central central, int maxCount){
+		this.central = central ;
 		this.maxCount = maxCount ;
 	}
 	
 	public void run() {
-		IndexSearcher searcher = null ;
+		IndexReader indexReader = null ;
 		try {
 			Thread.sleep(100) ;
-			searcher = new IndexSearcher(dir, true);
+			indexReader = central.newReader().getIndexReader() ;
 			for (int i = 0; i < maxCount; i++) {
-				int docCount = searcher.getIndexReader().maxDoc() ;
+				int docCount = indexReader.maxDoc() ;
 				Debug.debug("Reader : " + docCount) ;
 				Thread.sleep(70) ;
 			}
@@ -119,7 +115,7 @@ class ReaderThread implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} finally {
-			IOUtil.closeQuietly(searcher) ;
+			IOUtil.closeQuietly(indexReader) ;
 		}
 	}
 }
@@ -127,22 +123,22 @@ class ReaderThread implements Runnable {
 
 class NewReaderThread implements Runnable {
 
-	private Directory dir ;
+	private Central central ;
 	private int maxCount ;
-	NewReaderThread(Directory dir, int maxCount){
-		this.dir = dir ;
+	NewReaderThread(Central central, int maxCount){
+		this.central = central ;
 		this.maxCount = maxCount ;
 	}
 	
 	public void run() {
-		IndexSearcher searcher = null ;
+		IndexReader reader = null ;
 		try {
 			Thread.sleep(100) ;
 			for (int i = 0; i < maxCount; i++) {
-				searcher = new IndexSearcher(dir, true);
-				int docCount = searcher.getIndexReader().maxDoc() ;
+				reader = central.newReader().getIndexReader() ;
+				int docCount = reader.maxDoc() ;
 				Debug.debug("New Reader : " + docCount) ;
-				IOUtil.closeQuietly(searcher) ;
+				IOUtil.closeQuietly(reader) ;
 				Thread.sleep(70) ;
 			}
 		} catch (IOException e) {
@@ -150,7 +146,7 @@ class NewReaderThread implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} finally {
-			IOUtil.closeQuietly(searcher) ;
+			IOUtil.closeQuietly(reader) ;
 		}
 	}
 }
@@ -159,34 +155,32 @@ class NewReaderThread implements Runnable {
 class SelfWriterThread implements Runnable {
 
 	private int maxCount ;
-	private Directory dir ;
+	private Central central ;
 
-	SelfWriterThread(Directory dir, int maxCount) throws CorruptIndexException, LockObtainFailedException, IOException{
+	SelfWriterThread(Central central, int maxCount) throws CorruptIndexException, LockObtainFailedException, IOException{
 		this.maxCount = maxCount ;
-		this.dir = dir ;
+		this.central = central ;
 	}
 	
 	public void run() {
-		IndexWriter writer  = null ;
-		try {
-			WriteDocument[] docs = ISTestCase.makeTestDocument(maxCount) ;
-			writer  = new IndexWriter(dir, new KoreanAnalyzer(), IndexWriter.MaxFieldLength.LIMITED); 
-			for (WriteDocument doc : docs) {
-				writer.addDocument(doc.toLuceneDoc()) ;
-				try {
-					Thread.sleep(50) ;
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+		Indexer indexer = central.newIndexer() ;
+		indexer.index(new IndexJob<Void>() {
+			public Void handle(IndexSession session) throws Exception {
+				WriteDocument[] docs = ISTestCase.makeTestDocument(maxCount) ;
+				for (WriteDocument doc : docs) {
+					session.insertDocument(doc) ;
+					try {
+						Thread.sleep(50) ;
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					Debug.debug(doc.get("NAME")) ;
+					if (RandomUtil.nextBoolean()) session.commit() ; 
+					else session.rollback() ;
 				}
-				Debug.debug(doc.get("NAME")) ;
-				if (RandomUtil.nextBoolean()) writer.commit() ; 
-				else writer.rollback() ;
+				return null ;
 			}
-		} catch(IOException ex){
-			ex.printStackTrace() ;
-		} finally {
-			IOUtil.closeQuietly(writer) ;
-		}
+		}) ;
 	}
 	
 
@@ -198,33 +192,33 @@ class SelfWriterThread implements Runnable {
 class OnlyWriterThread implements Runnable {
 
 	private int maxCount ;
-	private IndexWriter writer ;
+	private Central central ;
 
-	OnlyWriterThread(int maxCount, IndexWriter writer){
+	OnlyWriterThread(int maxCount, Central central){
 		this.maxCount = maxCount ;
-		this.writer = writer ;
+		this.central = central ;
 	}
 	
 	public void run() {
-		try {
-			WriteDocument[] docs = ISTestCase.makeTestDocument(maxCount) ;
-			
-			for (WriteDocument doc : docs) {
-				writer.addDocument(doc.toLuceneDoc()) ;
-				try {
-					Thread.sleep(50) ;
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+		Indexer indexer = central.newIndexer() ;
+		indexer.index(new IndexJob<Void>() {
+
+			public Void handle(IndexSession session) throws Exception {
+				WriteDocument[] docs = ISTestCase.makeTestDocument(maxCount) ;
+				for (WriteDocument doc : docs) {
+					session.insertDocument(doc) ;
+					try {
+						Thread.sleep(50) ;
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					Debug.debug(doc.get("NAME")) ;
+					if (RandomUtil.nextBoolean()) session.commit() ; 
+					else session.rollback() ;
 				}
-				Debug.debug(doc.get("NAME")) ;
-				if (RandomUtil.nextBoolean()) writer.commit() ; 
-				else writer.rollback() ;
+				return null ;
 			}
-		} catch(IOException ex){
-			ex.printStackTrace() ;
-		} finally {
-			IOUtil.closeQuietly(writer) ;
-		}
+		}) ;
 	}
 
 }
@@ -232,34 +226,30 @@ class OnlyWriterThread implements Runnable {
 
 class WriterThread implements Runnable {
 
-	private Directory dir ;
+	private Central central ;
 	private int maxCount ;
-	WriterThread(Directory dir, int maxCount){
-		this.dir = dir ;
+	WriterThread(Central central, int maxCount){
+		this.central = central ;
 		this.maxCount = maxCount ;
 	}
 	
 	public void run() {
-		IndexWriter writer = null ;
-		try {
-			WriteDocument[] docs = ISTestCase.makeTestDocument(maxCount) ;
-			
-			for (WriteDocument doc : docs) {
-				writer = new IndexWriter(dir, new KoreanAnalyzer(), IndexWriter.MaxFieldLength.LIMITED);
-				writer.addDocument(doc.toLuceneDoc()) ;
-				try {
-					Thread.sleep(50) ;
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+		WriteDocument[] docs = ISTestCase.makeTestDocument(maxCount) ;
+		
+		for (final WriteDocument doc : docs) {
+			Indexer indexer = central.newIndexer() ;
+			indexer.index(new IndexJob<Void>() {
+				public Void handle(IndexSession session) throws Exception {
+					session.insertDocument(doc) ;
+					return null;
 				}
-				Debug.debug(doc.get("subject")) ;
-				writer.commit() ;
-				writer.close() ;
+			}) ;
+			try {
+				Thread.sleep(50) ;
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
-		} catch(IOException ex){
-			ex.printStackTrace() ;
-		} finally {
-			IOUtil.closeQuietly(writer) ;
+			Debug.debug(doc.get("subject")) ;
 		}
 	}
 	

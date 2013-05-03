@@ -24,21 +24,21 @@ public class TestWriteDocument extends TestCase {
 	
 	public void testNameCase() throws Exception {
 		assertEquals("bleujin", wdoc.get("name"));
-		assertEquals("bleujin", wdoc.getField("NAME").stringValue());
+		assertEquals("bleujin", wdoc.myField("NAME").stringValue());
 	}
 	
 	
 	public void testNameCaseInReadDoc() throws Exception {
 		WriteDocument wdoc = MyDocument.testDocument().unknown("Name", "bleujin");
 		
-		ReadDocument rdoc = MyDocument.loadDocument(wdoc.toLuceneDoc());
+		ReadDocument rdoc = MyDocument.loadDocument(wdoc.toLuceneDoc(FieldIndexingStrategy.DEFAULT));
 		
 		assertEquals("bleujin", rdoc.get("name")) ;
 		assertEquals("bleujin", rdoc.get("Name")) ;
 	}
 	
 	public void testGetField() throws Exception {
-		Fieldable field = wdoc.getField("NAME");
+		MyField field = wdoc.myField("NAME");
 		assertEquals("bleujin", field.stringValue()) ;
 	}
 	
@@ -51,7 +51,7 @@ public class TestWriteDocument extends TestCase {
 		
 	 	assertEquals(3, wdoc.getFields().size()) ;
 	 	
-	 	assertEquals("bleujin", wdoc.getField("Name").stringValue()) ;
+	 	assertEquals("bleujin", wdoc.myField("Name").stringValue()) ;
 	 	
 	 	Central cen = CentralConfig.newRam().build();
 	 	Indexer indexer = cen.newIndexer();
@@ -88,7 +88,7 @@ public class TestWriteDocument extends TestCase {
 			public Document handle(IndexSession session) throws Exception {
 				final WriteDocument writeDoc = MyDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
 				session.insertDocument(writeDoc) ;
-				return writeDoc.toLuceneDoc();
+				return writeDoc.toLuceneDoc(session.fieldIndexingStrategy());
 			}
 		}) ;
 		

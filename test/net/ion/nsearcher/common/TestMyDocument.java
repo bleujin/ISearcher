@@ -21,12 +21,12 @@ public class TestMyDocument extends TestCase {
 	public void testNew() throws Exception {
 		WriteDocument mdoc = MyDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
 		assertEquals("bleujin", mdoc.idValue()) ;
-		assertEquals(9, mdoc.toLuceneDoc().getFields().size()) ; // 1 + 2 + 3 + 2
+		assertEquals(9, mdoc.toLuceneDoc(FieldIndexingStrategy.DEFAULT).getFields().size()) ; // 1 + 2 + 3 + 2
 	}
 	
 	public void testBodyValue() throws Exception {
 		WriteDocument writedoc = MyDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
-		Document doc = writedoc.toLuceneDoc() ;
+		Document doc = writedoc.toLuceneDoc(FieldIndexingStrategy.DEFAULT) ;
 		assertEquals(9, doc.getFields().size()) ; // 1 + 2 + 3 + 2 + 1
 		
 		assertEquals(writedoc.docId(), doc.get(IKeywordField.ISKey)) ;
@@ -41,11 +41,11 @@ public class TestMyDocument extends TestCase {
 	
 	public void testAllSame() throws Exception {
 		WriteDocument writeDoc = MyDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
-		Document doc = writeDoc.toLuceneDoc() ;
+		Document doc = writeDoc.toLuceneDoc(FieldIndexingStrategy.DEFAULT) ;
 		ReadDocument loadDoc = MyDocument.loadDocument(doc) ;
 
 		for (MyField field : writeDoc.getFields()) {
-			assertEquals(field.indexField().stringValue(), loadDoc.get(field.name())) ;
+			assertEquals(field.stringValue(), loadDoc.get(field.name())) ;
 		}
 
 		for (Fieldable field : loadDoc.getFields()) {
@@ -61,7 +61,7 @@ public class TestMyDocument extends TestCase {
 			public Document handle(IndexSession session) throws Exception {
 				final WriteDocument writeDoc = MyDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
 				session.insertDocument(writeDoc) ;
-				return writeDoc.toLuceneDoc();
+				return writeDoc.toLuceneDoc(session.fieldIndexingStrategy());
 			}
 		}) ;
 		

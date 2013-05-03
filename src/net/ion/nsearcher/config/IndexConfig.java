@@ -28,7 +28,7 @@ public class IndexConfig {
 
 	private Version version ;
 	private ReusableAnalyzerBase analyzer ;
-	private FieldIndexingStrategy fiStrategy;
+	private FieldIndexingStrategy fieldIndexingStrategy;
 	
 	IndexConfig(Version version, ReusableAnalyzerBase analyzer, IndexWriterConfig clone, FieldIndexingStrategy fiStrategy) {
 		this.version = version ;
@@ -50,7 +50,7 @@ public class IndexConfig {
 		this.similarity = clone.getSimilarity();
 		this.termIndexInterval = clone.getTermIndexInterval();
 		this.writeLockTimeout = clone.getWriteLockTimeout();
-		this.fiStrategy = fiStrategy ;
+		this.fieldIndexingStrategy = fiStrategy ;
 	}
 
 	public IndexDeletionPolicy getIndexDeletionPolicy() {
@@ -99,6 +99,10 @@ public class IndexConfig {
 
 	public long getWriteLockTimeout() {
 		return writeLockTimeout;
+	}
+	
+	public FieldIndexingStrategy getFieldIndexingStrategy(){
+		return fieldIndexingStrategy ;
 	}
 
 	public IndexWriterConfig newIndexWriterConfig(Analyzer analyzer) {

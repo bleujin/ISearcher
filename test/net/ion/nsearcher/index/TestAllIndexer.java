@@ -5,6 +5,7 @@ import junit.framework.TestSuite;
 import net.ion.nsearcher.common.TestCaseInsensitiveInReadDocument;
 import net.ion.nsearcher.common.TestMyDocument;
 import net.ion.nsearcher.common.TestWriteDocument;
+import net.ion.nsearcher.config.TestFieldIndexingStrategy;
 import net.ion.nsearcher.index.channel.TestDocument;
 import net.ion.nsearcher.index.channel.TestStackFile;
 
@@ -22,6 +23,8 @@ public class TestAllIndexer {
 		ts.addTestSuite(TestStackFile.class) ;
 		ts.addTestSuite(TestIndexer.class) ;
 		ts.addTestSuite(TestIndexSession.class) ;
+		
+		ts.addTestSuite(TestFieldIndexingStrategy.class) ;
 		
 		return ts ;
 	} 
