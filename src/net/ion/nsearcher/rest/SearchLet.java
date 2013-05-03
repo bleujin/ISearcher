@@ -1,13 +1,11 @@
 package net.ion.nsearcher.rest;
 
-import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.rest.formater.SearchResponseFormater;
 import net.ion.nsearcher.search.SearchResponse;
 import net.ion.radon.core.annotation.DefaultValue;
 import net.ion.radon.core.annotation.FormParam;
 import net.ion.radon.core.annotation.PathParam;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 

@@ -1,6 +1,5 @@
 package net.ion.nsearcher.impl;
 
-import net.ion.nsearcher.search.TestSearchFilter;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 

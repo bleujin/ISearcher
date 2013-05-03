@@ -3,7 +3,6 @@ package net.ion.nsearcher.index.handler;
 import java.io.File;
 import java.io.IOException;
 
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.index.event.CollectorEvent;
@@ -21,7 +20,7 @@ public class FileDocumentHandler implements DocumentHandler {
 		FileEvent event = (FileEvent)_event ;
 
 		File file = event.getFile();
-		WriteDocument doc = MyDocument.newDocument(String.valueOf(event.getEventId())).event(event).name(file.getName());
+		WriteDocument doc = WriteDocument.newDocument(String.valueOf(event.getEventId())).event(event).name(file.getName());
 
 		MyField name = MyField.text("name", file.getName());
 		doc.add(name);

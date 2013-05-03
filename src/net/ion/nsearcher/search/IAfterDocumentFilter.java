@@ -1,7 +1,7 @@
 package net.ion.nsearcher.search;
 
-import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.ReadDocument;
 
 public interface IAfterDocumentFilter {
-	public boolean accept(MyDocument doc);
+	public boolean accept(ReadDocument doc);
 }

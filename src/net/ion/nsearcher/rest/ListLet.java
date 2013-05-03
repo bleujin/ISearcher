@@ -3,7 +3,6 @@ package net.ion.nsearcher.rest;
 import java.util.List;
 
 import net.ion.framework.rest.RopeRepresentation;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.rest.formater.SearchDocumentFormater;
 import net.ion.nsearcher.search.SearchResponse;

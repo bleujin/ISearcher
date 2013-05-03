@@ -17,20 +17,14 @@ import java.util.Map.Entry;
 import net.ion.framework.parse.gson.JsonElement;
 import net.ion.framework.parse.gson.JsonObject;
 import net.ion.framework.parse.gson.JsonUtil;
-import net.ion.framework.util.Debug;
-import net.ion.framework.util.MapUtil;
 import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.index.event.CollectorEvent;
 
-import org.apache.commons.collections.MultiHashMap;
-import org.apache.commons.collections.MultiMap;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 
 public class WriteDocument extends MyDocument {
 

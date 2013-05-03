@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 import net.ion.framework.util.ListUtil;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
@@ -43,7 +43,7 @@ class AddFiveEntryJob implements IndexJob<Boolean> {
 	
 	public Boolean handle(IndexSession session) throws IOException {
 		for (int i : ListUtil.rangeNum(5)) {
-			session.insertDocument(MyDocument.testDocument().add(MyField.number("index", i)).add(MyField.keyword("name", name))) ;
+			session.insertDocument(WriteDocument.testDocument().add(MyField.number("index", i)).add(MyField.keyword("name", name))) ;
 		}
 		return true;
 	}

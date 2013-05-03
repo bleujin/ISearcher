@@ -1,12 +1,6 @@
 package net.ion.nsearcher.common;
 
-import java.util.List;
-import java.util.concurrent.Executors;
-
 import junit.framework.TestCase;
-
-import net.ion.framework.util.Debug;
-import net.ion.framework.util.ListUtil;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
@@ -19,19 +13,19 @@ import org.apache.lucene.document.Fieldable;
 public class TestMyDocument extends TestCase {
 
 	public void testNew() throws Exception {
-		WriteDocument mdoc = MyDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
+		WriteDocument mdoc = WriteDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
 		assertEquals("bleujin", mdoc.idValue()) ;
 		assertEquals(9, mdoc.toLuceneDoc(FieldIndexingStrategy.DEFAULT).getFields().size()) ; // 1 + 2 + 3 + 2
 	}
 	
 	public void testBodyValue() throws Exception {
-		WriteDocument writedoc = MyDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
+		WriteDocument writedoc = WriteDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
 		Document doc = writedoc.toLuceneDoc(FieldIndexingStrategy.DEFAULT) ;
 		assertEquals(9, doc.getFields().size()) ; // 1 + 2 + 3 + 2 + 1
 		
 		assertEquals(writedoc.docId(), doc.get(IKeywordField.ISKey)) ;
 		
-		ReadDocument loadDoc = MyDocument.loadDocument(doc) ;
+		ReadDocument loadDoc = WriteDocument.loadDocument(doc) ;
 		assertEquals("bleujin", loadDoc.idValue()) ;
 		
 		assertEquals(doc.get(IKeywordField.ISALL_FIELD), loadDoc.reserved(IKeywordField.ISALL_FIELD)) ;
@@ -40,9 +34,9 @@ public class TestMyDocument extends TestCase {
 	}
 	
 	public void testAllSame() throws Exception {
-		WriteDocument writeDoc = MyDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
+		WriteDocument writeDoc = WriteDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
 		Document doc = writeDoc.toLuceneDoc(FieldIndexingStrategy.DEFAULT) ;
-		ReadDocument loadDoc = MyDocument.loadDocument(doc) ;
+		ReadDocument loadDoc = WriteDocument.loadDocument(doc) ;
 
 		for (MyField field : writeDoc.getFields()) {
 			assertEquals(field.stringValue(), loadDoc.get(field.name())) ;
@@ -59,7 +53,7 @@ public class TestMyDocument extends TestCase {
 		Indexer indexer = cen.newIndexer();
 		Document doc = indexer.index(new IndexJob<Document>() {
 			public Document handle(IndexSession session) throws Exception {
-				final WriteDocument writeDoc = MyDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
+				final WriteDocument writeDoc = WriteDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
 				session.insertDocument(writeDoc) ;
 				return writeDoc.toLuceneDoc(session.fieldIndexingStrategy());
 			}

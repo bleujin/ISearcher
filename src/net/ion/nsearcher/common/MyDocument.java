@@ -1,37 +1,14 @@
 package net.ion.nsearcher.common;
 
-import static net.ion.nsearcher.common.IKeywordField.ISALL_FIELD;
-import static net.ion.nsearcher.common.IKeywordField.ISBody;
-import static net.ion.nsearcher.common.IKeywordField.ISCollectorName;
-import static net.ion.nsearcher.common.IKeywordField.ISEventName;
-import static net.ion.nsearcher.common.IKeywordField.ISEventType;
-import static net.ion.nsearcher.common.IKeywordField.ISKey;
 import static net.ion.nsearcher.common.IKeywordField.KEYWORD_FIELD;
-import static net.ion.nsearcher.common.IKeywordField.TIMESTAMP;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import net.ion.framework.parse.gson.JsonElement;
-import net.ion.framework.parse.gson.JsonObject;
-import net.ion.framework.parse.gson.JsonUtil;
-import net.ion.framework.util.DateUtil;
-import net.ion.framework.util.ListUtil;
-import net.ion.framework.util.NumberUtil;
 import net.ion.framework.util.ObjectId;
-import net.ion.framework.util.ObjectUtil;
-import net.ion.framework.util.StringUtil;
-import net.ion.nsearcher.index.event.CollectorEvent;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Fieldable;
-import org.apache.lucene.document.Field.Index;
-import org.apache.lucene.document.Field.Store;
 
 public abstract class MyDocument implements Serializable {
 

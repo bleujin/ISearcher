@@ -1,29 +1,16 @@
 package net.ion.nsearcher.config;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.NumericField;
-import org.apache.lucene.document.Field.Index;
-import org.apache.lucene.document.Field.Store;
-
 import junit.framework.TestCase;
-import net.ion.framework.util.DateFormatUtil;
-import net.ion.framework.util.DateUtil;
-import net.ion.framework.util.NumberUtil;
-import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.IndexField;
-import net.ion.nsearcher.common.MyDocument;
-import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.common.WriteDocument;
-import net.ion.nsearcher.common.FieldIndexingStrategy.FieldType;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.search.Searcher;
+
+import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.Field.Store;
 
 public class TestFieldIndexingStrategy extends TestCase {
 
@@ -33,7 +20,7 @@ public class TestFieldIndexingStrategy extends TestCase {
 		Indexer indexer = central.newIndexer();
 		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
-				WriteDocument doc = MyDocument.newDocument("123").unknown("num", "50") ; // maybe numeric
+				WriteDocument doc = WriteDocument.newDocument("123").unknown("num", "50") ; // maybe numeric
 				session.updateDocument(doc) ;
 				return null;
 			}
@@ -50,7 +37,7 @@ public class TestFieldIndexingStrategy extends TestCase {
 		Indexer indexer = central.newIndexer();
 		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
-				WriteDocument doc = MyDocument.newDocument("123").unknown("num", "50") ; // keyword 
+				WriteDocument doc = WriteDocument.newDocument("123").unknown("num", "50") ; // keyword 
 				session.updateDocument(doc) ;
 				return null;
 			}

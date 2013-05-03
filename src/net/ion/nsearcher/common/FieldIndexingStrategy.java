@@ -10,9 +10,9 @@ import net.ion.framework.util.StringUtil;
 
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.document.NumericField;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
-import org.apache.lucene.document.NumericField;
 
 public abstract class FieldIndexingStrategy {
 

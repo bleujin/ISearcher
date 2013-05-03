@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Date;
 
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
@@ -23,7 +22,7 @@ public class TestField extends ISTestCase{
 		Indexer indexer = cen.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws IOException {
-				WriteDocument doc = MyDocument.testDocument() ;
+				WriteDocument doc = WriteDocument.testDocument() ;
 				doc.add(MyField.keyword("name", "test"));
 				doc.add(MyField.unknown("intkey", 123));
 				session.updateDocument(doc) ;
@@ -42,7 +41,7 @@ public class TestField extends ISTestCase{
 		Indexer indexer = cen.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
-				WriteDocument doc = MyDocument.testDocument() ;
+				WriteDocument doc = WriteDocument.testDocument() ;
 				doc.add(MyField.keyword("name", "test"));
 				doc.add(MyField.unknown("datekey", new Date()));
 				

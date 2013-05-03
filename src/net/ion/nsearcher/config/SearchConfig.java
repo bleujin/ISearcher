@@ -1,6 +1,5 @@
 package net.ion.nsearcher.config;
 
-import net.ion.framework.util.NumberUtil;
 import net.ion.framework.util.StringUtil;
 
 import org.apache.lucene.analysis.Analyzer;

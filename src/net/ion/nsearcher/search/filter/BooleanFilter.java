@@ -12,8 +12,6 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.FilterClause;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.util.FixedBitSet;
-import org.apache.lucene.util.OpenBitSet;
-import org.apache.lucene.util.OpenBitSetDISI;
 
 public class BooleanFilter extends Filter implements Iterable<FilterClause> {
 

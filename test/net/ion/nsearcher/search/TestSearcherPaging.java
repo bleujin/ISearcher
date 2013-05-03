@@ -5,7 +5,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import net.ion.framework.util.ListUtil;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
@@ -22,7 +21,7 @@ public class TestSearcherPaging extends TestCase {
 			public Void handle(IndexSession session) throws Exception {
 				List<WriteDocument> docs = ListUtil.newList();
 				for (int i : ListUtil.rangeNum(100)) {
-					docs.add(MyDocument.testDocument().unknown("idx", i).unknown("name", "bleujin"));
+					docs.add(WriteDocument.testDocument().unknown("idx", i).unknown("name", "bleujin"));
 				}
 				Collections.shuffle(docs) ;
 

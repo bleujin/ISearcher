@@ -8,9 +8,7 @@ import java.util.Map.Entry;
 import net.ion.framework.rest.IMapListRepresentationHandler;
 import net.ion.framework.rest.IRequest;
 import net.ion.framework.rest.IResponse;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
-import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
@@ -18,7 +16,6 @@ import net.ion.nsearcher.index.Indexer;
 import net.ion.radon.core.annotation.DefaultValue;
 import net.ion.radon.core.annotation.PathParam;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
 

@@ -7,10 +7,8 @@ import java.util.List;
 
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.config.Central;
-import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SearchResponse;
 import net.ion.nsearcher.search.Searcher;
 

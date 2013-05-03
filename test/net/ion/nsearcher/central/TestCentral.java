@@ -1,7 +1,7 @@
 package net.ion.nsearcher.central;
 
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
@@ -16,7 +16,7 @@ public class TestCentral extends ISTestCase{
 		
 		central.newIndexer().index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
-				session.insertDocument(MyDocument.newDocument("bleujin")) ;
+				session.insertDocument(WriteDocument.newDocument("bleujin")) ;
 				return null;
 			}
 		}) ;

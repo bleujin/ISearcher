@@ -6,13 +6,10 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import net.ion.framework.db.Page;
 import net.ion.framework.util.Debug;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.ReadDocument;
 
 import org.apache.ecs.xml.XML;
-import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 
@@ -49,7 +46,7 @@ public class SearchResponse {
 	}
 
 	public void debugPrint() throws IOException {
-		for (MyDocument doc : docs) {
+		for (ReadDocument doc : docs) {
 			Debug.line(doc) ;
 		}
 	}

@@ -14,12 +14,10 @@ import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.search.Searcher;
 
-import org.apache.lucene.document.Fieldable;
-
 public class TestMyFileld extends ISTestCase{
 
 	public void testUnknown() throws Exception {
-		WriteDocument doc = MyDocument.testDocument() ;
+		WriteDocument doc = WriteDocument.testDocument() ;
 		doc.add(MyField.unknown("double", 10.0d)) ;
 		doc.add(MyField.unknown("float", 10.0f)) ;
 
@@ -40,7 +38,7 @@ public class TestMyFileld extends ISTestCase{
 		Map<String, Object> address = MapUtil.chainKeyMap().put("city", "seoul").put("bun", 20).toMap() ;
 		List<String> names = ListUtil.toList("jin", "hero") ;
 		Map<String, Object> values = MapUtil.chainKeyMap().put("name", "bleujin").put("address", address).put("names", names) .toMap() ;
-		WriteDocument doc = MyDocument.newDocument("111").add(values) ;
+		WriteDocument doc = WriteDocument.newDocument("111").add(values) ;
 		return doc;
 	}
 	

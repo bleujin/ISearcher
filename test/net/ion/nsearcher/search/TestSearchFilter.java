@@ -2,8 +2,6 @@ package net.ion.nsearcher.search;
 
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.config.Central;
-import net.ion.nsearcher.search.SearchRequest;
-import net.ion.nsearcher.search.Searcher;
 import net.ion.nsearcher.search.filter.TermFilter;
 
 import org.apache.lucene.search.Filter;

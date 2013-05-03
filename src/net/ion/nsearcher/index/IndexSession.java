@@ -3,7 +3,6 @@ package net.ion.nsearcher.index;
 import java.io.IOException;
 
 import net.ion.nsearcher.common.FieldIndexingStrategy;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.common.MyDocument.Action;
@@ -94,7 +93,7 @@ public class IndexSession {
 		return this ;
 	}
 
-	public Action deleteDocument(MyDocument doc) throws IOException {
+	public Action deleteDocument(WriteDocument doc) throws IOException {
 		writer.deleteDocuments(new Term(SearchConstant.ISKey)) ;
 		return Action.Delete;
 	}

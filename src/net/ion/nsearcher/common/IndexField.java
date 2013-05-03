@@ -3,7 +3,6 @@ package net.ion.nsearcher.common;
 import java.io.Reader;
 import java.util.List;
 
-import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy.FieldType;
 

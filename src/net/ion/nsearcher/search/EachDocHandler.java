@@ -2,8 +2,9 @@ package net.ion.nsearcher.search;
 
 import net.ion.framework.util.Closure;
 import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.ReadDocument;
 
-public interface EachDocHandler extends Closure<MyDocument>{
+public interface EachDocHandler extends Closure<ReadDocument>{
 
-	public void execute(MyDocument doc) ;
+	public void execute(ReadDocument doc) ;
 }

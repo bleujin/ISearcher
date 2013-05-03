@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import net.ion.framework.rope.Rope;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.ReadDocument;
 
 import org.apache.lucene.index.CorruptIndexException;

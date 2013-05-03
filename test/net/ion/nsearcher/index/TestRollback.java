@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;

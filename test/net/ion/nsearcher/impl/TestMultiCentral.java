@@ -1,7 +1,6 @@
 package net.ion.nsearcher.impl;
 
 import junit.framework.TestCase;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
@@ -20,7 +19,7 @@ public class TestMultiCentral extends TestCase{
 		iw.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
 				for (int i = 0; i < 10; i++) {
-					WriteDocument doc = MyDocument.testDocument();
+					WriteDocument doc = WriteDocument.testDocument();
 					doc.add(MyField.number("index", i)) ;
 					doc.add(MyField.keyword("name", "bleujin")) ;
 					session.insertDocument(doc) ;

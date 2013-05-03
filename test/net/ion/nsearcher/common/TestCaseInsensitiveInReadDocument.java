@@ -14,7 +14,7 @@ public class TestCaseInsensitiveInReadDocument extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		WriteDocument wdoc = MyDocument.testDocument().unknown("NAME", "bleujin").unknown("Age", 20) ;
+		WriteDocument wdoc = WriteDocument.testDocument().unknown("NAME", "bleujin").unknown("Age", 20) ;
 		this.rdoc = ReadDocument.loadDocument(wdoc.toLuceneDoc(FieldIndexingStrategy.DEFAULT));
 	}
 	

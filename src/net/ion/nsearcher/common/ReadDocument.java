@@ -13,9 +13,7 @@ import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.NumberUtil;
 import net.ion.framework.util.SetUtil;
 import net.ion.framework.util.StringUtil;
-import net.ion.framework.vfs.MyFileSystemManager;
 
-import org.apache.commons.collections.list.SetUniqueList;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Fieldable;
 

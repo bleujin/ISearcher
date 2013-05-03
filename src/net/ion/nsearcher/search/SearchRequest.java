@@ -11,21 +11,15 @@ import net.ion.framework.util.CaseInsensitiveHashMap;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.SetUtil;
 import net.ion.framework.util.StringUtil;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.ReadDocument;
 
 import org.apache.ecs.xml.XML;
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.document.SetBasedFieldSelector;
-import org.apache.lucene.queryParser.CharStream;
 import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
-import org.apache.lucene.util.Version;
 
 public class SearchRequest {
 

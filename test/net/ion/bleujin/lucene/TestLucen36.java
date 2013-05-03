@@ -97,7 +97,7 @@ public class TestLucen36 extends TestCase {
 						public Boolean handle(IndexSession writer) throws IOException {
 							try {
 								for (int i : ListUtil.rangeNum(10)) {
-									WriteDocument doc = MyDocument.testDocument();
+									WriteDocument doc = WriteDocument.testDocument();
 									doc.add(MyField.number("mindex", i));
 									doc.add(MyField.keyword("name", "bleujin"));
 									writer.insertDocument(doc);

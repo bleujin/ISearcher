@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.ion.framework.util.Debug;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.index.BeforeIndexHandler;
 import net.ion.nsearcher.index.event.CollectorEvent;

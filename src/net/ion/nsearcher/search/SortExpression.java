@@ -7,7 +7,6 @@ import java.util.Map;
 import net.ion.framework.util.MapUtil;
 import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
-import net.ion.nsearcher.common.MyField;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.lucene.search.SortField;

@@ -1,7 +1,6 @@
 package net.ion.nsearcher.search;
 
 import junit.framework.TestCase;
-import net.ion.framework.db.Page;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 

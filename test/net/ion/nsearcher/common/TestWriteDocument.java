@@ -1,6 +1,6 @@
 package net.ion.nsearcher.common;
 
-import net.ion.framework.util.Debug;
+import junit.framework.TestCase;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
@@ -9,9 +9,6 @@ import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.search.Searcher;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Fieldable;
-
-import junit.framework.TestCase;
 
 public class TestWriteDocument extends TestCase {
 
@@ -19,7 +16,7 @@ public class TestWriteDocument extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		this.wdoc = MyDocument.testDocument().unknown("Name", "bleujin").unknown("age", 20);
+		this.wdoc = WriteDocument.testDocument().unknown("Name", "bleujin").unknown("age", 20);
 	}
 	
 	public void testNameCase() throws Exception {
@@ -29,9 +26,9 @@ public class TestWriteDocument extends TestCase {
 	
 	
 	public void testNameCaseInReadDoc() throws Exception {
-		WriteDocument wdoc = MyDocument.testDocument().unknown("Name", "bleujin");
+		WriteDocument wdoc = WriteDocument.testDocument().unknown("Name", "bleujin");
 		
-		ReadDocument rdoc = MyDocument.loadDocument(wdoc.toLuceneDoc(FieldIndexingStrategy.DEFAULT));
+		ReadDocument rdoc = ReadDocument.loadDocument(wdoc.toLuceneDoc(FieldIndexingStrategy.DEFAULT));
 		
 		assertEquals("bleujin", rdoc.get("name")) ;
 		assertEquals("bleujin", rdoc.get("Name")) ;
@@ -86,7 +83,7 @@ public class TestWriteDocument extends TestCase {
 		Indexer indexer = cen.newIndexer();
 		Document doc = indexer.index(new IndexJob<Document>() {
 			public Document handle(IndexSession session) throws Exception {
-				final WriteDocument writeDoc = MyDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
+				final WriteDocument writeDoc = WriteDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
 				session.insertDocument(writeDoc) ;
 				return writeDoc.toLuceneDoc(session.fieldIndexingStrategy());
 			}

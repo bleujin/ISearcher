@@ -2,7 +2,6 @@ package net.ion.nsearcher.search;
 
 import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
@@ -71,7 +70,7 @@ public class TestAnalyzer extends TestCase {
 		Indexer writer = c.newIndexer();
 		writer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
-				WriteDocument doc = MyDocument.testDocument();
+				WriteDocument doc = WriteDocument.testDocument();
 				doc.add(MyField.text("name", stmt));
 				session.insertDocument(doc);
 				return null;

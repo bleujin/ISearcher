@@ -8,8 +8,8 @@ import java.io.Serializable;
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.IKeywordField;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.ReadDocument;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.index.channel.persistor.ObjectPersistor;
 import net.ion.nsearcher.index.channel.persistor.StackFile;
@@ -22,18 +22,18 @@ public class TestDocument extends ISTestCase{
 	private String fileName = "c:/temp/abc.ser" ;
 	private int maxLength = 5;
 	public void xtestDocument() throws Exception {
-		MyDocument[] docs = makeTestDocument(maxLength) ;
+		WriteDocument[] docs = makeTestDocument(maxLength) ;
 		
-		ObjectPersistor<MyDocument> persistor = new ObjectPersistor<MyDocument>() ;
+		ObjectPersistor<WriteDocument> persistor = new ObjectPersistor<WriteDocument>() ;
 		new File(fileName).delete() ;
-		StackFile<MyDocument> stack = new StackFile<MyDocument>(fileName, persistor) ;
+		StackFile<WriteDocument> stack = new StackFile<WriteDocument>(fileName, persistor) ;
 
 		for (int i = 0; i < maxLength; i++) {
 			stack.push(docs[i]) ;
 		}
 
 		for (int i = 0; i < maxLength; i++) {
-			MyDocument doc = stack.pop() ;
+			WriteDocument doc = stack.pop() ;
 		}
 		stack.close() ;
 	}
@@ -70,7 +70,7 @@ public class TestDocument extends ISTestCase{
 	
 	public void xtestSerializable() throws Exception {
 		File file = new File("c:/temp/docs") ;
-		MyDocument[] docs = makeTestDocument(maxLength) ;
+		WriteDocument[] docs = makeTestDocument(maxLength) ;
 
 		
 		ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file)) ; 

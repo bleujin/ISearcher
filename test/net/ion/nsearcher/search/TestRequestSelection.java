@@ -2,14 +2,10 @@ package net.ion.nsearcher.search;
 
 import java.util.List;
 
-import org.apache.lucene.search.Filter;
-
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.config.Central;
-import net.ion.nsearcher.search.filter.TermFilter;
 
 public class TestRequestSelection extends ISTestCase {
 

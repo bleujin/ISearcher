@@ -6,7 +6,6 @@ import java.util.List;
 
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.common.WriteDocument;
@@ -60,7 +59,7 @@ public class TestIndexer extends ISTestCase {
 		Indexer indexer = c.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws IOException {
-				WriteDocument doc = MyDocument.testDocument();
+				WriteDocument doc = WriteDocument.testDocument();
 				session.insertDocument(doc.add(MyField.keyword("name", "bleujin"))) ;
 				return null;
 			}

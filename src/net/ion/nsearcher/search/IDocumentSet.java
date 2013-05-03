@@ -3,29 +3,29 @@ package net.ion.nsearcher.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.ReadDocument;
 
 public class IDocumentSet {
 
-	private List<MyDocument> docs ;
-	private IDocumentSet(List<MyDocument> docs) {
+	private List<ReadDocument> docs ;
+	private IDocumentSet(List<ReadDocument> docs) {
 		this.docs = docs ;
 	}
 
-	public static IDocumentSet create(List<MyDocument> docs) {
+	public static IDocumentSet create(List<ReadDocument> docs) {
 		return new IDocumentSet(docs);
 	}
 
 	
 	public IDocumentSet applyFilter(IAfterDocumentFilter docFilter){
-		List<MyDocument> result = new ArrayList<MyDocument>();
-		for (MyDocument doc : docs) {
+		List<ReadDocument> result = new ArrayList<ReadDocument>();
+		for (ReadDocument doc : docs) {
 			if (docFilter.accept(doc)) result.add(doc);
 		}
 		return IDocumentSet.create(result);
 	}
 	
-	public List<MyDocument> list(){
+	public List<ReadDocument> list(){
 		return docs ;
 	}
 	

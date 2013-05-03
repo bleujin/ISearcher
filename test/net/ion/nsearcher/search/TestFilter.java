@@ -4,9 +4,9 @@ import java.util.List;
 
 import net.ion.framework.util.ListUtil;
 import net.ion.nsearcher.ISTestCase;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.ReadDocument;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
@@ -80,7 +80,7 @@ public class TestFilter extends ISTestCase {
 						final int idx = i ;
 						iw.index(new IndexJob<Void>() {
 							public Void handle(IndexSession session) throws Exception {
-								session.insertDocument(MyDocument.testDocument().add(MyField.keyword("name", "bleujin")).add(MyField.number("index", idx))) ;
+								session.insertDocument(WriteDocument.testDocument().add(MyField.keyword("name", "bleujin")).add(MyField.number("index", idx))) ;
 								return null;
 							}
 						}) ;

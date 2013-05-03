@@ -1,13 +1,12 @@
 package net.ion.nsearcher.search;
 
-import net.ion.framework.util.Debug;
-import net.ion.nsearcher.common.MyDocument;
+import junit.framework.TestCase;
+import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
-import junit.framework.TestCase;
 
 public class TestTotalCount extends TestCase {
 
@@ -17,7 +16,7 @@ public class TestTotalCount extends TestCase {
 		Indexer indexer = central.newIndexer();
 		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
-				session.insertDocument(MyDocument.testDocument().keyword("name", "bleujin")) ;
+				session.insertDocument(WriteDocument.testDocument().keyword("name", "bleujin")) ;
 				return null;
 			}
 		}) ;
@@ -28,7 +27,7 @@ public class TestTotalCount extends TestCase {
 
 		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
-				session.insertDocument(MyDocument.testDocument().keyword("name", "hero")) ;
+				session.insertDocument(WriteDocument.testDocument().keyword("name", "hero")) ;
 				return null;
 			}
 		}) ;

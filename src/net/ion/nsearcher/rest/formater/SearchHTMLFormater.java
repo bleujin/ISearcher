@@ -7,7 +7,6 @@ import net.ion.framework.rest.RopeRepresentation;
 import net.ion.framework.rope.Rope;
 import net.ion.framework.rope.RopeWriter;
 import net.ion.framework.util.StringUtil;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SearchResponse;
