@@ -35,7 +35,7 @@ public class Central implements Closeable{
 	}
 
 	public Searcher newSearcher() throws IOException {
-		return new Searcher(singleSearcher); 
+		return new Searcher(singleSearcher, sconfig); 
 	}
 	
 	public Indexer newIndexer() {

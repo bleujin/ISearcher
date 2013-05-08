@@ -30,6 +30,9 @@ public class SearchConfig {
 		return defaultSearchFieldName;
 	}
 
+	public Query parseQuery(String query) throws ParseException {
+		return parseQuery(queryAnalyzer(), query) ;
+	}
 	public Query parseQuery(Analyzer analyzer, String query) throws ParseException {
 		QueryParserWithNumericRange parser = new QueryParserWithNumericRange(version, defaultSearchFieldName(), analyzer) ;
 		return parser.parse(query) ;

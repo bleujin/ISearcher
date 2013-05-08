@@ -12,6 +12,8 @@ import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.SetUtil;
 import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.common.ReadDocument;
+import net.ion.nsearcher.search.filter.BooleanFilter;
+import net.ion.nsearcher.search.filter.FilterUtil;
 
 import org.apache.ecs.xml.XML;
 import org.apache.lucene.document.FieldSelector;
@@ -42,6 +44,10 @@ public class SearchRequest {
 	public SearchRequest skip(int skip){
 		this.skip = skip ;
 		return this ;
+	}
+	
+	public Searcher searcher(){
+		return searcher ;
 	}
 	
 	public Query query() {
@@ -97,6 +103,7 @@ public class SearchRequest {
 	
 	public void setFilter(Filter filter) {
 		this.filter = filter;
+		
 	}
 
 	public Filter getFilter() {

@@ -34,7 +34,7 @@ public class SearchResponse {
 	}
 
 	public int totalCount() {
-		return new Searcher(searcher).totalCount(sreq.resetClone(Integer.MAX_VALUE)) ;
+		return new Searcher(searcher, sreq.searcher().config()).totalCount(sreq.resetClone(Integer.MAX_VALUE)) ;
 	}
 	
 	public int size(){

@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import net.ion.framework.util.StringUtil;
+import net.ion.nsearcher.config.SearchConfig;
 import net.ion.nsearcher.search.filter.FilterUtil;
 import net.ion.nsearcher.search.processor.PostProcessor;
 import net.ion.nsearcher.search.processor.PreProcessor;
@@ -22,9 +23,15 @@ public class Searcher {
 	private Set<PostProcessor> postListeners = new HashSet<PostProcessor>();
 	private Set<PreProcessor> preListeners = new HashSet<PreProcessor>();
 	private SingleSearcher searcher ;
+	private SearchConfig sconfig;
 	
-	public Searcher(SingleSearcher searcher) {
+	public Searcher(SingleSearcher searcher, SearchConfig sconfig) {
 		this.searcher = searcher ;
+		this.sconfig = sconfig ;
+	}
+	
+	public SearchConfig config(){
+		return sconfig ;
 	}
 	
 	public SearchRequest createRequest(String query) throws ParseException {
