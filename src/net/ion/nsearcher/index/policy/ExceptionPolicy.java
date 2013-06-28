@@ -14,11 +14,8 @@ public interface ExceptionPolicy {
 		}
 
 		public void whenExceptionOccured(IndexSession writer, IOException e) {
-			try {
-				e.printStackTrace() ;
-				writer.rollback();
-			} catch (IOException ignore) {
-			}
+			e.printStackTrace() ;
+			writer.rollback();
 			this.isOccured = true;
 		}
 

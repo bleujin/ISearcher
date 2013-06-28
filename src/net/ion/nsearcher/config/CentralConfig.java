@@ -35,6 +35,10 @@ public abstract class CentralConfig {
 		return new CentralRamConfig();
 	}
 	
+	public static CentralConfig oldFromDir(Directory dir) {
+		return new OldConfigFromDir(dir) ;
+	}
+	
 	public CentralConfig lockFactory(LockFactory lockFactory) {
 		this.lockFactory = lockFactory ;
 		return this;

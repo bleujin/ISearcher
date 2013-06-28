@@ -17,6 +17,7 @@ import net.ion.framework.util.StringUtil;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Fieldable;
 
+import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 
@@ -105,6 +106,10 @@ public class ReadDocument extends MyDocument {
 
 	public Document toLuceneDoc() {
 		return doc;
+	}
+	
+	public <T> T transformer(Function<ReadDocument, T> function){
+		return function.apply(this) ;
 	}
 
 	public String toString(){

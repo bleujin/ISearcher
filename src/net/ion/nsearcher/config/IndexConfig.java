@@ -105,6 +105,11 @@ public class IndexConfig {
 		return fieldIndexingStrategy ;
 	}
 
+	public IndexConfig fieldIndexingStrategy(FieldIndexingStrategy strategy){
+		this.fieldIndexingStrategy = strategy ;
+		return this ;
+	}
+	
 	public IndexWriterConfig newIndexWriterConfig(Analyzer analyzer) {
 		final IndexWriterConfig result = new IndexWriterConfig(version, analyzer);
 		result.setIndexDeletionPolicy(getIndexDeletionPolicy());

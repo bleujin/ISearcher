@@ -23,7 +23,7 @@ public class IndexField implements Fieldable {
 		this.inner = inner;
 	}
 
-	IndexField(FieldType fieldType, String name, String value, Field.Store store, Field.Index index) {
+	public IndexField(FieldType fieldType, String name, String value, Field.Store store, Field.Index index) {
 		this(new Field(fieldType == FieldType.Manual ? name : name.toLowerCase(), value, store, index));
 	}
 

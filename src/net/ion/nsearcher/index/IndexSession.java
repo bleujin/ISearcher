@@ -2,6 +2,7 @@ package net.ion.nsearcher.index;
 
 import java.io.IOException;
 
+import net.ion.framework.util.IOUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.common.WriteDocument;
@@ -38,10 +39,11 @@ public class IndexSession {
 
 	public void begin(String owner) throws IOException {
 		this.owner = owner ;
+		this.writer = null ;
 		this.writer = new IndexWriter(searcher.central().dir(), wconfig);
 	}
 
-	public void release() {
+	private void release() {
 		
 	}
 	
@@ -64,13 +66,16 @@ public class IndexSession {
 		return Action.Update ;
 	}
 
-	public IndexSession end() throws IOException{
-		try {
-			commit() ;
-		} finally {
-			writer.close() ;
-			release() ;
-		}
+//	public IndexSession commit() throws IOException{
+//		commit() ;
+//		
+//		return this ;
+//	}
+	
+	public IndexSession end() {
+		IOUtil.close(writer) ;
+		release() ;
+		
 		return this ;
 	}
 	
@@ -86,10 +91,16 @@ public class IndexSession {
 		writer.rollback() ;
 	}
 	
-	public IndexSession rollback() throws IOException {
+	public IndexSession rollback() {
 		if (alreadyCancelled) return this ;
 		this.alreadyCancelled = true ;
-		if (writer != null) writer.rollback() ;
+		if (writer != null) {
+			try {
+				writer.rollback() ;
+			} catch (IOException ignore) {
+				ignore.printStackTrace();
+			}
+		}
 		return this ;
 	}
 
@@ -144,6 +155,12 @@ public class IndexSession {
 
 	public void appendFrom(Directory... dirs) throws CorruptIndexException, IOException {
 		writer.addIndexes(dirs) ;
+	}
+
+	public IndexSession continueUnit() throws IOException {
+		commit() ;
+//		begin(this.owner) ;
+		return this ;
 	}
 
 

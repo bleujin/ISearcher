@@ -7,11 +7,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import net.ion.framework.util.Debug;
+import net.ion.framework.util.ListUtil;
 import net.ion.nsearcher.common.ReadDocument;
 
 import org.apache.ecs.xml.XML;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+
+import com.google.common.base.Function;
 
 public class SearchResponse {
 
@@ -20,8 +23,8 @@ public class SearchResponse {
 	private final long startTime;
 	private final long endTime;
 	private Future<Void> postFuture ;
-	private List<ReadDocument> docs ;
-	private SearchResponse(SingleSearcher searcher, SearchRequest sreq, List<ReadDocument> docs, long startTime) {
+	private List<Integer> docs ;
+	private SearchResponse(SingleSearcher searcher, SearchRequest sreq, List<Integer> docs, long startTime) {
 		this.searcher = searcher ;
 		this.sreq = sreq ;
 		this.startTime = startTime;
@@ -46,23 +49,31 @@ public class SearchResponse {
 	}
 
 	public void debugPrint() throws IOException {
-		for (ReadDocument doc : docs) {
+		for (ReadDocument doc : getDocument()) {
 			Debug.line(doc) ;
 		}
 	}
 	
-	public List<ReadDocument> getDocument(){
-		return docs ;
+	public List<ReadDocument> getDocument() throws IOException{
+		List<ReadDocument> result = ListUtil.newList() ;
+		for (Integer docId : docs) {
+			result.add(searcher.doc(docId, sreq));
+		}
+		return result ;
 	}
 
-	private static List<ReadDocument> makeDocument(SingleSearcher searcher, SearchRequest sreq, TopDocs docs) throws IOException {
+	private static List<Integer> makeDocument(SingleSearcher searcher, SearchRequest sreq, TopDocs docs) throws IOException {
 		ScoreDoc[] sdocs = docs.scoreDocs;
-		List<ReadDocument> result = new ArrayList<ReadDocument>();
+		List<Integer> result = ListUtil.newList() ;
 
 		for (int i = sreq.skip(); i < Math.min(sreq.limit(), sdocs.length); i++) {
-			result.add(searcher.doc(sdocs[i].doc, sreq));
+			result.add(sdocs[i].doc);
 		}
 		return result;
+	}
+	
+	public <T> T transformer(Function<TransformerKey, T> function){
+		return function.apply(new TransformerKey(this.searcher, docs, sreq)) ;
 	}
 
 	public long elapsedTime() {

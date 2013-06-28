@@ -152,7 +152,10 @@ public class SearchRequest {
 	}
 
 	public SearchRequest resetClone(int maxValue) {
-		return new SearchRequest(searcher, query).skip(0).offset(maxValue) ;
+		final SearchRequest copy = new SearchRequest(searcher, query);
+		copy.filter = this.filter ;
+		
+		return copy.skip(0).offset(maxValue) ;
 	}
 
 	

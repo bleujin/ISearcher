@@ -3,6 +3,7 @@ package net.ion.nsearcher.config;
 import net.ion.framework.util.StringUtil;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.ReusableAnalyzerBase;
 import org.apache.lucene.queryParser.CharStream;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
@@ -13,10 +14,10 @@ import org.apache.lucene.util.Version;
 public class SearchConfig {
 
 	private final Version version;
-	private final Analyzer queryAnalyzer ;
+	private final ReusableAnalyzerBase queryAnalyzer ;
 	private final String defaultSearchFieldName ;
 	
-	SearchConfig(Version version, Analyzer queryAnalyzer, String defaultSearchFieldName) {
+	SearchConfig(Version version, ReusableAnalyzerBase queryAnalyzer, String defaultSearchFieldName) {
 		this.version = version ;
 		this.queryAnalyzer = queryAnalyzer ;
 		this.defaultSearchFieldName = defaultSearchFieldName ;

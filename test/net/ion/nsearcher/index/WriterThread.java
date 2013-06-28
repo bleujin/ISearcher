@@ -8,21 +8,21 @@ import net.ion.nsearcher.index.policy.IWritePolicy;
 
 public class WriterThread extends Thread {
 
-	private IndexSession writer;
+	private IndexSession isession;
 	private IWritePolicy policy ;
 	private RelayChannel<WriteDocument> channel;
 
-	public WriterThread(String name, RelayChannel<WriteDocument> channel, IWritePolicy policy, IndexSession iw) {
+	public WriterThread(String name, RelayChannel<WriteDocument> channel, IWritePolicy policy, IndexSession isession) {
 		super(name);
 		this.channel = channel;
 		this.policy = policy ;
-		this.writer = iw;
+		this.isession = isession;
 	}
 
 	public void run() {
 		try {
-			getWriter().begin(this.getClass().getName()) ;
-			getPolicy().begin(writer) ;
+			isession.begin(this.getClass().getName()) ;
+			getPolicy().begin(isession) ;
 			while (true) {
 				if (channel.isEndMessageOccured() && (!channel.hasMessage()))
 					break;
@@ -30,20 +30,18 @@ public class WriterThread extends Thread {
 				try {
 					WriteDocument doc = channel.pollMessage();
 					
-					getPolicy().apply(getWriter(), doc) ;
+					getPolicy().apply(isession, doc) ;
 				} catch (IOException ignore) {
 					ignore.printStackTrace();
 				}
 			}
+			isession.commit() ;
 		} catch(IOException ex){
 			ex.printStackTrace() ;
+			isession.rollback() ;
 		} finally {
-			getPolicy().end(writer) ;
-			try {
-				getWriter().end();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			getPolicy().end(isession) ;
+			isession.end();
 		}
 
 	}
@@ -52,9 +50,6 @@ public class WriterThread extends Thread {
 		return this.policy ;
 	}
 
-	private IndexSession getWriter(){
-		return this.writer ;
-	}
 	
 	
 }

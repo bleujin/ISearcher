@@ -95,15 +95,15 @@ public class Indexer {
 					session.begin(name) ;
 					T result = indexJob.handle(session);
 					
-					session.end() ;
+					session.commit() ;
 					return result;
 				} catch(Throwable ex) {
-					try {if (session != null) session.rollback();} catch(IOException ignore){ignore.printStackTrace();} ;
+					if (session != null) session.rollback();
 					handler.onException(ex) ;
 //					return null ;
 					throw new IndexException(ex.getMessage(), ex) ;
 				} finally {
-					if(session != null) session.release() ;
+					session.end() ;
 				}
 			}
 		}) ;

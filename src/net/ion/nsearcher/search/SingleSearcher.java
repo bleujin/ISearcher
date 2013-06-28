@@ -17,7 +17,7 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.TopDocs;
 
-public class SingleSearcher implements Closeable{
+public class SingleSearcher implements Closeable, TSearcher{
 
 	private IndexReader ireader;
 	private IndexSearcher isearcher;
@@ -80,7 +80,7 @@ public class SingleSearcher implements Closeable{
 		}
 	}
 	
-	public synchronized ReadDocument doc(int docId, SearchRequest request) throws IOException{
+	public ReadDocument doc(int docId, SearchRequest request) throws IOException{
 		return ReadDocument.loadDocument(ireader.document(docId, request.selector()));
 	}
 
