@@ -11,10 +11,12 @@ import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
 
+import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
+
 public class SearchConfig {
 
 	private final Version version;
-	private final ReusableAnalyzerBase queryAnalyzer ;
+	private ReusableAnalyzerBase queryAnalyzer ;
 	private final String defaultSearchFieldName ;
 	
 	SearchConfig(Version version, ReusableAnalyzerBase queryAnalyzer, String defaultSearchFieldName) {
@@ -27,6 +29,12 @@ public class SearchConfig {
 		return queryAnalyzer;
 	}
 
+	public SearchConfig queryAnalyzer(ReusableAnalyzerBase queryAnalyzer){
+		this.queryAnalyzer = queryAnalyzer ;
+		return this ;
+	}
+	
+	
 	public String defaultSearchFieldName() {
 		return defaultSearchFieldName;
 	}
@@ -34,6 +42,7 @@ public class SearchConfig {
 	public Query parseQuery(String query) throws ParseException {
 		return parseQuery(queryAnalyzer(), query) ;
 	}
+	
 	public Query parseQuery(Analyzer analyzer, String query) throws ParseException {
 		QueryParserWithNumericRange parser = new QueryParserWithNumericRange(version, defaultSearchFieldName(), analyzer) ;
 		return parser.parse(query) ;

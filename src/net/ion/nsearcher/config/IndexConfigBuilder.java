@@ -2,6 +2,7 @@ package net.ion.nsearcher.config;
 
 import java.io.IOException;
 
+import net.ion.framework.util.Debug;
 import net.ion.framework.util.ObjectUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.SearchConstant;

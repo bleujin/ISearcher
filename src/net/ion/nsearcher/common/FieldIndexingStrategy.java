@@ -137,6 +137,8 @@ public abstract class FieldIndexingStrategy {
 
 	};
 	
+	
+	
 	public enum FieldType {
 		Keyword {
 			public IndexField toIndexField(FieldIndexingStrategy strategy, String name, String value){

@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import net.ion.framework.util.Debug;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.exception.IndexException;
