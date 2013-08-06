@@ -1,6 +1,11 @@
 package net.ion.nsearcher.config;
 
+import java.util.Date;
+import java.util.Locale;
+
 import junit.framework.TestCase;
+import net.ion.framework.util.DateFormatUtil;
+import net.ion.framework.util.DateUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.IndexField;
 import net.ion.nsearcher.common.WriteDocument;
@@ -9,6 +14,7 @@ import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.search.Searcher;
 
+import org.apache.commons.validator.GenericValidator;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 
@@ -48,6 +54,17 @@ public class TestFieldIndexingStrategy extends TestCase {
 		assertEquals(1, searcher.createRequest("num:50").find().size()) ;
 	}
 	
+	
+	public void testDateCheckSpeed() throws Exception {
+		Object lastResult = null ; 
+		for (int i = 0; i < 20000; i++) {
+//			Date d = DateFormatUtil.getDateIfMatchedType("2001.11.11");
+			lastResult = Character.isDigit("2001.11.11".charAt(0)) && Character.isDigit("2001.11.11".charAt(1));
+//			lastResult = GenericValidator.isDate("2001.11.11", "yyyy/mm/dd", false) ;
+//			System.out.println(d != null) ;
+		}
+		System.out.print(lastResult) ;
+	}
 	
 	
 	
