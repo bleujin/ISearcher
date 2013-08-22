@@ -9,8 +9,9 @@ import net.ion.framework.util.NumberUtil;
 import net.ion.framework.util.StringUtil;
 
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Fieldable;
-import org.apache.lucene.document.NumericField;
+import org.apache.lucene.document.IntField;
+import org.apache.lucene.document.LongField;
+import org.apache.lucene.document.DoubleField;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 
@@ -27,28 +28,25 @@ public abstract class FieldIndexingStrategy {
 		}
 
 		public IndexField number(String name, long number) {
-			NumericField f = new NumericField(name, Store.YES, true); // number
-			f.setLongValue(number);
+			
+			LongField f = new LongField(name, number, Store.YES); // number
 			IndexField result = createField(f);
 
 			result.addMoreField(new Field(name, String.valueOf(number), Store.NO, Index.NOT_ANALYZED));
 
-			NumericField sortfield = new NumericField(makeSortFieldName(name), 64, Store.YES, true); // sort
-			sortfield.setLongValue(number);
+			LongField sortfield = new LongField(makeSortFieldName(name), number, Store.YES); // sort
 			result.addMoreField(sortfield);
 
 			return result;
 		}
 
 		public IndexField number(String name, double number) {
-			NumericField f = new NumericField(name, Store.YES, true); // number
-			f.setDoubleValue(number);
+			DoubleField f = new DoubleField(name, number, Store.YES); // number
 			IndexField result = createField(f);
 
 			result.addMoreField(new Field(name, String.valueOf(number), Store.NO, Index.NOT_ANALYZED));
 
-			NumericField sortfield = new NumericField(makeSortFieldName(name), 64, Store.YES, true); // sort
-			sortfield.setDoubleValue(number);
+			DoubleField sortfield = new DoubleField(makeSortFieldName(name), number, Store.YES); // sort
 			result.addMoreField(sortfield);
 
 			return result;
@@ -60,12 +58,10 @@ public abstract class FieldIndexingStrategy {
 
 			result.addMoreField(sort(name, yyyymmdd + "-" + StringUtil.leftPad(String.valueOf(hh24miss), 6, '0'))); // sort
 
-			NumericField day = new NumericField(name, Store.YES, true);
-			day.setLongValue(yyyymmdd);
+			LongField day = new LongField(name, 1L * yyyymmdd, Store.YES);
 			result.addMoreField(day);
 			//
-			NumericField datetime = new NumericField(name + "time", Store.YES, true) ;
-			datetime.setLongValue(yyyymmdd * 1000000L + hh24miss) ;
+			LongField datetime = new LongField(name + "time", yyyymmdd * 1000000L + hh24miss, Store.YES) ;
 			result.addMoreField(datetime) ;
 
 			return result;
@@ -162,12 +158,12 @@ public abstract class FieldIndexingStrategy {
 		return new IndexField(fieldType, name, value, store, index) ;
 	}
 
-	public IndexField createField(Fieldable field){
+	public IndexField createField(Field field){
 		return new IndexField(field) ;
 	}
 
-	protected final IndexField sort(String name, String value) {
-		return new IndexField(FieldType.Keyword, makeSortFieldName(name), value, Store.YES, Index.NOT_ANALYZED);
+	protected final Field sort(String name, String value) {
+		return IndexField.field(FieldType.Keyword, makeSortFieldName(name), value, Store.YES, Index.NOT_ANALYZED) ;
 	}
 
 	

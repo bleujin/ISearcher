@@ -1,6 +1,6 @@
 package net.ion.nsearcher.common;
 
-import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.index.IndexableField;
 
 
 
@@ -8,7 +8,7 @@ public interface MyDocumentTemplate {
 	
 	public void startDoc(ReadDocument doc)  ;
 
-	public void printField(Fieldable field);
+	public void printField(IndexableField field);
 
 	public void endDoc(ReadDocument doc);
 

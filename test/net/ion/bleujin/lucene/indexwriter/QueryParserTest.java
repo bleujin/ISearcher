@@ -4,7 +4,7 @@ import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
 
 import org.apache.lucene.analysis.kr.KoreanAnalyzer;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.util.Version;
 
 public class QueryParserTest extends ISTestCase {

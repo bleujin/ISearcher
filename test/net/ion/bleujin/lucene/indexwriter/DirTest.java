@@ -13,10 +13,10 @@ import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 
-import org.apache.lucene.analysis.cjk.CJKAnalyzer;
+import org.apache.lucene.analysis.debug.standard.DCJKAnalyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.MultiReader;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -48,7 +48,7 @@ public class DirTest extends ISTestCase{
 		IndexReader mreader = new MultiReader(new IndexReader[]{cen1.newReader().getIndexReader(), cen2.newReader().getIndexReader()}) ;
 		long start = System.nanoTime() ;
 		IndexSearcher searcher = new IndexSearcher(mreader) ;
-		QueryParser qp = new QueryParser(Version.LUCENE_CURRENT, IKeywordField.ISALL_FIELD, new CJKAnalyzer(Version.LUCENE_CURRENT)) ;
+		QueryParser qp = new QueryParser(Version.LUCENE_CURRENT, IKeywordField.ISALL_FIELD, new DCJKAnalyzer(Version.LUCENE_CURRENT)) ;
 		
 		Debug.debug(searcher.search(qp.parse("bleujin"), 10).totalHits) ; 
 		Debug.debug(System.nanoTime() - start) ;

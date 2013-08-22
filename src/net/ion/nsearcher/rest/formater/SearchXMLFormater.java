@@ -11,8 +11,8 @@ import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SearchResponse;
 
 import org.apache.ecs.xml.XML;
-import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexableField;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
@@ -50,13 +50,13 @@ public class SearchXMLFormater extends AbstractDocumentFormater implements Searc
 
 		for (ReadDocument doc : docs) {
 			XML node = new XML("node");
-			List<Fieldable> fields = doc.getFields();
-			for (Fieldable field : fields) {
+			List<IndexableField> fields = doc.getFields();
+			for (IndexableField field : fields) {
 				XML property = new XML("property");
 				property.addAttribute("name", field.name());
-				property.addAttribute("stored", field.isStored());
-				property.addAttribute("tokenized", field.isTokenized());
-				property.addAttribute("indexed", field.isIndexed());
+				property.addAttribute("stored", field.fieldType().stored());
+				property.addAttribute("tokenized", field.fieldType().tokenized());
+				property.addAttribute("indexed", field.fieldType().indexed());
 				property.addElement("<![CDATA[" + field.stringValue() + "]]>");
 				node.addElement(property);
 			}

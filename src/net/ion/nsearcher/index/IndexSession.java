@@ -12,13 +12,11 @@ import net.ion.nsearcher.search.SingleSearcher;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexFileNameFilter;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.store.AlreadyClosedException;
 import org.apache.lucene.store.Directory;
 
 public class IndexSession {
@@ -68,17 +66,14 @@ public class IndexSession {
 		return Action.Update;
 	}
 
-	public Action copy(Directory src) throws IOException {
-//		searcher.central().dir().copy(src, arg1, arg2);
-		IndexFileNameFilter filter = IndexFileNameFilter.getFilter();
-		for (String file : src.listAll()) {
-			if (filter.accept(null, file)) {
-				src.copy(searcher.central().dir(), file, file);
-			}
-		}
-
-		return Action.Update;
-	}
+//	public Action copy(Directory src) throws IOException {
+//		for (String fileName : src.listAll()) {
+//			src.copy(searcher.central().dir(), fileName, fileName, IOContext.DEFAULT);
+//		}
+//
+//		return Action.Update;
+//	}
+	
 
 	// public IndexSession commit() throws IOException{
 	// commit() ;

@@ -2,8 +2,8 @@ package net.ion.nsearcher.search.filter;
 
 import java.util.Collection;
 
+import org.apache.lucene.queries.FilterClause;
 import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.FilterClause;
 import org.apache.lucene.search.BooleanClause.Occur;
 
 public class FilterUtil {

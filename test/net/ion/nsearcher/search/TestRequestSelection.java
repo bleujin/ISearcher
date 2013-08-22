@@ -19,7 +19,7 @@ public class TestRequestSelection extends ISTestCase {
 	public void testSelection() throws Exception {
 		Searcher searcher = cen.newSearcher() ;
 		
-		SearchResponse response = searcher.createRequest("").selections("name").lazySelections("int").find();
+		SearchResponse response = searcher.createRequest("").selections("name").find();
 		
 		List<ReadDocument> docs = response.getDocument();
 		for (ReadDocument doc : docs) {

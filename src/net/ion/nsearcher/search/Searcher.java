@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
+import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.config.SearchConfig;
 import net.ion.nsearcher.search.filter.FilterUtil;
@@ -13,7 +14,7 @@ import net.ion.nsearcher.search.processor.PostProcessor;
 import net.ion.nsearcher.search.processor.PreProcessor;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.Query;
@@ -116,8 +117,7 @@ public class Searcher {
 
 	// only test
 	public void forceClose() {
-		// TODO Auto-generated method stub
-		
+		IOUtil.closeQuietly(searcher) ;
 	}
 
 

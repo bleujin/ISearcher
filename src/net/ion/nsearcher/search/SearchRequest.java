@@ -8,20 +8,21 @@ import java.util.Map.Entry;
 
 import net.ion.framework.db.Page;
 import net.ion.framework.util.CaseInsensitiveHashMap;
+import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.SetUtil;
 import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.common.ReadDocument;
-import net.ion.nsearcher.search.filter.BooleanFilter;
-import net.ion.nsearcher.search.filter.FilterUtil;
 
 import org.apache.ecs.xml.XML;
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.document.SetBasedFieldSelector;
-import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.document.DocumentStoredFieldVisitor;
+import org.apache.lucene.index.StoredFieldVisitor;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
+import org.apache.lucene.search.SortField.Type;
 
 public class SearchRequest {
 
@@ -166,16 +167,20 @@ public class SearchRequest {
 		return this;
 	}
 
-	public SearchRequest lazySelections(String... cols) {
-		for (String col : cols) {
-			this.lazyColumns.add(col) ;
-		}
-		return this;
-	}
+//	public SearchRequest lazySelections(String... cols) {
+//		for (String col : cols) {
+//			this.lazyColumns.add(col) ;
+//		}
+//		return this;
+//	}
 
 	
-	public FieldSelector selector(){
-		return columns.size() == 0 ? null : new SetBasedFieldSelector(columns, lazyColumns) ;
+	public Set<String> selectorField(){
+		return columns ;
+	}
+	
+	public StoredFieldVisitor selector(){
+		return columns.size() == 0 ? null : new DocumentStoredFieldVisitor(columns) ;
 	}
 
 

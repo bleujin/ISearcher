@@ -10,7 +10,7 @@ import net.ion.framework.util.Debug;
 import net.ion.nsearcher.common.SearchConstant;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
@@ -31,7 +31,7 @@ public class TestThreadSafe extends TestCase{
 	
 	public void testThreadSafe() throws Exception {
 		Directory dir = new RAMDirectory() ;
-		Analyzer analyzer = new StandardAnalyzer(SearchConstant.LuceneVersion);
+		Analyzer analyzer = new DStandardAnalyzer(SearchConstant.LuceneVersion);
 		
 		IndexWriterConfig wconfig = new IndexWriterConfig(SearchConstant.LuceneVersion, analyzer);
 		wconfig.setOpenMode(OpenMode.CREATE_OR_APPEND) ;

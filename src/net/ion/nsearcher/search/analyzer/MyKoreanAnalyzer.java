@@ -1,174 +1,191 @@
 package net.ion.nsearcher.search.analyzer;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Stack;
+import java.util.Set;
 
-import net.ion.framework.util.ArrayUtil;
 import net.ion.framework.util.IOUtil;
-import net.ion.framework.util.ListUtil;
-import net.ion.framework.util.StringBuilderReader;
-import net.ion.nsearcher.common.SearchConstant;
 
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.kr.KoreanAnalyzer;
+import org.apache.lucene.analysis.core.LowerCaseFilter;
+import org.apache.lucene.analysis.core.StopFilter;
+import org.apache.lucene.analysis.kr.KoreanFilter;
+import org.apache.lucene.analysis.kr.KoreanTokenizer;
+import org.apache.lucene.analysis.util.CharArraySet;
+import org.apache.lucene.analysis.util.StopwordAnalyzerBase;
 import org.apache.lucene.util.Version;
 
-public class MyKoreanAnalyzer extends Analyzer {
+public class MyKoreanAnalyzer extends StopwordAnalyzerBase {
 
-	private KoreanAnalyzer kor = new KoreanAnalyzer();
-	private String[] stopword;
+	public static final int DEFAULT_MAX_TOKEN_LENGTH = 255;
+
+	private int maxTokenLength = DEFAULT_MAX_TOKEN_LENGTH;
+
+	private final boolean replaceInvalidAcronym;
+
+	private Set stopSet;
+
+	private boolean bigrammable = true;
+
+	private boolean hasOrigin = true;
+
+	private boolean exactMatch = false;
+
+	private boolean originCNoun = true;
+
+	public static final String DIC_ENCODING = "UTF-8";
+
+	public static final CharArraySet STOP_WORDS_SET;
+
+	static {
+		List stopWords = Arrays.asList(new String[] { "a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "if", "in", "into", "is", "it", "no", "not", "of", "on", "or", "such", "that", "the", "their", "then", "there", "these", "they", "this", "to", "was", "will", "with", "이", "그", "저",
+				"것", "수", "등", "들", "및", "에서", "그리고", "그래서", "또", "또는" });
+
+		CharArraySet stopSet = new CharArraySet(Version.LUCENE_42, stopWords.size(), false);
+
+		stopSet.addAll(stopWords);
+		STOP_WORDS_SET = CharArraySet.unmodifiableSet(stopSet);
+	}
 
 	public MyKoreanAnalyzer() {
-		this.kor = new KoreanAnalyzer();
-		this.stopword = new String[0];
+		this(Version.LUCENE_42, STOP_WORDS_SET);
 	}
 
-	public MyKoreanAnalyzer(Version version) {
-		this() ;
+	/**
+	 * 검색을 위한 형태소분석
+	 * 
+	 * @param search
+	 */
+	public MyKoreanAnalyzer(boolean exactMatch) {
+		this(Version.LUCENE_42, STOP_WORDS_SET);
+		this.exactMatch = exactMatch;
 	}
 
-	
-	public MyKoreanAnalyzer(String[] stopword) throws IOException{
-		this.kor = new KoreanAnalyzer(SearchConstant.LuceneVersion, stopword);
-		this.stopword = stopword;
+	public MyKoreanAnalyzer(Version matchVersion, String[] stopWords) throws IOException {
+		this(matchVersion, StopFilter.makeStopSet(matchVersion, stopWords));
+	}
+
+	public MyKoreanAnalyzer(Version matchVersion) throws IOException {
+		this(matchVersion, STOP_WORDS_SET);
+	}
+
+	public MyKoreanAnalyzer(Version matchVersion, File stopwords) throws IOException {
+		this(matchVersion, loadStopwordSet(stopwords, matchVersion));
+	}
+
+	public MyKoreanAnalyzer(Version matchVersion, File stopwords, String encoding) throws IOException {
+		this(matchVersion, loadStopwordSet(stopwords, matchVersion));
+	}
+
+	public MyKoreanAnalyzer(Version matchVersion, Reader stopwords) throws IOException {
+		this(matchVersion, loadStopwordSet(stopwords, matchVersion));
+	}
+
+	public MyKoreanAnalyzer(Version matchVersion, CharArraySet stopWords) {
+		super(matchVersion, stopWords);
+		replaceInvalidAcronym = matchVersion.onOrAfter(Version.LUCENE_42);
 	}
 
 	@Override
-	public TokenStream tokenStream(String fieldName, Reader reader) {
-		return kor.tokenStream(fieldName, WordGroup.adjustReader(stopword, reader));
-	}
+	protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
 
-	public String[] getStopword(){
-		return stopword ;
+		final KoreanTokenizer src = new KoreanTokenizer(matchVersion, WordGroup.adjustReader(reader));
+		src.setMaxTokenLength(maxTokenLength);
+
+		TokenStream tok = new KoreanFilter(src, bigrammable, hasOrigin, exactMatch, originCNoun);
+		tok = new StopFilter(matchVersion, new LowerCaseFilter(matchVersion, tok), stopwords);
+		return new TokenStreamComponents(src, tok) {
+			@Override
+			protected void setReader(final Reader reader) throws IOException {
+				src.setMaxTokenLength(MyKoreanAnalyzer.this.maxTokenLength);
+				super.setReader(WordGroup.adjustReader(reader));
+			}
+		};
 	}
 	
+//	protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
+//		final StandardTokenizer src = new StandardTokenizer(matchVersion, reader);
+//		src.setMaxTokenLength(maxTokenLength);
+//		TokenStream tok = new StandardFilter(matchVersion, src);
+//		tok = new LowerCaseFilter(matchVersion, tok);
+//		tok = new StopFilter(matchVersion, tok, stopwords);
+//		return new TokenStreamComponents(src, tok) {
+//			@Override
+//			protected void setReader(final Reader reader) throws IOException {
+//				src.setMaxTokenLength(StandardAnalyzer.this.maxTokenLength);
+//				super.setReader(reader);
+//			}
+//		};
+//	}
+	
+
+	public void setBigrammable(boolean is) {
+		bigrammable = is;
+	}
+
+	public void setHasOrigin(boolean has) {
+		hasOrigin = has;
+	}
+
+	public void setOriginCNoun(boolean cnoun) {
+		originCNoun = cnoun;
+	}
+
+	public void setExactMatch(boolean exact) {
+		exactMatch = exact;
+	}
+
 }
 
-class WordGroup {
-	private List<Word> words = ListUtil.newList();
 
+
+class WordGroup {
 	private WordGroup() {
 	};
 
-	void add(int type, StringBuilder word) {
-		// if (Word.isIgnoreType(type)) return ;
-		words.add(Word.create(type, word));
+	public static String testAdjustReader(String str) throws IOException {
+		return IOUtil.toString(WordGroup.adjustReader(new StringReader(str)));
 	}
 
-	public static String testAdjustReader(String str) throws IOException{
-		return IOUtil.toString(WordGroup.adjustReader(new String[0], new StringReader(str))) ;
-	} 
-	
-	public static Reader adjustReader(String[] stopWord, Reader reader) {
+	static Reader adjustReader(Reader reader) {
 		try {
-			String strValue = IOUtil.toString(reader);
-
-			int preType = Character.getType(strValue.charAt(0));
-
-			WordGroup words = WordGroup.create();
-			StringBuilder word = new StringBuilder();
-			for (Character c : strValue.toCharArray()) {
-				if (Character.getType(c) == preType) {
-					word.append(c);
-					continue;
-				} else {
-					words.add(preType, word);
-
-					word = new StringBuilder("" + c);
-					preType = Character.getType(c);
+			StringBuilder result = new StringBuilder();
+			int pretype = 0;
+			char[] cbuffr = new char[100];
+			while (reader.read(cbuffr) != -1) {
+				for (char c : cbuffr) {
+					int currtype = Character.getType(c);
+					if (isSplit(pretype, currtype))
+						result.append(' ');
+					result.append(c);
+					pretype = currtype;
 				}
 			}
-			words.add(preType, word);
-
-			StringBuilder result = words.toAdjustBuilder(stopWord);
-			return new StringBuilderReader(result);
-		} catch (IOException e) {
-			return reader;
+			return new StringReader(result.toString());
+		} catch (IOException ex) {
+			ex.printStackTrace() ;
+			return new StringReader("");
 		}
 	}
 
-	static WordGroup create() {
-		return new WordGroup();
+	private static boolean isSplit(int pre, int curr) {
+		if (pre == 5 && curr == 1)
+			return true;
+		if (pre == 5 && curr == 2)
+			return true;
+		if (pre == 1 && curr == 5)
+			return true;
+		if (pre == 2 && curr == 5)
+			return true;
+		if (pre == 9 && curr == 5)
+			return true;
+		if (curr == 20)
+			return true;
+		return false;
 	}
 
-	private Word[] toAdjustArray() {
-		Stack<Word> result = new Stack<Word>();
-
-		for (Word word : words) {
-			if (result.empty())
-				result.add(word);
-			else {
-				Word bword = result.pop();
-				if (bword.type() == 1 && word.type() == 5)
-					result.add(Word.create(255, bword.value().append(word.value()))); // 1:5 E?�러??
-				else if (bword.type() == 9 && word.type() == 5)
-					result.add(Word.create(255, bword.value().append(word.value()))); // 9:5 5??
-				else if (bword.type() == 1 && word.type() == 9)
-					result.add(Word.create(255, bword.value().append(word.value()))); // 1:9 B500
-				else if (bword.type() == 24 && word.type() == 9)
-					result.add(Word.create(255, bword.value().append(word.value())));
-				else {
-					result.add(bword);
-					result.add(word);
-				}
-			}
-		}
-		return result.toArray(new Word[0]);
-	}
-
-	StringBuilder toAdjustBuilder(String[] stopWord) {
-		StringBuilder result = new StringBuilder();
-		for (Word word : toAdjustArray()) {
-			if (word.isIgnoreType())
-				continue; // result.append('') ;
-			else if (word.value().length() <= 1){
-				continue;
-			} else if (ArrayUtil.contains(stopWord, word.value())){
-				continue ;
-			} else
-				result.append(word.value() + " ");
-		}
-
-		return result;
-	}
-
-}
-
-// END_PUNCTUATION : )
-class Word {
-	private int type;
-	private StringBuilder sb;
-
-	private Word(int type, StringBuilder sb) {
-		this.type = type;
-		this.sb = sb;
-	}
-
-	final static Word create(int type, StringBuilder sb) {
-		return new Word(type, sb);
-	}
-
-	public String toString() {
-		return type + ":" + sb;
-	}
-
-	boolean isIgnoreType() {
-		return isIgnoreType(type);
-	}
-
-	static boolean isIgnoreType(int type) {
-		return type == Character.END_PUNCTUATION || type == Character.START_PUNCTUATION || type == Character.DIRECTIONALITY_WHITESPACE;
-	}
-
-	int type() {
-		return type;
-	}
-
-	StringBuilder value() {
-		return sb;
-	}
 }

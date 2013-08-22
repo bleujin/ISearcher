@@ -10,17 +10,17 @@ import net.ion.framework.util.Debug;
 import net.ion.framework.util.FileUtil;
 import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.ObjectId;
+import net.ion.nsearcher.ISTestCase;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.NumericField;
+import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.store.Directory;
@@ -69,7 +69,7 @@ public class TestLockTimeout extends TestCase {
 	}
 
 	public void testAppendWrite() throws Exception {
-		final IndexWriter iwriter = new IndexWriter(dir, new StandardAnalyzer(Version.LUCENE_CURRENT), MaxFieldLength.LIMITED);
+		final IndexWriter iwriter = new IndexWriter(dir, ISTestCase.testWriterConfig());
 
 		for (int i = 0; i < 5000; i++) {
 			final ReadJob readJob = new ReadJob(dir);
@@ -89,7 +89,7 @@ public class TestLockTimeout extends TestCase {
 	public static Document createDoc(String groupKey, int i) {
 		Document doc = new Document();
 		doc.add(new Field("tranid", groupKey, Store.YES, Index.ANALYZED));
-		doc.add(new NumericField("index", Store.YES, true).setIntValue(i));
+		doc.add(new IntField("index", i, Store.YES));
 		doc.add(new Field("name", "bleujin", Store.YES, Index.ANALYZED));
 		return doc;
 	}
@@ -112,7 +112,6 @@ class ReadJob implements Callable<Void> {
 			searcher = new IndexSearcher(reader);
 			Debug.line(searcher.search(new MatchAllDocsQuery(), 1).totalHits);
 		} finally {
-			IOUtil.closeQuietly(searcher);
 			IOUtil.closeQuietly(reader);
 		}
 
@@ -130,7 +129,7 @@ class WriteJob implements Callable<Void> {
 	}
 
 	public Void call() throws Exception {
-		final IndexWriterConfig wconf = new IndexWriterConfig(Version.LUCENE_36, new StandardAnalyzer(Version.LUCENE_36));
+		final IndexWriterConfig wconf = new IndexWriterConfig(Version.LUCENE_36, new DStandardAnalyzer(Version.LUCENE_36));
 		wconf.setWriteLockTimeout(3000);
 		IndexWriter iw = null;
 		try {
@@ -153,7 +152,7 @@ class WriteJob implements Callable<Void> {
 	private Document createDoc(String groupKey, int i) {
 		Document doc = new Document();
 		doc.add(new Field("tranid", groupKey, Store.YES, Index.ANALYZED));
-		doc.add(new NumericField("index", Store.YES, true).setIntValue(i));
+		doc.add(new IntField("index", 1, Store.YES));
 		doc.add(new Field("name", "bleujin", Store.YES, Index.ANALYZED));
 		return doc;
 	}

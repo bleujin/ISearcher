@@ -8,7 +8,7 @@ import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.index.IndexableField;
 
 public class TestMyDocument extends TestCase {
 
@@ -42,7 +42,7 @@ public class TestMyDocument extends TestCase {
 			assertEquals(field.stringValue(), loadDoc.get(field.name())) ;
 		}
 
-		for (Fieldable field : loadDoc.getFields()) {
+		for (IndexableField field : loadDoc.getFields()) {
 			assertEquals(field.stringValue(), doc.get(field.name())) ;
 		}
 	}
@@ -61,7 +61,7 @@ public class TestMyDocument extends TestCase {
 		
 		ReadDocument findDoc = cen.newSearcher().createRequest("20").findOne() ;
 		
-		for (Fieldable field : findDoc.getFields()) {
+		for (IndexableField field : findDoc.getFields()) {
 			if (IKeywordField.TIMESTAMP.equals(field.name())) continue  ;
 			assertEquals(field.stringValue(), doc.get(field.name())) ;
 		}

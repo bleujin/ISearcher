@@ -1,25 +1,29 @@
 package net.ion.nsearcher.common;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
 import net.ion.framework.util.ListUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy.FieldType;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.index.IndexableFieldType;
 import org.apache.lucene.index.FieldInfo.IndexOptions;
+import org.apache.lucene.util.BytesRef;
 
-public class IndexField implements Fieldable {
+public class IndexField implements IndexableField {
 
 	private static final long serialVersionUID = -7320846412631501001L;
-	private Fieldable inner;
-	private List<Fieldable> more = ListUtil.newList() ;
+	private Field inner;
+	private List<IndexableField> more = ListUtil.newList() ;
 
 
-	IndexField(Fieldable inner) {
+	IndexField(Field inner) {
 		this.inner = inner;
 	}
 
@@ -27,77 +31,91 @@ public class IndexField implements Fieldable {
 		this(new Field(fieldType == FieldType.Manual ? name : name.toLowerCase(), value, store, index));
 	}
 
-	static IndexField load(Fieldable field){
+	static IndexField load(Field field){
 		return new IndexField(field) ;
 	}
 	
+	static Field field(FieldType fieldType, String name, String value, Field.Store store, Field.Index index){
+		return new Field(fieldType == FieldType.Manual ? name : name.toLowerCase(), value, store, index) ;
+	}
 	
-	public void addMoreField(Fieldable field) {
+	
+	public void addMoreField(Field field) {
 		more.add(field);
+	}
+
+	public void addMoreField(IndexField ifield) {
+		more.add(ifield.inner);
 	}
 
 	public String toString() {
 		return getRealField().toString();
 	}
 
-	public byte[] binaryValue() {
-		return getRealField().getBinaryValue();
+	public String stringValue() {
+		return getRealField().stringValue();
 	}
 
+	public TokenStream tokenStream(Analyzer analyzer) throws IOException{
+		return inner.tokenStream(analyzer) ;
+	}
+
+	public Field getRealField() {
+		return inner;
+	}
+
+	public IndexableField[] getMoreField() {
+		if (more == null || more.size() == 0)
+			return new IndexableField[0];
+		return more.toArray(new IndexableField[0]);
+	}
+
+
+	public IndexField addTo(Document doc) {
+		doc.add(this);
+		for (IndexableField more : this.getMoreField()) {
+			doc.add(more);
+		}
+
+		return this ;
+	}
+
+	public IndexOptions getIndexOptions() {
+		return inner.fieldType().indexOptions() ;
+	}
+
+	public void setIndexOptions(IndexOptions option) {
+		inner.fieldType().setIndexOptions(option) ;
+	}
+
+
 	public int getBinaryLength() {
-		return getRealField().getBinaryLength();
+		return getRealField().binaryValue().length;
 	}
 
 	public int getBinaryOffset() {
-		return getRealField().getBinaryOffset();
+		return getRealField().binaryValue().offset;
 	}
 
 	public byte[] getBinaryValue() {
-		return getRealField().getBinaryValue();
+		return getRealField().binaryValue().bytes;
+	}
+	public float boost() {
+		return getRealField().boost();
 	}
 
-	public byte[] getBinaryValue(byte[] bytes) {
-		return getRealField().getBinaryValue(bytes);
-	}
-
-	public float getBoost() {
-		return getRealField().getBoost();
-	}
-
-	public boolean getOmitNorms() {
-		return getRealField().getOmitNorms();
-	}
-
-	public boolean isBinary() {
-		return getRealField().isBinary();
-	}
 
 	public boolean isIndexed() {
-		return getRealField().isIndexed();
+		return getRealField().fieldType().indexed();
 	}
 
-	public boolean isLazy() {
-		return getRealField().isLazy();
-	}
-
-	public boolean isStoreOffsetWithTermVector() {
-		return getRealField().isStorePositionWithTermVector();
-	}
-
-	public boolean isStorePositionWithTermVector() {
-		return getRealField().isStorePositionWithTermVector();
-	}
 
 	public boolean isStored() {
-		return getRealField().isStored();
-	}
-
-	public boolean isTermVectorStored() {
-		return getRealField().isTermVectorStored();
+		return getRealField().fieldType().stored();
 	}
 
 	public boolean isTokenized() {
-		return getRealField().isTokenized();
+		return getRealField().fieldType().tokenized();
 	}
 
 	public String name() {
@@ -112,43 +130,21 @@ public class IndexField implements Fieldable {
 		getRealField().setBoost(f);
 	}
 
-	public void setOmitNorms(boolean flag) {
-		getRealField().setOmitNorms(flag);
+
+	public IndexableFieldType fieldType() {
+		return getRealField().fieldType();
 	}
 
-	public String stringValue() {
-		return getRealField().stringValue();
+	public Number numericValue() {
+		return getRealField().numericValue();
 	}
 
-	public TokenStream tokenStreamValue() {
-		return inner.tokenStreamValue();
+	public BytesRef binaryValue() {
+		return getRealField().binaryValue(); 
 	}
 
-	public Fieldable getRealField() {
-		return inner;
-	}
-
-	public Fieldable[] getMoreField() {
-		if (more == null || more.size() == 0)
-			return new Fieldable[0];
-		return more.toArray(new Fieldable[0]);
-	}
-
-	public IndexOptions getIndexOptions() {
-		return inner.getIndexOptions();
-	}
-
-	public void setIndexOptions(IndexOptions option) {
-		inner.setIndexOptions(option) ;
-	}
-
-	public IndexField addTo(Document doc) {
-		doc.add(this);
-		for (Fieldable more : this.getMoreField()) {
-			doc.add(more);
-		}
-
-		return this ;
-	}
+	
+	
+	
 
 }

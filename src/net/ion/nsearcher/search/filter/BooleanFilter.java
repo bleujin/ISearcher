@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.AtomicReader;
+import org.apache.lucene.index.AtomicReaderContext;
+import org.apache.lucene.queries.FilterClause;
+import org.apache.lucene.search.BitsFilteredDocIdSet;
 import org.apache.lucene.search.DocIdSet;
 import org.apache.lucene.search.DocIdSetIterator;
 import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.FilterClause;
 import org.apache.lucene.search.BooleanClause.Occur;
+import org.apache.lucene.util.Bits;
 import org.apache.lucene.util.FixedBitSet;
 
 public class BooleanFilter extends Filter implements Iterable<FilterClause> {
@@ -21,14 +24,15 @@ public class BooleanFilter extends Filter implements Iterable<FilterClause> {
 	 * Returns the a DocIdSetIterator representing the Boolean composition of the filters that have been added.
 	 */
 	@Override
-	public DocIdSet getDocIdSet(IndexReader reader) throws IOException {
+	public DocIdSet getDocIdSet(AtomicReaderContext context, Bits acceptDocs) throws IOException {
 		FixedBitSet res = null;
+		final AtomicReader reader = context.reader();
 
 		boolean hasShouldClauses = false;
 		for (final FilterClause fc : clauses) {
 			if (fc.getOccur() == Occur.SHOULD) {
 				hasShouldClauses = true;
-				final DocIdSetIterator disi = getDISI(fc.getFilter(), reader);
+				final DocIdSetIterator disi = getDISI(fc.getFilter(), context);
 				if (disi == null)
 					continue;
 				if (res == null) {
@@ -38,7 +42,7 @@ public class BooleanFilter extends Filter implements Iterable<FilterClause> {
 			}
 		}
 		if (hasShouldClauses && res == null)
-			return DocIdSet.EMPTY_DOCIDSET;
+			return null;
 
 		for (final FilterClause fc : clauses) {
 			if (fc.getOccur() == Occur.MUST_NOT) {
@@ -47,7 +51,7 @@ public class BooleanFilter extends Filter implements Iterable<FilterClause> {
 					res = new FixedBitSet(reader.maxDoc());
 					res.set(0, reader.maxDoc()); // NOTE: may set bits on deleted docs
 				}
-				final DocIdSetIterator disi = getDISI(fc.getFilter(), reader);
+				final DocIdSetIterator disi = getDISI(fc.getFilter(), context);
 				if (disi != null) {
 					res.andNot(disi);
 				}
@@ -56,9 +60,9 @@ public class BooleanFilter extends Filter implements Iterable<FilterClause> {
 
 		for (final FilterClause fc : clauses) {
 			if (fc.getOccur() == Occur.MUST) {
-				final DocIdSetIterator disi = getDISI(fc.getFilter(), reader);
+				final DocIdSetIterator disi = getDISI(fc.getFilter(), context);
 				if (disi == null) {
-					return DocIdSet.EMPTY_DOCIDSET; // no documents can match
+					return null; // no documents can match
 				}
 				if (res == null) {
 					res = new FixedBitSet(reader.maxDoc());
@@ -69,20 +73,15 @@ public class BooleanFilter extends Filter implements Iterable<FilterClause> {
 			}
 		}
 
-		return res != null ? res : DocIdSet.EMPTY_DOCIDSET;
+		return BitsFilteredDocIdSet.wrap(res, acceptDocs);
 	}
 
-	private static DocIdSetIterator getDISI(Filter filter, IndexReader reader) throws IOException {
-		final DocIdSet set = filter.getDocIdSet(reader);
-		return (set == null || set == DocIdSet.EMPTY_DOCIDSET) ? null : set.iterator();
+	private static DocIdSetIterator getDISI(Filter filter, AtomicReaderContext context) throws IOException {
+		// we dont pass acceptDocs, we will filter at the end using an additional filter
+		final DocIdSet set = filter.getDocIdSet(context, null);
+		return set == null ? null : set.iterator();
 	}
 
-	/**
-	 * Adds a new FilterClause to the Boolean Filter container
-	 * 
-	 * @param filterClause
-	 *            A FilterClause object containing a Filter and an Occur parameter
-	 */
 	public void add(FilterClause filterClause) {
 		clauses.add(filterClause);
 	}
@@ -98,14 +97,6 @@ public class BooleanFilter extends Filter implements Iterable<FilterClause> {
 		return clauses;
 	}
 
-	/**
-	 * Returns an iterator on the clauses in this query. It implements the {@link Iterable} interface to make it possible to do:
-	 * 
-	 * <pre>
-	 * for (FilterClause clause : booleanFilter) {
-	 * }
-	 * </pre>
-	 */
 	public final Iterator<FilterClause> iterator() {
 		return clauses().iterator();
 	}
@@ -129,7 +120,6 @@ public class BooleanFilter extends Filter implements Iterable<FilterClause> {
 		return 657153718 ^ clauses.hashCode();
 	}
 
-	/** Prints a user-readable version of this Filter. */
 	@Override
 	public String toString() {
 		final StringBuilder buffer = new StringBuilder("BooleanFilter(");

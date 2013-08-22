@@ -11,7 +11,7 @@ import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SearchResponse;
 
-import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.index.IndexableField;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
@@ -43,8 +43,8 @@ public class SearchHTMLFormater extends AbstractDocumentFormater implements Sear
 		for (ReadDocument doc : docs) {
 			rw.write("<ul style='font-size: 10pt;'><li>", doc.idValue());
 			rw.write("<ul>");
-			List<Fieldable> fields = doc.getFields();
-			for (Fieldable field : fields) {
+			List<IndexableField> fields = doc.getFields();
+			for (IndexableField field : fields) {
 				rw.write("<li>", field.name(), "[" + getFieldOption(field), "] : ", field.stringValue(), "<br/>");
 			}
 			rw.write("</ul>");
@@ -55,11 +55,11 @@ public class SearchHTMLFormater extends AbstractDocumentFormater implements Sear
 
 	
 
-	private Rope getFieldOption(Fieldable field) {
+	private Rope getFieldOption(IndexableField field) {
 		RopeWriter rw = new RopeWriter();
-		rw.write("Sto:", (field.isStored() ? "T" : "F"), 
-				",Tok:", (field.isTokenized() ? "T" : "F"), 
-				",Ind:", (field.isIndexed() ? "T" : "F"));
+		rw.write("Sto:", (field.fieldType().stored() ? "T" : "F"), 
+				",Tok:", (field.fieldType().tokenized() ? "T" : "F"), 
+				",Ind:", (field.fieldType().indexed() ? "T" : "F"));
 		return rw.getRope();
 	}
 

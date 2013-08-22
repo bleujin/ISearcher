@@ -3,12 +3,11 @@ package net.ion.nsearcher.config;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.ReusableAnalyzerBase;
 import org.apache.lucene.index.IndexDeletionPolicy;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.MergeScheduler;
 import org.apache.lucene.index.IndexWriter.IndexReaderWarmer;
-import org.apache.lucene.search.Similarity;
+import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.util.Version;
 
 public class IndexConfig {
@@ -27,10 +26,10 @@ public class IndexConfig {
 	private long writeLockTimeout;
 
 	private Version version ;
-	private ReusableAnalyzerBase analyzer ;
+	private Analyzer analyzer ;
 	private FieldIndexingStrategy fieldIndexingStrategy;
 	
-	IndexConfig(Version version, ReusableAnalyzerBase analyzer, IndexWriterConfig clone, FieldIndexingStrategy fiStrategy) {
+	IndexConfig(Version version, Analyzer analyzer, IndexWriterConfig clone, FieldIndexingStrategy fiStrategy) {
 		this.version = version ;
 		this.analyzer = analyzer;
 		

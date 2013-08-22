@@ -15,33 +15,66 @@ import net.ion.nsearcher.index.IndexSession;
 public class TestSearcherPaging extends TestCase {
 
 	public void testSkip() throws Exception {
-		Central cen = CentralConfig.newRam().build() ;
-		
+		Central cen = CentralConfig.newRam().build();
+
 		cen.newIndexer().index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
 				List<WriteDocument> docs = ListUtil.newList();
 				for (int i : ListUtil.rangeNum(100)) {
 					docs.add(WriteDocument.testDocument().unknown("idx", i).unknown("name", "bleujin"));
 				}
-				Collections.shuffle(docs) ;
+				Collections.shuffle(docs);
 
 				for (WriteDocument doc : docs) {
-					session.insertDocument(doc) ;
+					session.insertDocument(doc);
 				}
-				
+
 				return null;
 			}
-		}) ;
-		SearchResponse response = cen.newSearcher().createRequest("bleujin").descending("idx").skip(4).offset(3).find();
-		assertEquals(3, response.size()) ;
-		assertEquals(100, response.totalCount()) ;
+		});
+		SearchResponse response = cen.newSearcher().createRequest("bleujin").descending("idx _number").skip(4).offset(3).find();
+		assertEquals(3, response.size());
+		assertEquals(100, response.totalCount());
 		List<ReadDocument> list = response.getDocument();
-		
-		assertEquals("95", list.get(0).get("idx")) ;
-		assertEquals("94", list.get(1).get("idx")) ;
-		assertEquals("93", list.get(2).get("idx")) ;
-		
-		
+
+		response.debugPrint();
+
+		assertEquals("95", list.get(0).get("idx"));
+		assertEquals("94", list.get(1).get("idx"));
+		assertEquals("93", list.get(2).get("idx"));
+
+		cen.close();
 	}
-	
+
+	public void testStringOrder() throws Exception {
+		Central cen = CentralConfig.newRam().build();
+
+		cen.newIndexer().index(new IndexJob<Void>() {
+			public Void handle(IndexSession session) throws Exception {
+				List<WriteDocument> docs = ListUtil.newList();
+				docs.add(WriteDocument.testDocument().keyword("idx", "2"));
+				docs.add(WriteDocument.testDocument().keyword("idx", "10"));
+				docs.add(WriteDocument.testDocument().keyword("idx", "9"));
+				Collections.shuffle(docs);
+
+				for (WriteDocument doc : docs) {
+					session.insertDocument(doc);
+				}
+				return null;
+			}
+		});
+		SearchResponse response = cen.newSearcher().createRequest("").descending("idx").find();
+		assertEquals(3, response.size());
+		List<ReadDocument> list = response.getDocument();
+
+		response.debugPrint();
+
+		assertEquals("9", list.get(0).get("idx"));
+		assertEquals("2", list.get(1).get("idx"));
+		assertEquals("10", list.get(2).get("idx"));
+
+		cen.close();
+
+	}
+
 }

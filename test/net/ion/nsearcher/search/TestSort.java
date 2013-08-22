@@ -22,7 +22,7 @@ public class TestSort extends ISTestCase{
 		SortField[] sfs = new SortExpression().parse("name _number desc") ;
 		assertEquals(1, sfs.length) ;
 		assertEquals(true, sfs[0].getReverse()) ;
-		assertEquals(SortField.DOUBLE, sfs[0].getType()) ;
+		assertEquals(SortField.Type.DOUBLE, sfs[0].getType()) ;
 	}
 
 	
@@ -30,14 +30,14 @@ public class TestSort extends ISTestCase{
 		SortField[] sfs = new SortExpression().parse("name _number") ;
 		assertEquals(1, sfs.length) ;
 		assertEquals(false, sfs[0].getReverse()) ;
-		assertEquals(SortField.DOUBLE, sfs[0].getType()) ;
+		assertEquals(SortField.Type.DOUBLE, sfs[0].getType()) ;
 	}
 
 	public void testOneField3() throws Exception {
 		SortField[] sfs = new SortExpression().parse("name asc") ;
 		assertEquals(1, sfs.length) ;
 		assertEquals(false, sfs[0].getReverse()) ;
-		assertEquals(SortField.STRING, sfs[0].getType()) ;
+		assertEquals(SortField.Type.STRING, sfs[0].getType()) ;
 	}
 
 
@@ -46,10 +46,10 @@ public class TestSort extends ISTestCase{
 		SortField[] sfs = new SortExpression().parse("name desc, address asc") ;
 		assertEquals(2, sfs.length) ;
 		assertEquals(true, sfs[0].getReverse()) ;
-		assertEquals(SortField.STRING, sfs[0].getType()) ;
+		assertEquals(SortField.Type.STRING, sfs[0].getType()) ;
 
 		assertEquals(false, sfs[1].getReverse()) ;
-		assertEquals(SortField.STRING, sfs[1].getType()) ;
+		assertEquals(SortField.Type.STRING, sfs[1].getType()) ;
 
 	}
 	
@@ -57,7 +57,7 @@ public class TestSort extends ISTestCase{
 		SortField[] sfs = new SortExpression().parse("name desc, _score") ;
 		assertEquals(2, sfs.length) ;
 		assertEquals(true, sfs[0].getReverse()) ;
-		assertEquals(SortField.STRING, sfs[0].getType()) ;
+		assertEquals(SortField.Type.STRING, sfs[0].getType()) ;
 
 		assertEquals(SortField.FIELD_SCORE, sfs[1]) ;
 	}
@@ -67,7 +67,7 @@ public class TestSort extends ISTestCase{
 		Central central = writeDocument();
 		
 		Searcher newSearcher = central.newSearcher() ;
-		SearchResponse result = newSearcher.createRequest("(name:bleujin) AND (int:[100 TO 200])").descending("int").offset(5).find() ;
+		SearchResponse result = newSearcher.createRequest("(name:bleujin) AND (int:[100 TO 200])").descending("int _number").offset(5).find() ;
 		
 		List<ReadDocument> docs = result.getDocument() ;
 		Integer beforeValue = 200 ; // max

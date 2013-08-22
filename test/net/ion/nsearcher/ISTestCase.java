@@ -24,7 +24,6 @@ import net.ion.framework.db.manager.OracleDBManager;
 import net.ion.framework.db.servant.StdOutServant;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.RandomUtil;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.common.WriteDocument;
@@ -40,13 +39,19 @@ import net.ion.nsearcher.index.channel.MemoryChannel;
 import net.ion.nsearcher.index.event.ICollectorEvent;
 import net.ion.nsearcher.index.policy.ExceptionPolicy;
 import net.ion.nsearcher.index.policy.MergePolicy;
+import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.http.impl.cookie.DateUtils;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.cjk.CJKAnalyzer;
+import org.apache.lucene.analysis.debug.standard.DCJKAnalyzer;
+import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
+import org.apache.lucene.util.Version;
 
 public class ISTestCase extends TestCase{
 
@@ -105,7 +110,6 @@ public class ISTestCase extends TestCase{
         out.close() ;
 	}
 	protected Central writeDocument() throws CorruptIndexException, LockObtainFailedException, IOException, IndexException, InterruptedException, ExecutionException {
-	
 		return writeDocument(createDefaultAnalyzer()) ;
 	}
 	
@@ -130,6 +134,17 @@ public class ISTestCase extends TestCase{
 		return central;
 	}
 	
+	public static IndexWriterConfig testWriterConfig(){
+		Version version = Version.LUCENE_CURRENT ;
+		return new IndexWriterConfig(version, new DStandardAnalyzer(version)) ;
+	}
+
+	public static IndexWriter testWriter(Directory dir, Analyzer analyzer) throws IOException{
+		Version version = Version.LUCENE_CURRENT ;
+		return new IndexWriter(dir, new IndexWriterConfig(version, new DStandardAnalyzer(version))) ;
+	}
+	
+
 
 	protected void clearWriterDic(){
 		
@@ -208,12 +223,12 @@ public class ISTestCase extends TestCase{
 
 	public Analyzer createDefaultAnalyzer() {
 		// return new KoreanAnalyzer();
-		return new CJKAnalyzer(SearchConstant.LuceneVersion);
+		return new DCJKAnalyzer(SearchConstant.LuceneVersion);
 	}
 	
-	public Analyzer createKoreanAnalyzer() {
+	public Analyzer createKoreanAnalyzer() throws IOException {
 		// return new KoreanAnalyzer();
-		return new CJKAnalyzer(SearchConstant.LuceneVersion);
+		return new MyKoreanAnalyzer(SearchConstant.LuceneVersion);
 	}
 	
 

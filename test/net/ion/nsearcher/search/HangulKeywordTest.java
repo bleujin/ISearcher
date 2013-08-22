@@ -18,15 +18,13 @@ import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 import net.ion.nsearcher.search.processor.StdOutProcessor;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.kr.AnalyzerUtil;
 import org.apache.lucene.analysis.kr.KoreanAnalyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.index.TermEnum;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.QueryWrapperFilter;
-import org.apache.lucene.store.instantiated.InstantiatedIndex;
-import org.apache.lucene.store.instantiated.InstantiatedIndexReader;
 import org.apache.lucene.util.Version;
 
 public class HangulKeywordTest extends ISTestCase {
@@ -47,7 +45,7 @@ public class HangulKeywordTest extends ISTestCase {
 			}
 		}) ;
 
-		printTerm(c.newReader().getIndexReader(), "name") ;
+		printTerm(createKoreanAnalyzer(), val) ;
 		
 		StdOutProcessor stdOutProcessor = new StdOutProcessor();
 		Searcher searcher = c.newSearcher();
@@ -56,10 +54,39 @@ public class HangulKeywordTest extends ISTestCase {
 		assertEquals(1, searcher.createRequest("급락", createKoreanAnalyzer()).find().size());
 	}
 	
+	public void testMyKorean() throws Exception {
+		Central c = CentralConfig.newRam().build() ;
+
+		Analyzer indexAnal = new MyKoreanAnalyzer();
+
+		Indexer writer = c.newIndexer();
+		writer.index(indexAnal, new IndexJob<Void>() {
+
+			public Void handle(IndexSession session) throws Exception {
+				WriteDocument doc2 = WriteDocument.testDocument();
+				doc2.text("index", "7756");
+				doc2.text("name", "LG U+");
+				doc2.text("name", "알리안츠Best중소형증권투자신탁[주]");
+				doc2.text("name", "미래에셋ASEAN업종대표증권자투자신탁 1(주식)종류A ");
+				doc2.text("name", "필요가 없다 正道");
+				doc2.text("name", "한요가");
+				session.insertDocument(doc2);
+
+				WriteDocument doc1 = WriteDocument.testDocument();
+				doc1.text("name", "서울E플러스 펀드");
+				doc1.text("name", "SCH-B500 1(주식)종류A ");
+				doc1.text("name", "2000년 9월 30일 그 일이 일어났다. ");
+				doc1.text("name", "4.19의거 발생일 ");
+				doc1.text("name", "급락조짐을 보였으며 살펴 보기에는 아마도 그럴것이다");
+				session.insertDocument(doc1);
+				return null;
+			}
+		}) ;
+	}
+	
 	public void testHangulKeyword() throws Exception {
 		Central c = CentralConfig.newRam().build() ;
 
-		Set stopword = new HashSet();
 		// Analyzer anal = KorAnalyzer.createWithStopWord(stopword) ;
 		Analyzer indexAnal = new MyKoreanAnalyzer();
 		Analyzer searchAnal = new MyKoreanAnalyzer() ;
@@ -70,42 +97,40 @@ public class HangulKeywordTest extends ISTestCase {
 		writer.index(indexAnal, new IndexJob<Void>() {
 
 			public Void handle(IndexSession session) throws Exception {
-				WriteDocument doc2 = WriteDocument.testDocument();
-				doc2.add(MyField.text("index", "7756"));
-				doc2.add(MyField.text("name", "LG U+"));
-				doc2.add(MyField.text("name", "알리안츠Best중소형증권투자신탁[주]"));
-				doc2.add(MyField.text("name", "미래에셋ASEAN업종대표증권자투자신탁 1(주식)종류A "));
-				doc2.add(MyField.text("name", "필요가 없다 正道"));
-				doc2.add(MyField.text("name", "한요가"));
-				session.insertDocument(doc2);
-
 				WriteDocument doc1 = WriteDocument.testDocument();
-				doc1.add(MyField.text("name", "서울E플러스 펀드"));
-				doc1.add(MyField.text("name", "SCH-B500 1(주식)종류A "));
-				doc1.add(MyField.text("name", "2000년 9월 30일 그 일이 일어났다. "));
-				doc1.add(MyField.text("name", "4.19의거 발생일 "));
-				doc1.add(MyField.text("name", "급락조짐을 보였으며 살펴 보기에는 아마도 그럴것이다"));
+				doc1.text("index", "7756");
+				doc1.text("name", "LG U+");
+				doc1.text("name", "알리안츠Best중소형증권투자신탁[주]");
+				doc1.text("name", "미래에셋ASEAN업종대표증권자투자신탁 1(주식)종류A ");
+				doc1.text("name", "필요가 없다 正道");
+				doc1.text("name", "한요가");
 				session.insertDocument(doc1);
+
+				WriteDocument doc2 = WriteDocument.testDocument();
+				doc2.text("name", "서울E플러스 펀드");
+				doc2.text("name", "SCH-B500 1(주식)종류A ");
+				doc2.text("name", "2000년 9월 30일 그 일이 일어났다. ");
+				doc2.text("name", "4.19의거 발생일 ");
+				doc2.text("name", "급락조짐을 보였으며 살펴 보기에는 아마도 그럴것이다");
+				session.insertDocument(doc2);
 				return null;
 			}
 		}) ;
 
 
-		printTerm(c.newReader().getIndexReader(), "IS-all") ;
 		
 		StdOutProcessor stdOutProcessor = new StdOutProcessor();
 		Searcher searcher = c.newSearcher();
+//		printTerm(indexAnal, searcher.search("").getDocument().get(1).bodyValue()) ;
+
+		
 		searcher.addPostListener(stdOutProcessor);
 
 		assertEquals(1, searcher.createRequest("LG U+", searchAnal).find().size());
 
 		assertEquals(1, searcher.createRequest("2000년 9월", searchAnal).find().size());
 
-		assertEquals(1, searcher.createRequest("B500", searchAnal).find().size());
-
 		assertEquals(1, searcher.createRequest("BEST 중소형", searchAnal).find().size());
-		
-		Debug.line(searcher.createRequest("급락", searchAnal).query()) ;
 		
 
 		assertEquals(1, searcher.createRequest("급락", searchAnal).find().size());
@@ -124,6 +149,9 @@ public class HangulKeywordTest extends ISTestCase {
 
 		assertEquals(1, searcher.createRequest("index:7756", searchAnal).find().size());
 
+		assertEquals(1, searcher.createRequest("B500", searchAnal).find().size());
+
+
 	}
 	
 	
@@ -136,18 +164,10 @@ public class HangulKeywordTest extends ISTestCase {
 		Debug.debug(req.query().toString()) ;
 	}
 	
-	private void printTerm(IndexReader reader, String name) throws Exception {
+	private void printTerm(Analyzer analyzer, String source) throws Exception {
+		String[] tokens = AnalyzerUtil.toToken(analyzer, source);
 		
-		InstantiatedIndex iidx = new InstantiatedIndex(reader) ;
-		TermEnum tenum = new InstantiatedIndexReader(iidx).terms() ;
-		
-		Debug.debug(reader.maxDoc()) ;
-		
-		while(tenum.next()){
-			Term term = tenum.term();
-			if (term.field().toString().equals(name))
-				Debug.debug(term) ;
-		}
+		Debug.line(tokens) ;
 	}
 	
 	public void testRange() throws Exception {

@@ -21,10 +21,10 @@ import net.ion.crawler.parser.httpclient.SimpleHttpClientParser;
 import net.ion.framework.rope.Rope;
 import net.ion.framework.rope.RopeWriter;
 import net.ion.framework.util.Debug;
+import net.ion.nsearcher.ISTestCase;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
@@ -184,7 +184,7 @@ public class CrawlSiteTest extends TestCase{
 		// create Lucene index writer
 		// IndexWriter writer = new IndexWriter(index, new StandardAnalyzer(), true, IndexWriter.MaxFieldLength.LIMITED);
 		FSDirectory dir = FSDirectory.open(new File("c:/temp"));
-		IndexWriter writer = new IndexWriter(dir, new StandardAnalyzer(Version.LUCENE_CURRENT), true, MaxFieldLength.LIMITED);
+		IndexWriter writer =  ISTestCase.testWriter(dir, new DStandardAnalyzer(Version.LUCENE_CURRENT));
 
 		// common crawler settings
 		// Crawler scrawler = new Crawler();
@@ -220,7 +220,6 @@ public class CrawlSiteTest extends TestCase{
 		crawler.collect() ;
 
 		// Optimizing Lucene index
-		writer.optimize();
 		writer.close();
 
 		// reportPathCheckFile(crawler, graph, new PrintStream(getTestDir() + "/report.txt")) ;

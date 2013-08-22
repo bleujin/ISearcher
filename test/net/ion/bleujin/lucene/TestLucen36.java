@@ -8,7 +8,6 @@ import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.ObjectUtil;
-import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
@@ -22,18 +21,19 @@ import net.ion.nsearcher.search.Searcher;
 import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 import net.ion.nsearcher.search.processor.PostProcessor;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.NumericField;
+import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexCommit;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -53,7 +53,7 @@ public class TestLucen36 extends TestCase {
 
 		indexer.commit();
 
-		IndexReader reader = IndexReader.open(dir);
+		DirectoryReader reader = DirectoryReader.open(dir);
 
 		{
 			// add
@@ -67,7 +67,7 @@ public class TestLucen36 extends TestCase {
 
 		IndexCommit commit = reader.getIndexCommit();
 
-		IndexReader newReader = ObjectUtil.coalesce(IndexReader.openIfChanged(reader), reader);
+		DirectoryReader newReader = ObjectUtil.coalesce(DirectoryReader.openIfChanged(reader), reader);
 
 		Debug.line(reader, newReader, commit);
 		IndexSearcher searcher = new IndexSearcher(newReader);
@@ -105,7 +105,7 @@ public class TestLucen36 extends TestCase {
 								
 								 { // delete
 									 
-									 Query delQuery = new QueryParser(Version.LUCENE_36, "mindex", new StandardAnalyzer(Version.LUCENE_36)).parse("mindex:[3 TO 4]");
+									 Query delQuery = new QueryParser(Version.LUCENE_36, "mindex", new DStandardAnalyzer(Version.LUCENE_36)).parse("mindex:[3 TO 4]");
 									 // Query delQuery = new TermQuery(new Term("mindex", "3")) ;
 									 writer.deleteQuery(delQuery) ;
 								 }
@@ -163,7 +163,7 @@ public class TestLucen36 extends TestCase {
 		final IndexWriter indexer = new IndexWriter(dir, writerConfig);
 		indexer.commit();
 
-		final IndexReader reader = IndexReader.open(dir);
+		final DirectoryReader reader = DirectoryReader.open(dir);
 
 		ExecutorService exec = Executors.newFixedThreadPool(5);
 
@@ -177,8 +177,7 @@ public class TestLucen36 extends TestCase {
 						long start = System.currentTimeMillis();
 						for (int i : ListUtil.rangeNum(10)) {
 							Document doc = new Document();
-							NumericField field = new NumericField("mindex");
-							field.setIntValue(i);
+							IntField field = new IntField("mindex", i, Store.YES);
 							doc.add(field);
 							doc.add(new Field("name", "bleujin", Store.YES, Index.NOT_ANALYZED));
 							doc.add(new Field("cname", "bleujin" + i, Store.YES, Index.NOT_ANALYZED));
@@ -192,7 +191,7 @@ public class TestLucen36 extends TestCase {
 						// indexer.commit();
 						// }
 
-						IndexReader newReader = ObjectUtil.coalesce(IndexReader.openIfChanged(reader), reader);
+						DirectoryReader newReader = ObjectUtil.coalesce(DirectoryReader.openIfChanged(reader), reader);
 						IndexSearcher searcher = new IndexSearcher(newReader);
 						Query query = new QueryParser(Version.LUCENE_36, "name", new MyKoreanAnalyzer()).parse("name:bleujin");
 						TopDocs docs = searcher.search(query, 10000);
@@ -217,10 +216,10 @@ public class TestLucen36 extends TestCase {
 		indexer.commit();
 
 		for (int i = 0; i < 5; i++) {
-			IndexReader newReader = ObjectUtil.coalesce(IndexReader.openIfChanged(reader), reader);
+			DirectoryReader newReader = ObjectUtil.coalesce(DirectoryReader.openIfChanged(reader), reader);
 			IndexSearcher searcher = new IndexSearcher(newReader);
 			Query query = new QueryParser(Version.LUCENE_36, "mindex", new MyKoreanAnalyzer()).parse("name:bleujin");
-			TopDocs docs = searcher.search(query, 10000, new Sort(new SortField("mindex", SortField.INT, true)));
+			TopDocs docs = searcher.search(query, 10000, new Sort(new SortField("mindex", SortField.Type.INT, true)));
 			ScoreDoc[] sdocs = docs.scoreDocs;
 			for (int j = 0; j < Math.min(1, sdocs.length); j++) {
 				Debug.line(docs.totalHits, System.currentTimeMillis(), sdocs.length, newReader.document(sdocs[0].doc));

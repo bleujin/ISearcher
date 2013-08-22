@@ -5,14 +5,14 @@ import java.io.IOException;
 import net.ion.framework.util.ObjectUtil;
 import net.ion.nsearcher.common.SearchConstant;
 
-import org.apache.lucene.analysis.ReusableAnalyzerBase;
-import org.apache.lucene.analysis.cjk.CJKAnalyzer;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.debug.standard.DCJKAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 
 public class SearchConfigBuilder {
 
 	private CentralConfig centralConfig ;
-	private ReusableAnalyzerBase queryAnalyzer ;
+	private Analyzer queryAnalyzer ;
 	private String dftSearchFieldName = SearchConstant.ISALL_FIELD ;
 	
 	public SearchConfigBuilder(CentralConfig centralConfig) {
@@ -20,7 +20,7 @@ public class SearchConfigBuilder {
 	}
 
 	
-	public SearchConfigBuilder queryAnalyzer(ReusableAnalyzerBase queryAnalyzer){
+	public SearchConfigBuilder queryAnalyzer(Analyzer queryAnalyzer){
 		this.queryAnalyzer = queryAnalyzer ;
 		return this ;
 	}
@@ -34,8 +34,8 @@ public class SearchConfigBuilder {
 		return dftSearchFieldName ;
 	}
 	
-	public ReusableAnalyzerBase queryAnalyzer(){
-		return ObjectUtil.coalesce(queryAnalyzer, new CJKAnalyzer(centralConfig.version())) ;
+	public Analyzer queryAnalyzer(){
+		return ObjectUtil.coalesce(queryAnalyzer, new DCJKAnalyzer(centralConfig.version())) ;
 	}
 	
 	

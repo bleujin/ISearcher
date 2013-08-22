@@ -7,61 +7,44 @@ import java.util.TreeSet;
 
 import net.ion.framework.util.StringUtil;
 
-import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.AtomicReaderContext;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.index.TermDocs;
+import org.apache.lucene.queries.TermsFilter;
 import org.apache.lucene.search.DocIdSet;
 import org.apache.lucene.search.Filter;
-import org.apache.lucene.util.OpenBitSet;
-
+import org.apache.lucene.util.Bits;
 
 public class TermFilter extends Filter {
 
 	private static final long serialVersionUID = -6690325079949112622L;
 	private Set<Term> terms = new TreeSet<Term>();
-	
-	public TermFilter(){
-	}
-	
-	public TermFilter(String field, String value){
-		addTerm(new Term(field, value)) ;
-	}
-	
-	public TermFilter addTerm(Term term) {
-		terms.add(term);
-		return this ;
+
+	public TermFilter() {
 	}
 
-	public DocIdSet getDocIdSet(IndexReader reader) throws IOException {
-		OpenBitSet result = new OpenBitSet(reader.maxDoc());
-		TermDocs td = reader.termDocs();
-		
-		try {
-			for (Term term : terms) {
-				td.seek(term);
-				while (td.next()) {
-					result.set(td.doc());
-				}
-			}
-		} finally {
-			td.close();
-		}
-		return result;
+	public TermFilter(String field, String value) {
+		addTerm(new Term(field, value));
 	}
-	
-	public boolean containsField(String field){
+
+	public TermFilter addTerm(Term term) {
+		terms.add(term);
+		return this;
+	}
+
+	public boolean containsField(String field) {
 		for (Term term : terms) {
-			if (StringUtil.equals(field, term.field())) return true ;
+			if (StringUtil.equals(field, term.field()))
+				return true;
 		}
-		return false ;
+		return false;
 	}
 
 	public boolean equals(Object _that) {
 		if (this == _that)
 			return true;
-		if (! (_that instanceof TermFilter))
+		if (!(_that instanceof TermFilter))
 			return false;
-		
+
 		TermFilter that = (TermFilter) _that;
 		return (terms == that.terms || (terms != null && terms.equals(that.terms)));
 	}
@@ -75,8 +58,12 @@ public class TermFilter extends Filter {
 		return hash;
 	}
 
+	public String toString() {
+		return getClass() + "[" + this.terms + "]";
+	}
 
-	public String toString(){
-		return getClass() + "[" + this.terms + "]" ;
+	@Override
+	public DocIdSet getDocIdSet(AtomicReaderContext context, Bits acceptDocs) throws IOException {
+		return new TermsFilter(terms.toArray(new Term[0])).getDocIdSet(context, acceptDocs) ;
 	}
 }

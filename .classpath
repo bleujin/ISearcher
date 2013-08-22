@@ -8,9 +8,9 @@
 	<classpathentry kind="lib" path="lib/common_apache_fat.jar"/>
 	<classpathentry kind="lib" path="lib/search_util_fat.jar"/>
 	<classpathentry kind="lib" path="lib/rest_fat.jar"/>
-	<classpathentry kind="lib" path="lib/search362_fat.jar"/>
 	<classpathentry kind="lib" path="lib/aradon_0.9.jar"/>
 	<classpathentry kind="lib" path="lib/guava-jdk5-13.0.jar"/>
+	<classpathentry kind="lib" path="lib/search440_fat.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

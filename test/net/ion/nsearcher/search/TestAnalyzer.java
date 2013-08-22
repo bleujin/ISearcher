@@ -14,11 +14,6 @@ import net.ion.nsearcher.search.processor.StdOutProcessor;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.kr.morph.WordEntry;
 import org.apache.lucene.analysis.kr.utils.DictionaryUtil;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.index.TermEnum;
-import org.apache.lucene.store.instantiated.InstantiatedIndex;
-import org.apache.lucene.store.instantiated.InstantiatedIndexReader;
 
 public class TestAnalyzer extends TestCase {
 
@@ -77,8 +72,7 @@ public class TestAnalyzer extends TestCase {
 			}
 		}) ;
 
-		if (printTerm) printTerm(c.newReader().getIndexReader(), "name") ;
-		
+
 		StdOutProcessor stdOutProcessor = new StdOutProcessor();
 		Searcher searcher = c.newSearcher();
 		searcher.addPostListener(stdOutProcessor);
@@ -86,17 +80,6 @@ public class TestAnalyzer extends TestCase {
 		return searcher.createRequest(term, anal).find().size() > 0;
 	}
 	
-	private void printTerm(IndexReader reader, String name) throws Exception {
-		InstantiatedIndex iidx = new InstantiatedIndex(reader) ;
-		TermEnum tenum = new InstantiatedIndexReader(iidx).terms() ;
-		
-		// Debug.debug(reader.maxDoc()) ;
-		while(tenum.next()){
-			Term term = tenum.term();
-			if (term.field().toString().equals(name))
-				Debug.debug(term, term.field(), term.text()) ;
-		}
-	}
 	
 	
 	public void testPrintType() throws Exception {

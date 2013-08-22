@@ -18,7 +18,7 @@ import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SearchResponse;
 
-import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.index.IndexableField;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.Language;
 import org.restlet.data.MediaType;
@@ -68,8 +68,8 @@ public class SearchJSONFormater extends AbstractDocumentFormater implements Sear
 		List<Map<String, Object>> nodeList = new ArrayList<Map<String, Object>>();
 		for (ReadDocument doc : docs) {
 			Map<String, Object> node = new HashMap<String, Object>();
-			List<Fieldable> fields = doc.getFields();
-			for (Fieldable field : fields) {
+			List<IndexableField> fields = doc.getFields();
+			for (IndexableField field : fields) {
 				if(node.containsKey(field.name())){
 					if(field.stringValue().length() > ((String)node.get(field.name())).length()){
 						node.put(field.name(), field.stringValue());
@@ -89,8 +89,8 @@ public class SearchJSONFormater extends AbstractDocumentFormater implements Sear
 		List<Map<String, Object>> nodeList = new ArrayList<Map<String, Object>>();
 		for (ReadDocument doc : docs) {
 			Map<String, Object> node = new HashMap<String, Object>();
-			List<Fieldable> fields = doc.getFields();
-			for (Fieldable field : fields) {
+			List<IndexableField> fields = doc.getFields();
+			for (IndexableField field : fields) {
 				node.put(field.name(), field.stringValue());
 			}
 			nodeList.add(node);

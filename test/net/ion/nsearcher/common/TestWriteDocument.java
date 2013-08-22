@@ -1,6 +1,7 @@
 package net.ion.nsearcher.common;
 
 import junit.framework.TestCase;
+import net.ion.framework.util.Debug;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
@@ -101,7 +102,12 @@ public class TestWriteDocument extends TestCase {
 		}
 	}
 	
-	
+	public void testId() throws Exception {
+		WriteDocument doc1 = WriteDocument.testDocument();
+		WriteDocument doc2 = WriteDocument.testDocument();
+		
+		Debug.line(doc1.idValue(), doc2.idValue()) ;
+	}
 	
 	
 }

@@ -21,14 +21,17 @@
 	<property name="baseDir" value="." />
 	<property name="targetDir" value="../lib" />
 	
-	<target name="search410">
-    	<delete file="${targetDir}/search410_fat.jar"></delete>
-        <fatjar.build output="${targetDir}/search410_fat.jar">
+	<target name="search440">
+    	<delete file="${targetDir}/search440_fat.jar"></delete>
+        <fatjar.build output="${targetDir}/search440_fat.jar">
             <fatjar.manifest/>
-        	<fatjar.jarsource file="${basedir}\search410\lucene-core-4.1.0.jar" relpath=""/> 
-        	<fatjar.jarsource file="${basedir}\search410\lucene-queries-4.1.0.jar" relpath=""/>  
-        	<fatjar.jarsource file="${basedir}\search410\lucene-queryparser-4.1.0.jar" relpath=""/>  
-        	<fatjar.jarsource file="${basedir}\search410\lucene-analyzers-4.1.0.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search440\lucene-core-4.4.0.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\search440\lucene-queries-4.4.0.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search440\lucene-queryparser-4.4.0.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search440\lucene-codecs-4.4.0.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search440\lucene-facet-4.4.0.jar" relpath=""/>  
+            <fatjar.jarsource file="${basedir}\search440\lucene-analyzers-common-4.4.0.jar" relpath=""/>  
+            <fatjar.jarsource file="${basedir}\search440\koreananalyzer.4x-20130430.jar" relpath=""/>  
         </fatjar.build>
     </target>
 

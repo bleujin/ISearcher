@@ -14,7 +14,9 @@ import net.ion.nsearcher.reader.InfoReader.InfoHandler;
 import net.ion.radon.core.annotation.DefaultValue;
 import net.ion.radon.core.annotation.PathParam;
 
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.store.Directory;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 
@@ -25,15 +27,16 @@ public class InfoLet extends SearchResource{
 		InfoReader reader = getInfoReader() ;
 		
 		Map<String, Object> infoMap = reader.info(new InfoHandler<Map<String, Object>>() {
-			public Map<String, Object> view(IndexReader dreader) throws IOException {
+			@Override
+			public Map<String, Object> view(IndexReader ireader, DirectoryReader dreader) throws IOException {
 				Map<String, Object> result = MapUtil.newMap() ;
 				
 				result.put("directory", dreader.directory()) ;
 				result.put("current version", dreader.getVersion()) ;
-				result.put("indexExists", IndexReader.indexExists(dreader.directory())) ;
-				result.put("lastModified", IndexReader.listCommits(dreader.directory())) ;
-				result.put("maxDoc", dreader.maxDoc()) ;
-				result.put("numDoc", dreader.numDocs()) ;
+				result.put("indexExists", DirectoryReader.indexExists(dreader.directory())) ;
+				result.put("lastModified", DirectoryReader.listCommits(dreader.directory())) ;
+				result.put("maxDoc", ireader.maxDoc()) ;
+				result.put("numDoc", ireader.numDocs()) ;
 				
 				return result;
 			}

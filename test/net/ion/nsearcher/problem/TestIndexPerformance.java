@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
@@ -83,7 +83,7 @@ public class TestIndexPerformance extends TestCase {
 	
 	//29 sec(keyword, analyzed) / 18sec(keyword, not analyzed) / 28sec (text, analyzed)
 	public void testLuceneWrite() throws Exception {
-		IndexWriterConfig wconfig = new IndexWriterConfig(Version.LUCENE_CURRENT, new StandardAnalyzer(Version.LUCENE_CURRENT));
+		IndexWriterConfig wconfig = new IndexWriterConfig(Version.LUCENE_CURRENT, new DStandardAnalyzer(Version.LUCENE_CURRENT));
 		IndexWriter iwriter = new IndexWriter(dir, wconfig);
 		File file = new File("C:/temp/freebase-datadump-tsv/data/medicine/drug_label_section.tsv") ;
 		

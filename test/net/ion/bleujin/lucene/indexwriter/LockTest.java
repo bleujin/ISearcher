@@ -10,7 +10,6 @@ import net.ion.nsearcher.ISTestCase;
 import org.apache.lucene.analysis.kr.KoreanAnalyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;
 
@@ -20,14 +19,14 @@ public class LockTest extends ISTestCase {
 		File file = getTestDirFile() ;
 		
 		FSDirectory dir = FSDirectory.open(file);
-		IndexWriter writer = new IndexWriter(dir, new KoreanAnalyzer(), MaxFieldLength.LIMITED ) ;
+		IndexWriter writer = testWriter(dir, new KoreanAnalyzer()) ;
 		try {
 			FSDirectory dir2 = FSDirectory.open(file);
-			IndexWriter writer2 = new IndexWriter(dir2, new KoreanAnalyzer(), MaxFieldLength.LIMITED ) ;
+			IndexWriter writer2 = testWriter(dir2, new KoreanAnalyzer()) ;
 			fail() ;
 		} catch(LockObtainFailedException ignore){
 		}
-		IndexReader reader = writer.getReader() ;
+		Debug.debug() ;
 	}
 
 
@@ -35,7 +34,7 @@ public class LockTest extends ISTestCase {
 		File file = getTestDirFile() ;
 		
 		FSDirectory dir = FSDirectory.open(file);
-		IndexWriter writer = new IndexWriter(dir, new KoreanAnalyzer(), MaxFieldLength.LIMITED ) ;
+		IndexWriter writer = testWriter(dir, new KoreanAnalyzer()) ;
 //		IndexReader reader = writer.getReader() ;
 //		writer.close() ;
 //		
@@ -44,7 +43,7 @@ public class LockTest extends ISTestCase {
 //		Debug.debug(fieldNames) ;
 		try {
 			FSDirectory dir2 = FSDirectory.open(file);
-			IndexWriter writer2 = new IndexWriter(dir2, new KoreanAnalyzer(), MaxFieldLength.LIMITED ) ;
+			IndexWriter writer2 = testWriter(dir2, new KoreanAnalyzer()) ;
 			fail() ;
 		} catch(LockObtainFailedException ignore){
 		}
@@ -55,12 +54,12 @@ public class LockTest extends ISTestCase {
 		final File file = getTestDirFile() ;
 		
 		FSDirectory dir = FSDirectory.open(file);
-		IndexWriter writer1 = new IndexWriter(dir, new KoreanAnalyzer(), MaxFieldLength.LIMITED ) ;
+		IndexWriter writer1 = testWriter(dir, new KoreanAnalyzer()) ;
 		Thread another = new Thread(){
 			public void run(){
 				try {
 					FSDirectory dir = FSDirectory.open(file);
-					IndexWriter writer2 = new IndexWriter(dir, new KoreanAnalyzer(), MaxFieldLength.LIMITED ) ;
+					IndexWriter writer2 = testWriter(dir, new KoreanAnalyzer()) ;
 					fail() ;
 					throw new IllegalStateException();
 				} catch (IOException ignore) {

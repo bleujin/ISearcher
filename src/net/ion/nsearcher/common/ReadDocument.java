@@ -15,7 +15,8 @@ import net.ion.framework.util.SetUtil;
 import net.ion.framework.util.StringUtil;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.index.IndexableFieldType;
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
@@ -43,7 +44,9 @@ public class ReadDocument extends MyDocument {
 	}
 	
 	public String get(String name) {
-		return getField(name).stringValue() ;
+		final IndexableField field = getField(name);
+		if (field == null) return null ;
+		return field.stringValue() ;
 	}
 
 	public long getAsLong(String name) {
@@ -51,16 +54,16 @@ public class ReadDocument extends MyDocument {
 	}
 
 
-	public Fieldable getField(String name) {
+	public IndexableField getField(String name) {
 		if ( ArrayUtil.contains(IKeywordField.KEYWORD_FIELD, name)) {
 			throw new IllegalArgumentException("["+ name + "] reserved field Id, use ReadDocuement.reserved Method.");
 		} else {
-			return doc.getFieldable(StringUtil.lowerCase(name)) ;
+			return doc.getField(StringUtil.lowerCase(name)) ;
 		}
 	}
 
-	public List<Fieldable> getFields() {
-		final List<Fieldable> result = ListUtil.newList() ;
+	public List<IndexableField> getFields() {
+		final List<IndexableField> result = ListUtil.newList() ;
 		
 		for (String fieldName : getFieldNames()) {
 			result.add(getField(fieldName)) ;
@@ -69,8 +72,8 @@ public class ReadDocument extends MyDocument {
 		return Collections.unmodifiableList(result) ;
 	}
 	
-	public Fieldable[] getFields(String name) {
-		return doc.getFieldables(name) ;
+	public IndexableField[] getFields(String name) {
+		return doc.getFields(name) ;
 	}
 
 	private String[] getValues(String name) {
@@ -79,8 +82,8 @@ public class ReadDocument extends MyDocument {
 
 	public void write(MyDocumentTemplate mw){
 		mw.startDoc(this) ;
-		List<Fieldable> fields = getFields() ;
-		for (Fieldable field : fields) {
+		List<IndexableField> fields = getFields() ;
+		for (IndexableField field : fields) {
 			mw.printField(field) ;
 		}
 		mw.endDoc(this) ;
@@ -96,7 +99,7 @@ public class ReadDocument extends MyDocument {
 	
 	public String[] getFieldNames() {
 		Set<String> set = SetUtil.newSet() ;
-		for (Fieldable field : doc.getFields()) {
+		for (IndexableField field : doc.getFields()) {
 			if (IKeywordField.Field.reservedId(field.name())) continue ;
 			if (field.name().endsWith(MyField.SORT_POSTFIX)) continue ;
 			set.add(field.name()) ;
@@ -116,8 +119,9 @@ public class ReadDocument extends MyDocument {
 		ToStringHelper helper = Objects.toStringHelper(this.getClass());
 		for (String fieldName : getFieldNames()) {
 			int i = 0 ;
-			for (Fieldable field : getFields(fieldName)) {
-				helper.add(fieldName + "[" + (i++) + "]", field.stringValue()).add("Indexed", field.isIndexed()).add("Stored", field.isStored()).add("Tokenized", field.isTokenized()) ;
+			for (IndexableField field : getFields(fieldName)) {
+				IndexableFieldType fieldType = field.fieldType();
+				helper.add(fieldName + "[" + (i++) + "]", field.stringValue()).add("Indexed", fieldType.indexed()).add("Stored", fieldType.stored()).add("Tokenized", fieldType.tokenized()) ;
 			}
 		}
 		return helper.toString() ;

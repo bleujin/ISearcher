@@ -10,16 +10,17 @@ import net.ion.nsearcher.common.FieldIndexingStrategy;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.lucene.search.SortField;
+import org.apache.lucene.search.SortField.Type;
 
 public class SortExpression {
 
 	private static String[] KEYWORD_FIELD = new String[]{"_doc", "_score"};
 	private static String[] ORDER = new String[]{"asc", "desc"};
-	private static Map<String, Integer> ORDER_ENCODING = MapUtil.<Integer>chainKeyMap()
-		.put("_string", SortField.STRING)
-		.put("_doc", SortField.DOC)
-		.put("_score", SortField.SCORE)
-		.put("_number", SortField.DOUBLE)
+	private static Map<String, Type> ORDER_ENCODING = MapUtil.<Type>chainKeyMap()
+		.put("_string", SortField.Type.STRING)
+		.put("_doc", SortField.Type.DOC)
+		.put("_score", SortField.Type.SCORE)
+		.put("_number", SortField.Type.DOUBLE)
 		.toMap() ;
 	
 	public static SortField[] parse(String _str) {
@@ -35,7 +36,7 @@ public class SortExpression {
 			String[] sps = StringUtil.split(field) ;
 
 			String fieldName = sps[0] ; // mandatory
-			Integer sortFieldType = SortField.STRING ;
+			Type sortFieldType = SortField.Type.STRING ;
 			boolean isRerverse = false ;
 			
 			if (ArrayUtils.contains(KEYWORD_FIELD, fieldName) && sps.length == 1) {
@@ -60,8 +61,8 @@ public class SortExpression {
 		return (SortField[])result.toArray(new SortField[0]) ;
 	}
 
-	private static Integer getSortFieldType(String sp) {
-		return (ORDER_ENCODING.containsKey(sp)) ?  ORDER_ENCODING.get(sp) : SortField.STRING;
+	private static SortField.Type getSortFieldType(String sp) {
+		return (ORDER_ENCODING.containsKey(sp)) ?  ORDER_ENCODING.get(sp) : SortField.Type.STRING;
 	}
 	
 	

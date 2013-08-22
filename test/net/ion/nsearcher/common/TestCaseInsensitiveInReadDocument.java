@@ -5,7 +5,7 @@ import java.util.List;
 import junit.framework.TestCase;
 import net.ion.framework.util.ArrayUtil;
 
-import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.index.IndexableField;
 
 public class TestCaseInsensitiveInReadDocument extends TestCase {
 
@@ -65,7 +65,7 @@ public class TestCaseInsensitiveInReadDocument extends TestCase {
 	
 	
 	public void testGetFields() throws Exception {
-		List<Fieldable> list = rdoc.getFields();
+		List<IndexableField> list = rdoc.getFields();
 		
 		assertEquals(2, list.size()) ;
 		assertEquals(true, ArrayUtil.contains(new String[]{"name", "age"}, list.get(0).name())) ;

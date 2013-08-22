@@ -2,28 +2,27 @@ package net.ion.nsearcher.config;
 
 import java.io.IOException;
 
-import net.ion.framework.util.Debug;
 import net.ion.framework.util.ObjectUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.SearchConstant;
 
-import org.apache.lucene.analysis.ReusableAnalyzerBase;
-import org.apache.lucene.analysis.cjk.CJKAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.debug.standard.DCJKAnalyzer;
+import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexDeletionPolicy;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.MergePolicy;
 import org.apache.lucene.index.MergeScheduler;
 import org.apache.lucene.index.IndexWriter.IndexReaderWarmer;
-import org.apache.lucene.search.Similarity;
+import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.util.Version;
 
 public class IndexConfigBuilder {
 
 	private CentralConfig centralConfig ;
-	private IndexWriterConfig clone = new IndexWriterConfig(SearchConstant.LuceneVersion, new StandardAnalyzer(SearchConstant.LuceneVersion)) ;
-	private ReusableAnalyzerBase analyzer ;
+	private IndexWriterConfig clone = new IndexWriterConfig(SearchConstant.LuceneVersion, new DStandardAnalyzer(SearchConstant.LuceneVersion)) ;
+	private Analyzer analyzer ;
 	private FieldIndexingStrategy fieldIndexingStrategy = FieldIndexingStrategy.DEFAULT ;
 	
 	IndexConfigBuilder(CentralConfig centralConfig) {
@@ -113,15 +112,15 @@ public class IndexConfigBuilder {
 		return new IndexConfig(config.version(), indexAnalyzer(config.version()), clone, this.fieldIndexingStrategy) ;
 	}
 
-	private ReusableAnalyzerBase indexAnalyzer(Version version) {
-		return ObjectUtil.coalesce(this.analyzer, new CJKAnalyzer(version));
+	private Analyzer indexAnalyzer(Version version) {
+		return ObjectUtil.coalesce(this.analyzer, new DCJKAnalyzer(version));
 	}
 
 	public Central build() throws CorruptIndexException, IOException{
 		return centralConfig.build() ;
 	}
 	
-	public IndexConfigBuilder indexAnalyzer(ReusableAnalyzerBase anlyzer){
+	public IndexConfigBuilder indexAnalyzer(Analyzer anlyzer){
 		this.analyzer = anlyzer ;
 		return this ;
 	}
