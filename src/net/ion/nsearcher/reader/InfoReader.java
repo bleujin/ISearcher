@@ -3,7 +3,10 @@ package net.ion.nsearcher.reader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import net.ion.framework.util.Debug;
+import net.ion.framework.util.MapUtil;
 import net.ion.nsearcher.common.IKeywordField;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.search.SingleSearcher;
@@ -11,6 +14,7 @@ import net.ion.nsearcher.search.SingleSearcher;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.FieldInfo;
+import org.apache.lucene.index.IndexCommit;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.MultiFields;
 import org.apache.lucene.index.ReaderUtil;
@@ -24,13 +28,13 @@ public class InfoReader {
 	
 	private SingleSearcher searcher ;
 	private DirectoryReader dreader;
-	private InfoReader(SingleSearcher searcher, DirectoryReader directory)  {
+	private InfoReader(SingleSearcher searcher, DirectoryReader dreader)  {
 		this.searcher = searcher;
-		this.dreader = directory ;
+		this.dreader = dreader ;
 	}
 
-	public final static InfoReader create(SingleSearcher searcher, DirectoryReader directory)  {
-		return new InfoReader(searcher, directory);
+	public final static InfoReader create(SingleSearcher searcher, DirectoryReader direader)  {
+		return new InfoReader(searcher, direader);
 	}
 
 	
@@ -68,6 +72,12 @@ public class InfoReader {
 		}
 		
 		return result ;
+	}
+
+	public Map<String, String> commitUserData() throws IOException {
+		List<IndexCommit> list = DirectoryReader.listCommits(dreader.directory());
+		if (list.size() <= 0) return MapUtil.EMPTY ;
+		return list.get(0).getUserData() ;
 	}
 	
 }

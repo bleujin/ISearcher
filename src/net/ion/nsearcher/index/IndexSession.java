@@ -2,7 +2,9 @@ package net.ion.nsearcher.index;
 
 import java.io.IOException;
 
+import net.ion.framework.util.Debug;
 import net.ion.framework.util.IOUtil;
+import net.ion.framework.util.MapUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.common.WriteDocument;
@@ -27,6 +29,9 @@ public class IndexSession {
 	private String owner;
 	private FieldIndexingStrategy fieldIndexingStrategy;
 
+	public final static String VERSION = "version" ;
+	public final static String LASTMODIFIED = "lastmodified" ;
+	
 	IndexSession(SingleSearcher searcher, Analyzer analyzer) {
 		this.searcher = searcher;
 		this.wconfig = searcher.central().indexConfig().newIndexWriterConfig(analyzer);
@@ -82,6 +87,8 @@ public class IndexSession {
 	// }
 
 	public IndexSession end() {
+		final String lastmodified = String.valueOf(System.currentTimeMillis());
+		writer.setCommitData(MapUtil.<String>chainKeyMap().put(VERSION, SearchConstant.LuceneVersion.toString()).put(LASTMODIFIED, lastmodified).toMap()) ;
 		IOUtil.close(writer);
 		this.writer = null ;
 		release();
