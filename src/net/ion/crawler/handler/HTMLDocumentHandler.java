@@ -10,8 +10,10 @@ import net.ion.crawler.parser.PageData;
 import net.ion.framework.parse.html.HTag;
 import net.ion.framework.parse.html.NotFoundTagException;
 import net.ion.framework.rope.RopeReader;
+import net.ion.nsearcher.common.Applier;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.WriteDocument;
+import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.event.CollectorEvent;
 import net.ion.nsearcher.index.handler.DocumentHandler;
 
@@ -41,7 +43,7 @@ public class HTMLDocumentHandler implements DocumentHandler {
 			}
 			
 			Link link = pageData.getLink();
-			WriteDocument doc = WriteDocument.newDocument(String.valueOf(event.getEventId())).event(event).text("uri" ,link.getURI());
+			WriteDocument doc = IndexSession.testDocument(String.valueOf(event.getEventId())).event(event).text("uri" ,link.getURI());
 			for (MyField field : fields) {
 				doc.add(field) ;
 			}
@@ -52,6 +54,8 @@ public class HTMLDocumentHandler implements DocumentHandler {
 			return new WriteDocument[0];
 		}
 	}
+	
+	
 	
 	
 	private List<MyField> makeFields(PageData pageData) throws IOException {

@@ -18,7 +18,7 @@ import net.ion.framework.util.Debug;
 import net.ion.framework.util.InfinityThread;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.RandomUtil;
-import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.AbDocument;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
@@ -63,7 +63,7 @@ class IndexThread implements Callable<Void> {
 						public Void handle(IndexSession isession) throws Exception {
 							while(queue.size() > 0){
 								Event event = queue.take();
-								WriteDocument wdoc = MyDocument.newDocument(event.key);
+								WriteDocument wdoc = isession.newDocument(event.key);
 								isession.updateDocument(wdoc) ;
 							}
 							return null;

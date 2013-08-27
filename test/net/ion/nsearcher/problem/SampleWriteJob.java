@@ -4,9 +4,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.Field.Store;
+
 import net.ion.framework.util.Debug;
-import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.IndexField;
+import net.ion.nsearcher.common.AbDocument;
 import net.ion.nsearcher.common.WriteDocument;
+import net.ion.nsearcher.common.FieldIndexingStrategy.FieldType;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.radon.impl.util.CsvReader;
@@ -29,12 +35,19 @@ public class SampleWriteJob implements IndexJob<Void> {
 		
 		while(line != null && line.length > 0 && max-- > 0 ){
 //			if (headers.length != line.length ) continue ;
-			WriteDocument doc = MyDocument.newDocument("/" + max) ; 
+			
+			WriteDocument doc = isession.newDocument("/" + max) ; 
 			for (int ii = 0, last = headers.length; ii < last ; ii++) {
 				if (line.length > ii) doc.unknown(headers[ii], line[ii]) ;
 			}
-			
 			isession.insertDocument(doc) ;
+			
+//			Document doc = new Document() ; 
+//			for (int ii = 0, last = headers.length; ii < last ; ii++) {
+//				if (line.length > ii) doc.add(new IndexField(FieldType.Text, headers[ii], line[ii], Store.YES, Index.ANALYZED)) ;
+//			}
+//			isession.testDocument(doc) ;
+			
 			line = reader.readLine() ;
 			if ((max % 5000) == 0) {
 				System.out.print('.') ;

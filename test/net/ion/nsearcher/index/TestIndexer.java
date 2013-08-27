@@ -58,9 +58,9 @@ public class TestIndexer extends ISTestCase {
 		
 		Indexer indexer = c.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws IOException {
-				WriteDocument doc = WriteDocument.testDocument();
-				session.insertDocument(doc.add(MyField.keyword("name", "bleujin"))) ;
+			public Void handle(IndexSession isession) throws IOException {
+				WriteDocument doc = isession.newDocument();
+				isession.insertDocument(doc.add(MyField.keyword("name", "bleujin"))) ;
 				return null;
 			}
 		}) ;

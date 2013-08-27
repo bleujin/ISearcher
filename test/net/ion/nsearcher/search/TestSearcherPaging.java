@@ -18,15 +18,15 @@ public class TestSearcherPaging extends TestCase {
 		Central cen = CentralConfig.newRam().build();
 
 		cen.newIndexer().index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws Exception {
+			public Void handle(IndexSession isession) throws Exception {
 				List<WriteDocument> docs = ListUtil.newList();
 				for (int i : ListUtil.rangeNum(100)) {
-					docs.add(WriteDocument.testDocument().unknown("idx", i).unknown("name", "bleujin"));
+					docs.add(isession.newDocument().unknown("idx", i).unknown("name", "bleujin"));
 				}
 				Collections.shuffle(docs);
 
 				for (WriteDocument doc : docs) {
-					session.insertDocument(doc);
+					isession.insertDocument(doc);
 				}
 
 				return null;
@@ -50,15 +50,15 @@ public class TestSearcherPaging extends TestCase {
 		Central cen = CentralConfig.newRam().build();
 
 		cen.newIndexer().index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws Exception {
+			public Void handle(IndexSession isession) throws Exception {
 				List<WriteDocument> docs = ListUtil.newList();
-				docs.add(WriteDocument.testDocument().keyword("idx", "2"));
-				docs.add(WriteDocument.testDocument().keyword("idx", "10"));
-				docs.add(WriteDocument.testDocument().keyword("idx", "9"));
+				docs.add(isession.newDocument().keyword("idx", "2"));
+				docs.add(isession.newDocument().keyword("idx", "10"));
+				docs.add(isession.newDocument().keyword("idx", "9"));
 				Collections.shuffle(docs);
 
 				for (WriteDocument doc : docs) {
-					session.insertDocument(doc);
+					isession.insertDocument(doc);
 				}
 				return null;
 			}

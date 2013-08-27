@@ -15,8 +15,8 @@ public class TestCentral extends ISTestCase{
 		Central central = CentralConfig.newRam().build() ;
 		
 		central.newIndexer().index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws Exception {
-				session.insertDocument(WriteDocument.newDocument("bleujin")) ;
+			public Void handle(IndexSession isession) throws Exception {
+				isession.insertDocument(isession.newDocument("bleujin")) ;
 				return null;
 			}
 		}) ;

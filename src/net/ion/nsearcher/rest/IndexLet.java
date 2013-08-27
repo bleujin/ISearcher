@@ -28,12 +28,12 @@ public class IndexLet extends SearchResource{
 		final Map<String, Object> map = getInnerRequest().getGeneralParameter();
 		indexer.index(new IndexJob<Void>() {
 
-			public Void handle(IndexSession session) throws Exception {
-				WriteDocument doc = WriteDocument.testDocument();
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument doc = isession.newDocument();
 				for (Entry<String, Object> entry : map.entrySet()) {
 					doc.add(MyField.unknown(entry.getKey(), entry.getValue())) ;
 				}
-				session.insertDocument(doc) ;
+				isession.insertDocument(doc) ;
 				return null;
 			}
 		}) ;

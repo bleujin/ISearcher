@@ -61,11 +61,11 @@ public class DirTest extends ISTestCase{
 		Central cen = CentralConfig.newRam().build() ;
 		Indexer writer = cen.newIndexer() ;
 		writer.index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws Exception {
+			public Void handle(IndexSession isession) throws Exception {
 				for (int i = 0; i < 3 ; i++) {
-					WriteDocument doc = WriteDocument.testDocument() ;
+					WriteDocument doc = isession.newDocument() ;
 					doc.add(MyField.text("name", "bleujin")) ;
-					session.insertDocument(doc) ;
+					isession.insertDocument(doc) ;
 				}
 				return null;
 			}

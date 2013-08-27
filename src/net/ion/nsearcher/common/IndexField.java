@@ -21,7 +21,7 @@ public class IndexField implements IndexableField {
 	private static final long serialVersionUID = -7320846412631501001L;
 	private Field inner;
 	private List<IndexableField> more = ListUtil.newList() ;
-
+	public final static IndexField BLANK = new IndexField(null) ;
 
 	IndexField(Field inner) {
 		this.inner = inner;

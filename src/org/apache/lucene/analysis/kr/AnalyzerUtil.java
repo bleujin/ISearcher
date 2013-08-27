@@ -21,8 +21,8 @@ public class AnalyzerUtil {
 
 		List<String> result = ListUtil.newList() ;
 		while (tokenStream.incrementToken()) {
-//			int startOffset = offsetAttribute.startOffset();
-//			int endOffset = offsetAttribute.endOffset();
+			int start = offsetAttribute.startOffset();
+			int end = offsetAttribute.endOffset();
 			result.add(termAttribute.toString());
 		}
 		return result.toArray(new String[0]) ;

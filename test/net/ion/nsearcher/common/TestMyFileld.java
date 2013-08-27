@@ -17,7 +17,7 @@ import net.ion.nsearcher.search.Searcher;
 public class TestMyFileld extends ISTestCase{
 
 	public void testUnknown() throws Exception {
-		WriteDocument doc = WriteDocument.testDocument() ;
+		WriteDocument doc = IndexSession.testDocument() ;
 		doc.add(MyField.unknown("double", 10.0d)) ;
 		doc.add(MyField.unknown("float", 10.0f)) ;
 
@@ -38,7 +38,7 @@ public class TestMyFileld extends ISTestCase{
 		Map<String, Object> address = MapUtil.chainKeyMap().put("city", "seoul").put("bun", 20).toMap() ;
 		List<String> names = ListUtil.toList("jin", "hero") ;
 		Map<String, Object> values = MapUtil.chainKeyMap().put("name", "bleujin").put("address", address).put("names", names) .toMap() ;
-		WriteDocument doc = WriteDocument.newDocument("111").add(values) ;
+		WriteDocument doc = IndexSession.testDocument("111").add(values) ;
 		return doc;
 	}
 	

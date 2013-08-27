@@ -2,13 +2,16 @@ package net.ion.nsearcher.index;
 
 import java.io.IOException;
 
+import javax.print.Doc;
+
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.MapUtil;
+import net.ion.framework.util.ObjectId;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.common.WriteDocument;
-import net.ion.nsearcher.common.MyDocument.Action;
+import net.ion.nsearcher.common.AbDocument.Action;
 import net.ion.nsearcher.search.SingleSearcher;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -51,7 +54,33 @@ public class IndexSession {
 	private void release() {
 
 	}
-
+	
+	
+	public WriteDocument newDocument(String docId){
+		return new WriteDocument(docId) ;
+	}
+	
+	public WriteDocument newDocument(){
+		final String docId = new ObjectId().toString();
+		return new WriteDocument(docId) ;
+	}
+	
+	
+	
+	@Deprecated
+	public static WriteDocument testDocument(String docId){
+		return new WriteDocument(docId) ;
+	}
+	
+	@Deprecated
+	public static WriteDocument testDocument(){
+		final String docId = new ObjectId().toString();
+		return new WriteDocument(docId) ;
+	}
+	
+	
+	
+	
 	public FieldIndexingStrategy fieldIndexingStrategy() {
 		return fieldIndexingStrategy;
 	}
@@ -67,7 +96,7 @@ public class IndexSession {
 
 	public Action updateDocument(WriteDocument doc) throws IOException {
 		final Document idoc = doc.toLuceneDoc(fieldIndexingStrategy);
-		writer.updateDocument(new Term(SearchConstant.ISKey, idoc.get(SearchConstant.ISKey)), idoc);
+		writer.updateDocument(new Term(SearchConstant.ISKey, doc.idValue()), idoc);
 		return Action.Update;
 	}
 
@@ -125,10 +154,16 @@ public class IndexSession {
 	}
 
 	public Action deleteDocument(WriteDocument doc) throws IOException {
-		writer.deleteDocuments(new Term(SearchConstant.ISKey));
+		writer.deleteDocuments(new Term(SearchConstant.ISKey, doc.idValue()));
 		return Action.Delete;
 	}
 
+	public Action deleteDocument(String idValue) throws IOException {
+		writer.deleteDocuments(new Term(SearchConstant.ISKey, idValue));
+		return Action.Delete;
+	}
+
+	
 	public Action deleteAll() throws IOException {
 		writer.deleteAll();
 		return Action.DeleteAll;

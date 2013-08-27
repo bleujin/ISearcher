@@ -3,6 +3,7 @@ package net.ion.nsearcher.index.event;
 import java.io.IOException;
 
 import net.ion.nsearcher.common.WriteDocument;
+import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.collect.ICollector;
 
 public abstract class CollectorEvent implements ICollectorEvent{

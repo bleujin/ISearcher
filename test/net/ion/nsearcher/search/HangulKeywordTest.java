@@ -37,10 +37,10 @@ public class HangulKeywordTest extends ISTestCase {
 
 		Indexer writer = c.newIndexer() ;
 		writer.index(createKoreanAnalyzer(), new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws Exception {
-				WriteDocument doc2 = WriteDocument.testDocument();
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument doc2 = isession.newDocument();
 				doc2.add(MyField.text("name", val));
-				session.insertDocument(doc2);
+				isession.insertDocument(doc2);
 				return null;
 			}
 		}) ;
@@ -62,23 +62,23 @@ public class HangulKeywordTest extends ISTestCase {
 		Indexer writer = c.newIndexer();
 		writer.index(indexAnal, new IndexJob<Void>() {
 
-			public Void handle(IndexSession session) throws Exception {
-				WriteDocument doc2 = WriteDocument.testDocument();
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument doc2 = isession.newDocument();
 				doc2.text("index", "7756");
 				doc2.text("name", "LG U+");
 				doc2.text("name", "알리안츠Best중소형증권투자신탁[주]");
 				doc2.text("name", "미래에셋ASEAN업종대표증권자투자신탁 1(주식)종류A ");
 				doc2.text("name", "필요가 없다 正道");
 				doc2.text("name", "한요가");
-				session.insertDocument(doc2);
+				isession.insertDocument(doc2);
 
-				WriteDocument doc1 = WriteDocument.testDocument();
+				WriteDocument doc1 = isession.newDocument();
 				doc1.text("name", "서울E플러스 펀드");
 				doc1.text("name", "SCH-B500 1(주식)종류A ");
 				doc1.text("name", "2000년 9월 30일 그 일이 일어났다. ");
 				doc1.text("name", "4.19의거 발생일 ");
 				doc1.text("name", "급락조짐을 보였으며 살펴 보기에는 아마도 그럴것이다");
-				session.insertDocument(doc1);
+				isession.insertDocument(doc1);
 				return null;
 			}
 		}) ;
@@ -96,23 +96,23 @@ public class HangulKeywordTest extends ISTestCase {
 		Indexer writer = c.newIndexer();
 		writer.index(indexAnal, new IndexJob<Void>() {
 
-			public Void handle(IndexSession session) throws Exception {
-				WriteDocument doc1 = WriteDocument.testDocument();
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument doc1 = isession.newDocument();
 				doc1.text("index", "7756");
 				doc1.text("name", "LG U+");
 				doc1.text("name", "알리안츠Best중소형증권투자신탁[주]");
 				doc1.text("name", "미래에셋ASEAN업종대표증권자투자신탁 1(주식)종류A ");
 				doc1.text("name", "필요가 없다 正道");
 				doc1.text("name", "한요가");
-				session.insertDocument(doc1);
+				isession.insertDocument(doc1);
 
-				WriteDocument doc2 = WriteDocument.testDocument();
+				WriteDocument doc2 = isession.newDocument();
 				doc2.text("name", "서울E플러스 펀드");
 				doc2.text("name", "SCH-B500 1(주식)종류A ");
 				doc2.text("name", "2000년 9월 30일 그 일이 일어났다. ");
 				doc2.text("name", "4.19의거 발생일 ");
 				doc2.text("name", "급락조짐을 보였으며 살펴 보기에는 아마도 그럴것이다");
-				session.insertDocument(doc2);
+				isession.insertDocument(doc2);
 				return null;
 			}
 		}) ;
@@ -180,12 +180,12 @@ public class HangulKeywordTest extends ISTestCase {
 		Indexer writer = c.newIndexer();
 		writer.index(anal, new IndexJob<Void>() {
 
-			public Void handle(IndexSession session) throws Exception {
-				WriteDocument doc2 = WriteDocument.testDocument();
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument doc2 = isession.newDocument();
 				doc2.add(MyField.text("n1", "30"));
 				doc2.add(MyField.text("d1", "20071231"));
 				doc2.add(MyField.text("t1", "20071231-0705010"));
-				session.insertDocument(doc2);
+				isession.insertDocument(doc2);
 				return null;
 			}
 		}) ;
@@ -217,17 +217,17 @@ public class HangulKeywordTest extends ISTestCase {
 
 		Indexer writer = c.newIndexer();
 		writer.index(analyzer, new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws Exception {
-				WriteDocument doc1 = WriteDocument.testDocument();
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument doc1 = isession.newDocument();
 				doc1.add(MyField.text("n1", "30"));
 				doc1.add(MyField.text("key", "value"));
-				session.insertDocument(doc1);
+				isession.insertDocument(doc1);
 
-				WriteDocument doc2 = WriteDocument.testDocument();
+				WriteDocument doc2 = isession.newDocument();
 				doc2.add(MyField.text("n1", "30"));
 				doc2.add(MyField.text("d1", "20071231"));
 				doc2.add(MyField.text("key", "value"));
-				session.insertDocument(doc2);
+				isession.insertDocument(doc2);
 				return null;
 			}
 		}) ;

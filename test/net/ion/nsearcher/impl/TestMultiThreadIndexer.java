@@ -63,11 +63,11 @@ class Creater implements Runnable {
 			
 			Indexer di = central.newIndexer() ;
 			Integer integer = di.index(new IndexJob<Integer>(){
-				public Integer handle(IndexSession session) throws IOException {
+				public Integer handle(IndexSession isession) throws IOException {
 					for (int i : ListUtil.rangeNum(10)) {
-						WriteDocument doc = WriteDocument.testDocument() ;
+						WriteDocument doc = isession.newDocument() ;
 						doc.add(MyField.number("index", i)) ;
-						session.insertDocument(doc) ;
+						isession.insertDocument(doc) ;
 					}
 					return 10 ;
 				}

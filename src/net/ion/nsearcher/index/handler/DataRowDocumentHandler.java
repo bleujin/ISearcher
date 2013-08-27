@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.WriteDocument;
+import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.event.CollectorEvent;
 import net.ion.nsearcher.index.event.DataRowEvent;
 import net.ion.nsearcher.index.event.KeyValues;
@@ -25,7 +26,7 @@ public class DataRowDocumentHandler implements DocumentHandler {
 			docName += keyValues.get(key) + "_" ;
 		}
 		
-		WriteDocument doc = WriteDocument.newDocument(String.valueOf(event.getEventId())).event(event).name(docName);
+		WriteDocument doc = IndexSession.testDocument(String.valueOf(event.getEventId())).event(event).name(docName);
 		for (String colName : keyValues.getKeySet()) {
 			Object value = keyValues.get(colName);
 			if (value != null) {

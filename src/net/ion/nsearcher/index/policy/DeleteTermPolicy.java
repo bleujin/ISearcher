@@ -3,7 +3,7 @@ package net.ion.nsearcher.index.policy;
 import java.io.IOException;
 
 import net.ion.nsearcher.common.WriteDocument;
-import net.ion.nsearcher.common.MyDocument.Action;
+import net.ion.nsearcher.common.AbDocument.Action;
 import net.ion.nsearcher.index.IndexSession;
 
 import org.apache.lucene.index.Term;

@@ -25,9 +25,9 @@ public class TestFieldIndexingStrategy extends TestCase {
 		
 		Indexer indexer = central.newIndexer();
 		indexer.index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws Exception {
-				WriteDocument doc = WriteDocument.newDocument("123").unknown("num", "50") ; // maybe numeric
-				session.updateDocument(doc) ;
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument doc = isession.newDocument("123").unknown("num", "50") ; // maybe numeric
+				isession.updateDocument(doc) ;
 				return null;
 			}
 		}) ;
@@ -42,9 +42,9 @@ public class TestFieldIndexingStrategy extends TestCase {
 		
 		Indexer indexer = central.newIndexer();
 		indexer.index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws Exception {
-				WriteDocument doc = WriteDocument.newDocument("123").unknown("num", "50") ; // keyword 
-				session.updateDocument(doc) ;
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument doc = isession.newDocument("123").unknown("num", "50") ; // keyword 
+				isession.updateDocument(doc) ;
 				return null;
 			}
 		}) ;

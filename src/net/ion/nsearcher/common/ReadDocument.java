@@ -22,7 +22,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 
-public class ReadDocument extends MyDocument {
+public class ReadDocument extends AbDocument {
 
 	private static final long serialVersionUID = 2104871499687824141L;
 	private Document doc;
@@ -31,7 +31,11 @@ public class ReadDocument extends MyDocument {
 		this.doc = doc ;
 	}
 
-	public String docId(){
+	public static ReadDocument loadDocument(Document doc) {
+		return new ReadDocument(doc) ;
+	}
+	
+	public String idValue(){
 		return reserved(ISKey) ;
 	}
 

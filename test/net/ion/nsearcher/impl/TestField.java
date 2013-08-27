@@ -21,11 +21,11 @@ public class TestField extends ISTestCase{
 		
 		Indexer indexer = cen.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws IOException {
-				WriteDocument doc = WriteDocument.testDocument() ;
+			public Void handle(IndexSession isession) throws IOException {
+				WriteDocument doc = isession.newDocument() ;
 				doc.add(MyField.keyword("name", "test"));
 				doc.add(MyField.unknown("intkey", 123));
-				session.updateDocument(doc) ;
+				isession.updateDocument(doc) ;
 				return null ;
 			}
 		}) ;
@@ -40,12 +40,12 @@ public class TestField extends ISTestCase{
 		
 		Indexer indexer = cen.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws Exception {
-				WriteDocument doc = WriteDocument.testDocument() ;
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument doc = isession.newDocument() ;
 				doc.add(MyField.keyword("name", "test"));
 				doc.add(MyField.unknown("datekey", new Date()));
 				
-				session.updateDocument(doc) ;
+				isession.updateDocument(doc) ;
 				return null;
 			}
 		}) ;

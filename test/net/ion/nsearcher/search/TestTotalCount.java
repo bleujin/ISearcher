@@ -15,8 +15,8 @@ public class TestTotalCount extends TestCase {
 		
 		Indexer indexer = central.newIndexer();
 		indexer.index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws Exception {
-				session.insertDocument(WriteDocument.testDocument().keyword("name", "bleujin")) ;
+			public Void handle(IndexSession isession) throws Exception {
+				isession.insertDocument(isession.newDocument().keyword("name", "bleujin")) ;
 				return null;
 			}
 		}) ;
@@ -26,8 +26,8 @@ public class TestTotalCount extends TestCase {
 		assertEquals(1, response.totalCount()) ;
 
 		indexer.index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws Exception {
-				session.insertDocument(WriteDocument.testDocument().keyword("name", "hero")) ;
+			public Void handle(IndexSession isession) throws Exception {
+				isession.insertDocument(isession.newDocument().keyword("name", "hero")) ;
 				return null;
 			}
 		}) ;

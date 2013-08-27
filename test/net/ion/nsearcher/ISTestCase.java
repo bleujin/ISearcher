@@ -163,7 +163,7 @@ public class ISTestCase extends TestCase{
 		List<WriteDocument> list = new ArrayList<WriteDocument>() ;
 		String[] ranName = new String[]{"bleujin", "novision", "iihi", "k2sun"} ;
 		for (int j = 0; j < count; j++) {
-			WriteDocument myDoc = WriteDocument.testDocument() ;
+			WriteDocument myDoc = IndexSession.testDocument() ;
 			// int : 100 - 200
 			myDoc.add(MyField.number("int", 100 + RandomUtil.nextInt(100))) ;
 			myDoc.add(MyField.keyword("date", DateUtils.formatDate(RandomUtil.nextCalendar(10).getTime(), "yyyyMMdd-HH24mmss"))) ;
@@ -172,7 +172,7 @@ public class ISTestCase extends TestCase{
 			list.add(myDoc) ;
 		}
 		
-		WriteDocument myDoc1 = WriteDocument.testDocument() ;
+		WriteDocument myDoc1 = IndexSession.testDocument() ;
 		//myDoc1.add(MyField.number("int", 2)) ;
 		//myDoc1.add(MyField.text("int", "2")) ;
 		myDoc1.add(MyField.number("int", 3)) ;
@@ -182,7 +182,7 @@ public class ISTestCase extends TestCase{
 		myDoc1.add(MyField.text("content", RandomStringUtils.random(400, new char[]{'A','B','C','D','E', ' '}))) ;
 		list.add(myDoc1) ;
 
-		WriteDocument myDoc2 = WriteDocument.testDocument() ;
+		WriteDocument myDoc2 = IndexSession.testDocument() ;
 		myDoc2.add(MyField.keyword("int", "3")) ;
 		myDoc2.add(MyField.number("int", 3)) ;
 		myDoc2.add(MyField.number("INT", 4)) ;
@@ -196,13 +196,13 @@ public class ISTestCase extends TestCase{
 		list.add(myDoc2) ;
 
 		
-		WriteDocument myDoc3 = WriteDocument.testDocument() ;
+		WriteDocument myDoc3 = IndexSession.testDocument() ;
 		myDoc3.add(MyField.number("long", 1234L)) ;
 		myDoc3.add(MyField.keyword("key", "long")) ;
 		myDoc3.add(MyField.keyword("name", "test")) ;
 		list.add(myDoc3) ;
 
-		WriteDocument myDoc4 = WriteDocument.testDocument() ;
+		WriteDocument myDoc4 = IndexSession.testDocument() ;
 		myDoc4.add(MyField.date("date", 20100725, 232010)) ;
 		myDoc4.add(MyField.keyword("name", "date")) ;
 		list.add(myDoc4) ;

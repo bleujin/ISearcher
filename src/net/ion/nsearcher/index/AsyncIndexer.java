@@ -66,11 +66,11 @@ public class AsyncIndexer {
 
 	public Future<Void> index() {
 		return indexer.asyncIndex(analyzer, new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws IOException {
+			public Void handle(IndexSession isession) throws IOException {
 				try {
 					Debug.debug("writePolicy : " + getWritePolicy());
 					Debug.debug("exceptionPolicy : " + getExceptionPolicy());
-					Debug.debug("iWriter : " + session);
+					Debug.debug("iWriter : " + isession);
 
 					while (true) {
 
@@ -86,7 +86,7 @@ public class AsyncIndexer {
 							ICollectorEvent event = getChannel().pollMessage();
 
 							if (event.getEventType().isBegin()) {
-								getWritePolicy().begin(session);
+								getWritePolicy().begin(isession);
 							} else if (event.getEventType().isEnd()) {
 								break;
 							} else if (event.getEventType().isShutDown()) {
@@ -95,7 +95,7 @@ public class AsyncIndexer {
 								WriteDocument[] docs = ((CollectorEvent) event).makeDocument();
 								for (WriteDocument doc : docs) {
 									beforeHandle((CollectorEvent) event, doc);
-									getWritePolicy().apply(session, doc);
+									getWritePolicy().apply(isession, doc);
 									afterHandle(new ApplyEvent(doc));
 								}
 							}
@@ -106,13 +106,13 @@ public class AsyncIndexer {
 						} catch (IOException ex) {
 							ex.printStackTrace();
 							afterHandle(new IndexExceptionEvent(ex));
-							getExceptionPolicy().whenExceptionOccured(session, ex);
+							getExceptionPolicy().whenExceptionOccured(isession, ex);
 						}
 					}
 				} catch (IndexCancelException ex) {
 					ex.printStackTrace();
 					afterHandle(new IndexExceptionEvent(ex));
-					session.cancel() ;
+					isession.cancel() ;
 //					try {
 //						session.rollback();
 //					} catch (IOException ignore) {
@@ -124,7 +124,7 @@ public class AsyncIndexer {
 				} catch (Throwable ex) {
 					ex.printStackTrace();
 				} finally {
-					getWritePolicy().end(session);
+					getWritePolicy().end(isession);
 					afterHandle(new IndexEndEvent());
 				}
 				return null;

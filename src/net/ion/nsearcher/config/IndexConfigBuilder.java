@@ -5,10 +5,13 @@ import java.io.IOException;
 import net.ion.framework.util.ObjectUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.SearchConstant;
+import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.debug.standard.DCJKAnalyzer;
 import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexDeletionPolicy;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -17,6 +20,8 @@ import org.apache.lucene.index.MergeScheduler;
 import org.apache.lucene.index.IndexWriter.IndexReaderWarmer;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.util.Version;
+
+import com.sun.xml.internal.ws.util.pipe.StandalonePipeAssembler;
 
 public class IndexConfigBuilder {
 
@@ -113,7 +118,7 @@ public class IndexConfigBuilder {
 	}
 
 	private Analyzer indexAnalyzer(Version version) {
-		return ObjectUtil.coalesce(this.analyzer, new DCJKAnalyzer(version));
+		return ObjectUtil.coalesce(this.analyzer, new CJKAnalyzer(version));
 	}
 
 	public Central build() throws CorruptIndexException, IOException{

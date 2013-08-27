@@ -94,20 +94,20 @@ public class TestLucen36 extends TestCase {
 					Indexer indexer = c.newIndexer();
 					indexer.index(new IndexJob<Boolean>() {
 
-						public Boolean handle(IndexSession writer) throws IOException {
+						public Boolean handle(IndexSession isession) throws IOException {
 							try {
 								for (int i : ListUtil.rangeNum(10)) {
-									WriteDocument doc = WriteDocument.testDocument();
+									WriteDocument doc = isession.newDocument();
 									doc.add(MyField.number("mindex", i));
 									doc.add(MyField.keyword("name", "bleujin"));
-									writer.insertDocument(doc);
+									isession.insertDocument(doc);
 								}
 								
 								 { // delete
 									 
 									 Query delQuery = new QueryParser(Version.LUCENE_36, "mindex", new DStandardAnalyzer(Version.LUCENE_36)).parse("mindex:[3 TO 4]");
 									 // Query delQuery = new TermQuery(new Term("mindex", "3")) ;
-									 writer.deleteQuery(delQuery) ;
+									 isession.deleteQuery(delQuery) ;
 								 }
 								long start = System.currentTimeMillis();
 								Searcher searcher = c.newSearcher();

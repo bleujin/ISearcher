@@ -85,7 +85,7 @@ public abstract class FieldIndexingStrategy {
 			String name = StringUtil.lowerCase(_name) ;
 			if (obj == null) {
 				// throw new IllegalArgumentException("field value is not null") ;
-				return text(name, "N/A");
+				return IndexField.BLANK;
 			}
 
 			if (obj instanceof Integer) {
@@ -116,11 +116,11 @@ public abstract class FieldIndexingStrategy {
 				return number(name, NumberUtil.toLong(value));
 			} else if (StringUtil.isAlphanumericUnderbar(value)) {
 				return keyword(name, value);
-			} else if (Character.isDigit(value.charAt(0)) && Character.isDigit(value.charAt(1)) && (d = DateFormatUtil.getDateIfMatchedType(value)) != null) {
-				Calendar c = DateUtil.dateToCalendar(d);
-				int yyyymmdd = c.get(Calendar.YEAR) * 10000 + (c.get(Calendar.MONTH) + 1) * 100 + c.get(Calendar.DATE);
-				int hh24miss = c.get(Calendar.HOUR_OF_DAY) * 10000 + c.get(Calendar.MINUTE) * 100 + c.get(Calendar.SECOND);
-				return date(name, yyyymmdd, hh24miss);
+//			} else if (Character.isDigit(value.charAt(0)) && Character.isDigit(value.charAt(1)) && (d = DateFormatUtil.getDateIfMatchedType(value)) != null) {
+//				Calendar c = DateUtil.dateToCalendar(d);
+//				int yyyymmdd = c.get(Calendar.YEAR) * 10000 + (c.get(Calendar.MONTH) + 1) * 100 + c.get(Calendar.DATE);
+//				int hh24miss = c.get(Calendar.HOUR_OF_DAY) * 10000 + c.get(Calendar.MINUTE) * 100 + c.get(Calendar.SECOND);
+//				return date(name, yyyymmdd, hh24miss);
 			} else {
 				return text(name, value);
 			}

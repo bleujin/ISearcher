@@ -166,6 +166,8 @@ class UnknownStringField extends MyField {
 		return name;
 	}
 	public String stringValue() {
+//		return null ;
+//		return value ;
 		return ObjectUtil.toString(value) ;
 	}
 }

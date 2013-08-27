@@ -64,10 +64,10 @@ public class TestAnalyzer extends TestCase {
 
 		Indexer writer = c.newIndexer();
 		writer.index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws Exception {
-				WriteDocument doc = WriteDocument.testDocument();
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument doc = isession.newDocument();
 				doc.add(MyField.text("name", stmt));
-				session.insertDocument(doc);
+				isession.insertDocument(doc);
 				return null;
 			}
 		}) ;

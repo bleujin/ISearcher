@@ -17,7 +17,7 @@ public class TestWriteDocument extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		this.wdoc = WriteDocument.testDocument().unknown("Name", "bleujin").unknown("age", 20);
+		this.wdoc = IndexSession.testDocument().unknown("Name", "bleujin").unknown("age", 20);
 	}
 	
 	public void testNameCase() throws Exception {
@@ -27,7 +27,7 @@ public class TestWriteDocument extends TestCase {
 	
 	
 	public void testNameCaseInReadDoc() throws Exception {
-		WriteDocument wdoc = WriteDocument.testDocument().unknown("Name", "bleujin");
+		WriteDocument wdoc = IndexSession.testDocument().unknown("Name", "bleujin");
 		
 		ReadDocument rdoc = ReadDocument.loadDocument(wdoc.toLuceneDoc(FieldIndexingStrategy.DEFAULT));
 		
@@ -84,7 +84,7 @@ public class TestWriteDocument extends TestCase {
 		Indexer indexer = cen.newIndexer();
 		Document doc = indexer.index(new IndexJob<Document>() {
 			public Document handle(IndexSession session) throws Exception {
-				final WriteDocument writeDoc = WriteDocument.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
+				final WriteDocument writeDoc = session.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
 				session.insertDocument(writeDoc) ;
 				return writeDoc.toLuceneDoc(session.fieldIndexingStrategy());
 			}
@@ -103,8 +103,8 @@ public class TestWriteDocument extends TestCase {
 	}
 	
 	public void testId() throws Exception {
-		WriteDocument doc1 = WriteDocument.testDocument();
-		WriteDocument doc2 = WriteDocument.testDocument();
+		WriteDocument doc1 = IndexSession.testDocument();
+		WriteDocument doc2 = IndexSession.testDocument();
 		
 		Debug.line(doc1.idValue(), doc2.idValue()) ;
 	}

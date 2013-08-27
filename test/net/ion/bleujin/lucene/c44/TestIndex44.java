@@ -1,7 +1,7 @@
 package net.ion.bleujin.lucene.c44;
 
 import net.ion.framework.util.ListUtil;
-import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.AbDocument;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
@@ -28,7 +28,7 @@ public class TestIndex44 extends TestCase {
 			@Override
 			public Void handle(IndexSession isession) throws Exception {
 				for (int i : ListUtil.rangeNum(10)) {
-					WriteDocument doc = MyDocument.testDocument();
+					WriteDocument doc = isession.newDocument();
 					doc.keyword("index", "" + i).text("text", "bleu jin") ;
 					isession.insertDocument(doc) ;
 				}

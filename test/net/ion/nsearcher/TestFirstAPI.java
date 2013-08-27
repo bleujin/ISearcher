@@ -40,10 +40,10 @@ public class TestFirstAPI extends TestCase {
 	public void testCreateIndexer() throws Exception {
 		Indexer indexer = cen.newIndexer() ;
 		indexer.index(new DStandardAnalyzer(SearchConstant.LuceneVersion), new IndexJob<Void>(){
-			public Void handle(IndexSession session) throws IOException {
+			public Void handle(IndexSession isession) throws IOException {
 				for (int i : ListUtil.rangeNum(10)) {
-					WriteDocument doc = WriteDocument.newDocument(new ObjectId().toString()).add(JsonObject.create().put("name", "bleujin").put("age", i));
-					session.insertDocument(doc) ;
+					WriteDocument doc = isession.newDocument(new ObjectId().toString()).add(JsonObject.create().put("name", "bleujin").put("age", i));
+					isession.insertDocument(doc) ;
 				}
 				return null;
 			}

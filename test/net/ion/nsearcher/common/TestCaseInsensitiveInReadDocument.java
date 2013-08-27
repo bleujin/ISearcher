@@ -4,6 +4,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import net.ion.framework.util.ArrayUtil;
+import net.ion.nsearcher.index.IndexSession;
 
 import org.apache.lucene.index.IndexableField;
 
@@ -14,7 +15,7 @@ public class TestCaseInsensitiveInReadDocument extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		WriteDocument wdoc = WriteDocument.testDocument().unknown("NAME", "bleujin").unknown("Age", 20) ;
+		WriteDocument wdoc = IndexSession.testDocument().unknown("NAME", "bleujin").unknown("Age", 20) ;
 		this.rdoc = ReadDocument.loadDocument(wdoc.toLuceneDoc(FieldIndexingStrategy.DEFAULT));
 	}
 	

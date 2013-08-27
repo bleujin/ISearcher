@@ -8,7 +8,7 @@ import net.ion.framework.util.Debug;
 import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.common.IKeywordField;
 import net.ion.nsearcher.common.WriteDocument;
-import net.ion.nsearcher.common.MyDocument.Action;
+import net.ion.nsearcher.common.AbDocument.Action;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.event.ICollectorEvent;
 

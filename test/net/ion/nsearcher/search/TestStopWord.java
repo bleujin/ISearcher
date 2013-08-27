@@ -6,7 +6,7 @@ import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.SetUtil;
-import net.ion.nsearcher.common.MyDocument;
+import net.ion.nsearcher.common.AbDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
@@ -104,7 +104,7 @@ public class TestStopWord extends TestCase {
 			public Void handle(IndexSession isession) throws Exception {
 				String[] array = new String[]{"hero", "bleujin", "i-on"} ;
 				for (int i = 0; i < array.length; i++) {
-					WriteDocument doc = MyDocument.testDocument() ;
+					WriteDocument doc = isession.newDocument() ;
 					doc.add(MyField.keyword("type", "sample"));
 					doc.add(MyField.text("name", array[i]));
 					isession.insertDocument(doc) ;

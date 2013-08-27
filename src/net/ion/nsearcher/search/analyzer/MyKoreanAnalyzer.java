@@ -65,11 +65,11 @@ public class MyKoreanAnalyzer extends StopwordAnalyzerBase {
 		this.exactMatch = exactMatch;
 	}
 
-	public MyKoreanAnalyzer(Version matchVersion, String[] stopWords) throws IOException {
+	public MyKoreanAnalyzer(Version matchVersion, String[] stopWords) {
 		this(matchVersion, StopFilter.makeStopSet(matchVersion, stopWords));
 	}
 
-	public MyKoreanAnalyzer(Version matchVersion) throws IOException {
+	public MyKoreanAnalyzer(Version matchVersion)  {
 		this(matchVersion, STOP_WORDS_SET);
 	}
 

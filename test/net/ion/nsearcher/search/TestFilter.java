@@ -79,8 +79,8 @@ public class TestFilter extends ISTestCase {
 						Indexer iw = c.newIndexer();
 						final int idx = i ;
 						iw.index(new IndexJob<Void>() {
-							public Void handle(IndexSession session) throws Exception {
-								session.insertDocument(WriteDocument.testDocument().add(MyField.keyword("name", "bleujin")).add(MyField.number("index", idx))) ;
+							public Void handle(IndexSession isession) throws Exception {
+								isession.insertDocument(isession.newDocument().add(MyField.keyword("name", "bleujin")).add(MyField.number("index", idx))) ;
 								return null;
 							}
 						}) ;

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.ion.nsearcher.common.WriteDocument;
-import net.ion.nsearcher.common.MyDocument.Action;
+import net.ion.nsearcher.common.AbDocument.Action;
 import net.ion.nsearcher.index.IndexSession;
 
 import org.apache.lucene.document.Document;

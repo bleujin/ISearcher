@@ -20,6 +20,6 @@ public class ApplyEvent implements IIndexEvent{
 		return startTime ;
 	}
 	public String toString(){
-		return doc.docId() ;
+		return doc.idValue() ;
 	}
 }

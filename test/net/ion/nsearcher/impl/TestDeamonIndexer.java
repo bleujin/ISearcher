@@ -32,7 +32,7 @@ public class TestDeamonIndexer extends TestCase {
 	}
 
 	private static WriteDocument testDocument() {
-		return WriteDocument.newDocument("test") ;
+		return IndexSession.testDocument("test") ;
 	}
 
 }

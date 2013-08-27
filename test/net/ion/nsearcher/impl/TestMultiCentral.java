@@ -17,12 +17,12 @@ public class TestMultiCentral extends TestCase{
 
 		Indexer iw = mc.newIndexer() ;
 		iw.index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws Exception {
+			public Void handle(IndexSession isession) throws Exception {
 				for (int i = 0; i < 10; i++) {
-					WriteDocument doc = WriteDocument.testDocument();
+					WriteDocument doc = isession.newDocument();
 					doc.add(MyField.number("index", i)) ;
 					doc.add(MyField.keyword("name", "bleujin")) ;
-					session.insertDocument(doc) ;
+					isession.insertDocument(doc) ;
 				}
 				return null;
 			}

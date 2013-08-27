@@ -6,6 +6,7 @@ import static net.ion.nsearcher.common.IKeywordField.ISCollectorName;
 import static net.ion.nsearcher.common.IKeywordField.ISEventName;
 import static net.ion.nsearcher.common.IKeywordField.ISEventType;
 import static net.ion.nsearcher.common.IKeywordField.ISKey;
+import static net.ion.nsearcher.common.IKeywordField.KEYWORD_FIELD;
 import static net.ion.nsearcher.common.IKeywordField.TIMESTAMP;
 
 import java.io.IOException;
@@ -20,24 +21,25 @@ import net.ion.framework.parse.gson.JsonUtil;
 import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.index.event.CollectorEvent;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 
 import com.google.common.collect.ArrayListMultimap;
 
-public class WriteDocument extends MyDocument {
+public class WriteDocument extends AbDocument {
 
 	private static final long serialVersionUID = -8187265793444923069L;
 	private String docId;
 	private Action action = Action.Unknown;
 
 	private ArrayListMultimap<String, MyField> fields = ArrayListMultimap.create() ;;
-	WriteDocument(String docId) {
+	public WriteDocument(String docId) {
 		this.docId = docId;
 	}
 
-	public String docId() {
+	public String idValue() {
 
 		return docId;
 	}
@@ -45,26 +47,31 @@ public class WriteDocument extends MyDocument {
 	public Document toLuceneDoc(FieldIndexingStrategy strategy) {
 		
 		Document doc = new Document();
-		StringBuilder bodyBuilder = new StringBuilder(docId + " ");
-
+		StringBuilder bodyBuilder = new StringBuilder(1024);
+		
+		bodyBuilder.append(docId + " ") ;
 		for (MyField field : fields.values()) {
 			
 			if (field == null)
 				continue;
 			final IndexField indexField = field.indexField(strategy);
+			if (indexField == IndexField.BLANK) continue ;
+			
 			indexField.addTo(doc) ;
 
 			if (isReservedField(field.name())) // except timestamp
 				continue;
+
 			bodyBuilder.append(field.stringValue() + " ");
 		}
 
-		doc.add(MyField.manual(ISKey, docId(), Store.YES, Index.NOT_ANALYZED).indexField(strategy));
-		doc.add(MyField.manual(ISBody, String.valueOf(HashFunction.hashGeneral(bodyBuilder.toString())), Store.YES, Index.NOT_ANALYZED).indexField(strategy));
+		doc.add(MyField.manual(ISKey, idValue(), Store.YES, Index.NOT_ANALYZED).indexField(strategy));
+		final String bodyString = bodyBuilder.toString();
+		doc.add(MyField.manual(ISBody, String.valueOf(HashFunction.hashGeneral(bodyString)), Store.YES, Index.NOT_ANALYZED).indexField(strategy));
 		doc.add(MyField.manual(TIMESTAMP, String.valueOf(System.currentTimeMillis()), Store.YES, Index.NOT_ANALYZED).indexField(strategy));
 
 		// @TODO : compress, Store.No
-		doc.add(MyField.manual(ISALL_FIELD, bodyBuilder.toString(), Store.NO, Index.ANALYZED).indexField(strategy));
+		doc.add(MyField.manual(ISALL_FIELD, bodyString, Store.NO, Index.ANALYZED).indexField(strategy));
 
 		return doc;
 	}
@@ -83,6 +90,9 @@ public class WriteDocument extends MyDocument {
 		return String.valueOf(HashFunction.hashGeneral(bodyBuilder.toString())) ;
 	}
 	
+	private static final boolean isReservedField(String fieldName){
+		return ArrayUtils.contains(KEYWORD_FIELD, fieldName);
+	}
 	
 
 	public WriteDocument setAction(Action action) {

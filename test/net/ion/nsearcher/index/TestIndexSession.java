@@ -58,9 +58,9 @@ class AddFiveEntryJob implements IndexJob<Boolean> {
 		this.name = name ;
 	}
 	
-	public Boolean handle(IndexSession session) throws IOException {
+	public Boolean handle(IndexSession isession) throws IOException {
 		for (int i : ListUtil.rangeNum(5)) {
-			session.insertDocument(WriteDocument.testDocument().add(MyField.number("index", i)).add(MyField.keyword("name", name))) ;
+			isession.insertDocument(isession.newDocument().add(MyField.number("index", i)).add(MyField.keyword("name", name))) ;
 		}
 		return true;
 	}
