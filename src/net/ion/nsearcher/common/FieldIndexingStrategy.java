@@ -1,17 +1,16 @@
 package net.ion.nsearcher.common;
 
-import java.util.Calendar;
 import java.util.Date;
 
-import net.ion.framework.util.DateFormatUtil;
 import net.ion.framework.util.DateUtil;
 import net.ion.framework.util.NumberUtil;
 import net.ion.framework.util.StringUtil;
 
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.IntField;
-import org.apache.lucene.document.LongField;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.document.DoubleField;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.LongField;
+import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 
@@ -20,115 +19,91 @@ public abstract class FieldIndexingStrategy {
 	
 	public static final FieldIndexingStrategy DEFAULT = new FieldIndexingStrategy() {
 		
-		public IndexField keyword(String name, String value) {
-			IndexField result = createField(FieldType.Keyword, name, value, Store.YES, Index.NOT_ANALYZED);
-
-			result.addMoreField(sort(name, value));
-			return result;
+		public void keyword(Document doc, MyField field, String name, String value) {
+			doc.add(createField(FieldType.Keyword, name, value, Store.YES, Index.NOT_ANALYZED));
+			doc.add(sort(name, value));
 		}
 
-		public IndexField number(String name, long number) {
-			
-			LongField f = new LongField(name, number, Store.YES); // number
-			IndexField result = createField(f);
-
-			result.addMoreField(new Field(name, String.valueOf(number), Store.NO, Index.NOT_ANALYZED));
-
-			LongField sortfield = new LongField(makeSortFieldName(name), number, Store.YES); // sort
-			result.addMoreField(sortfield);
-
-			return result;
+		public void number(Document doc, MyField field, String name, long number) {
+			doc.add(new LongField(name, number, Store.YES)); // number
+			doc.add(new Field(name, String.valueOf(number), Store.NO, Index.NOT_ANALYZED));
+			doc.add(new StringField(makeSortFieldName(name), StringUtil.leftPad(String.valueOf(number), 20, '0'), Store.YES)); // sort
 		}
 
-		public IndexField number(String name, double number) {
-			DoubleField f = new DoubleField(name, number, Store.YES); // number
-			IndexField result = createField(f);
-
-			result.addMoreField(new Field(name, String.valueOf(number), Store.NO, Index.NOT_ANALYZED));
-
-			DoubleField sortfield = new DoubleField(makeSortFieldName(name), number, Store.YES); // sort
-			result.addMoreField(sortfield);
-
-			return result;
+		public void number(Document doc, MyField field, String name, double number) {
+			doc.add(new DoubleField(name, number, Store.YES)); // number
+			doc.add(new Field(name, String.valueOf(number), Store.NO, Index.NOT_ANALYZED));
+			doc.add(new StringField(makeSortFieldName(name), StringUtil.leftPad(String.valueOf(number), 20, '0'), Store.YES)); // sort
 		}
 
-		public IndexField date(String name, int yyyymmdd, int hh24miss) {
-			IndexField result = createField(FieldType.Date, name, yyyymmdd + " " + StringUtil.leftPad(String.valueOf(hh24miss), 6, '0'), Store.YES, Index.ANALYZED); // text
+		public void date(Document doc, MyField field, String name, int yyyymmdd, int hh24miss) {
+			doc.add(createField(FieldType.Date, name, yyyymmdd + " " + StringUtil.leftPad(String.valueOf(hh24miss), 6, '0'), Store.YES, Index.ANALYZED)); // text
 			// result.addMoreField(new MyField(name, yyyymmdd + "-" + hh24miss, Store.YES, Index.NOT_ANALYZED)) ; // keyword
 
-			result.addMoreField(sort(name, yyyymmdd + "-" + StringUtil.leftPad(String.valueOf(hh24miss), 6, '0'))); // sort
-
-			LongField day = new LongField(name, 1L * yyyymmdd, Store.YES);
-			result.addMoreField(day);
-			//
-			LongField datetime = new LongField(name + "time", yyyymmdd * 1000000L + hh24miss, Store.YES) ;
-			result.addMoreField(datetime) ;
-
-			return result;
+			doc.add(sort(name, yyyymmdd + "-" + StringUtil.leftPad(String.valueOf(hh24miss), 6, '0'))); // sort
+			doc.add(new LongField(name, 1L * yyyymmdd, Store.YES));
+			doc.add(new LongField(name + "time", yyyymmdd * 1000000L + hh24miss, Store.YES)) ;
 		}
 		
-		public IndexField text(String name, String value) {
-			String transValue = split(value) ;
-			IndexField result = createField(FieldType.Text, name, transValue, Store.YES, Index.ANALYZED);
-
-			result.addMoreField(sort(name, StringUtil.substring(value, 0, 40)));
-
-			return result;
+		public void text(Document doc, MyField field, String name, String value) {
+			final Field textField = createField(FieldType.Text, name, value, Store.NO, Index.ANALYZED);
+			textField.setBoost(field.boost()) ;
+			doc.add(textField);
+			doc.add(sort(name, StringUtil.substring(value, 0, 20)));
 		}
 		
 		
-		public IndexField noStoreText(String name, String value) {
-			return createField(FieldType.Text, name, value, Store.NO, Index.ANALYZED);
+		public void noStoreText(Document doc, MyField field, String name, String value) {
+			doc.add(createField(FieldType.Text, name, value, Store.NO, Index.ANALYZED));
 		}
 		
-		public IndexField unknown(String _name, Object obj){
-			String name = StringUtil.lowerCase(_name) ;
+		public void unknown(Document doc, MyField field, String name, Object obj){
+//			String name = StringUtil.lowerCase(_name) ;
 			if (obj == null) {
-				// throw new IllegalArgumentException("field value is not null") ;
-				return IndexField.BLANK;
+				return ;
 			}
 
 			if (obj instanceof Integer) {
-				return number(name, (Integer)obj);
+				number(doc, field, name, (Integer)obj);
 			} else if (obj instanceof Long) {
-				return number(name, (Long)obj) ;
+				number(doc, field, name, (Long)obj) ;
 			} else if (obj instanceof Double) {
-				return number(name, (Double)obj) ;
+				number(doc, field, name, (Double)obj) ;
 			} else if (obj instanceof Float) {
-				return number(name, (Float)obj) ;
+				number(doc, field, name, (Float)obj) ;
 			} else if (obj instanceof Date) {
 				// Debug.debug(name, "date") ;
 				Date d = (Date) obj;
 				String str = DateUtil.dateToString(d, DateUtil.DEFAULT_FORMAT);
 				int yyyymmdd = Integer.parseInt(StringUtil.substringBefore(str, "-"));
 				int hh24miss = Integer.parseInt(StringUtil.substringAfter(str, "-"));
-				return date(name, yyyymmdd, hh24miss);
+				date(doc, field, name, yyyymmdd, hh24miss);
 			} else {
 				// Debug.debug(name, "text") ;
-				return unknown(name, obj.toString());
+				unknown(doc, field, name, obj.toString());
 			}
 
 		}
 		
-		public IndexField unknown(String name, String value) {
+		public void unknown(Document doc, MyField field, String name, String value) {
 			Date d = null;
 			if (NumberUtil.isNumber(value)) {
-				return number(name, NumberUtil.toLong(value));
+				number(doc, field, name, NumberUtil.toLong(value));
 			} else if (StringUtil.isAlphanumericUnderbar(value)) {
-				return keyword(name, value);
+				keyword(doc, field, name, value);
 //			} else if (Character.isDigit(value.charAt(0)) && Character.isDigit(value.charAt(1)) && (d = DateFormatUtil.getDateIfMatchedType(value)) != null) {
 //				Calendar c = DateUtil.dateToCalendar(d);
 //				int yyyymmdd = c.get(Calendar.YEAR) * 10000 + (c.get(Calendar.MONTH) + 1) * 100 + c.get(Calendar.DATE);
 //				int hh24miss = c.get(Calendar.HOUR_OF_DAY) * 10000 + c.get(Calendar.MINUTE) * 100 + c.get(Calendar.SECOND);
 //				return date(name, yyyymmdd, hh24miss);
 			} else {
-				return text(name, value);
+				text(doc, field, name, value);
 			}
 		}
 		
 		
-		public IndexField manual(String name, String value, Store store, Index index) {
-			return createField(FieldType.Manual, name, value, store, index) ;
+		public void manual(Document doc, String name, String value, Store store, Index index) {
+			doc.add(createField(FieldType.Manual, name, value, store, index)) ;
 		}
 
 	};
@@ -136,49 +111,36 @@ public abstract class FieldIndexingStrategy {
 	
 	
 	public enum FieldType {
-		Keyword {
-			public IndexField toIndexField(FieldIndexingStrategy strategy, String name, String value){
-				return strategy.keyword(name, value) ;
-			} 
-		}, Number, Date, Manual, Text
+		Keyword, Number, Date, Manual, Text
 	}
 	
-	public abstract IndexField keyword(String name, String value) ;
-	public abstract IndexField number(String name, long number) ;
-	public abstract IndexField number(String name, double number) ;
-	public abstract IndexField date(String name, int yyyymmdd, int hh24miss) ;
-	public abstract IndexField text(String name, String value) ;
-	public abstract IndexField noStoreText(String name, String value) ;
-	public abstract IndexField unknown(String name, Object obj) ;
-	public abstract IndexField unknown(String name, String value) ;
-	public abstract IndexField manual(String name, String value, Store store, Index index) ;
+	public abstract void keyword(Document doc, MyField field, String name, String value) ;
+	public abstract void number(Document doc, MyField field, String name, long number) ;
+	public abstract void number(Document doc, MyField field, String name, double number) ;
+	public abstract void date(Document doc, MyField field, String name, int yyyymmdd, int hh24miss) ;
+	public abstract void text(Document doc, MyField field, String name, String value) ;
+	public abstract void noStoreText(Document doc, MyField field, String name, String value) ;
+	public abstract void unknown(Document doc, MyField field, String name, Object obj) ;
+	public abstract void unknown(Document doc, MyField field, String name, String value) ;
+	public abstract void manual(Document doc, String name, String value, Store store, Index index) ;
 	
 	
-	public IndexField createField(FieldType fieldType, String name, String value, Field.Store store, Field.Index index){
-		return new IndexField(fieldType, name, value, store, index) ;
+	
+	public Field createField(FieldType fieldType, String name, String value, Field.Store store, Field.Index index){
+		return new Field(fieldType == FieldType.Manual ? name : name.toLowerCase(), value, store, index) ;
 	}
 
-	public IndexField createField(Field field){
-		return new IndexField(field) ;
-	}
+//	public IndexField createField(Field field){
+//		return new IndexField(field) ;
+//	}
 
 	protected final Field sort(String name, String value) {
-		return IndexField.field(FieldType.Keyword, makeSortFieldName(name), value, Store.YES, Index.NOT_ANALYZED) ;
+		return new Field(makeSortFieldName(name), value, Store.YES, Index.NOT_ANALYZED) ;
 	}
 
 	
 	public final static String makeSortFieldName(String name) {
-		return name + MyField.SORT_POSTFIX;
-	}
-	
-	protected String split(String value) {
-
-//		StringUtil.split(value, " ,-:;")
-//		
-//		Debug.line(value) ;
-//		if (true) return "서울 E플러스 펀드 SCH-B500 1(주식) 종류A 2000년 9월 30일 일이 일어났다. 4.19 의거 발생일  급락조짐을 보였으며 살펴 보기에는 아마도 그럴것이다" ;
-
-		return value ; 
+		return (name + MyField.SORT_POSTFIX).toLowerCase();
 	}
 
 }

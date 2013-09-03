@@ -17,28 +17,29 @@ import net.ion.nsearcher.search.Searcher;
 public class TestMyFileld extends ISTestCase{
 
 	public void testUnknown() throws Exception {
-		WriteDocument doc = IndexSession.testDocument() ;
+		Central cen = CentralConfig.newRam().build();
+		Indexer indexer = cen.newIndexer();
+		
+		WriteDocument doc = indexer.index(new IndexJob<WriteDocument>() {
+			@Override
+			public WriteDocument handle(IndexSession isession) throws Exception {
+				return isession.newDocument();
+			}
+		});
 		doc.add(MyField.unknown("double", 10.0d)) ;
 		doc.add(MyField.unknown("float", 10.0f)) ;
 
 		for(MyField f : doc.getFields()){
 			Debug.line(f) ;
-		} 
-	}
-	
-	public void testMap() throws Exception {
-		WriteDocument doc = createSampleDoc();
-
-		for(MyField f : doc.getFields()){
-			Debug.line(f) ;
-		} 
+		}
+		cen.close() ;
 	}
 
-	private WriteDocument createSampleDoc() {
+	private WriteDocument createSampleDoc(IndexSession isession) {
 		Map<String, Object> address = MapUtil.chainKeyMap().put("city", "seoul").put("bun", 20).toMap() ;
 		List<String> names = ListUtil.toList("jin", "hero") ;
 		Map<String, Object> values = MapUtil.chainKeyMap().put("name", "bleujin").put("address", address).put("names", names) .toMap() ;
-		WriteDocument doc = IndexSession.testDocument("111").add(values) ;
+		WriteDocument doc = isession.newDocument("111").add(values) ;
 		return doc;
 	}
 	
@@ -46,8 +47,8 @@ public class TestMyFileld extends ISTestCase{
 		Central cen = CentralConfig.newRam().build() ;
 		Indexer writer = cen.newIndexer() ;
 		writer.index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws Exception {
-				session.updateDocument(createSampleDoc()) ;
+			public Void handle(IndexSession isession) throws Exception {
+				isession.updateDocument(createSampleDoc(isession)) ;
 				return null ;
 			}
 		}) ;

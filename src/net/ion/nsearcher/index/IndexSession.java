@@ -31,6 +31,7 @@ public class IndexSession {
 	private final IndexWriterConfig wconfig;
 	private String owner;
 	private FieldIndexingStrategy fieldIndexingStrategy;
+	private boolean ignoreBody;
 
 	public final static String VERSION = "version" ;
 	public final static String LASTMODIFIED = "lastmodified" ;
@@ -56,6 +57,7 @@ public class IndexSession {
 	}
 	
 	
+	
 	public WriteDocument newDocument(String docId){
 		return new WriteDocument(docId) ;
 	}
@@ -65,37 +67,39 @@ public class IndexSession {
 		return new WriteDocument(docId) ;
 	}
 	
-	
-	
-	@Deprecated
-	public static WriteDocument testDocument(String docId){
-		return new WriteDocument(docId) ;
-	}
-	
-	@Deprecated
-	public static WriteDocument testDocument(){
-		final String docId = new ObjectId().toString();
-		return new WriteDocument(docId) ;
-	}
-	
-	
-	
-	
 	public FieldIndexingStrategy fieldIndexingStrategy() {
 		return fieldIndexingStrategy;
 	}
+	
+	
+	
+	
+	public IndexSession fieldIndexingStrategy(FieldIndexingStrategy fieldIndexingStrategy) {
+		this.fieldIndexingStrategy = fieldIndexingStrategy ;
+		return this ;
+	}
+	
+	public IndexSession setIgnoreBody(boolean ignoreBody){
+		this.ignoreBody = ignoreBody ;
+		return this ;
+	}
+	
+	public boolean handleBody(){
+		return ! this.ignoreBody ;
+	}
+	
 
 	public IndexReader reader() throws IOException {
 		return searcher.indexReader();
 	}
 
 	public Action insertDocument(WriteDocument doc) throws IOException {
-		writer.addDocument(doc.toLuceneDoc(fieldIndexingStrategy));
+		writer.addDocument(doc.toLuceneDoc(this));
 		return Action.Insert;
 	}
 
 	public Action updateDocument(WriteDocument doc) throws IOException {
-		final Document idoc = doc.toLuceneDoc(fieldIndexingStrategy);
+		final Document idoc = doc.toLuceneDoc(this);
 		writer.updateDocument(new Term(SearchConstant.ISKey, doc.idValue()), idoc);
 		return Action.Update;
 	}

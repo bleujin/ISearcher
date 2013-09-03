@@ -7,6 +7,7 @@ import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
+import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
@@ -16,6 +17,25 @@ import org.apache.lucene.search.NumericRangeFilter;
 
 public class TestField extends ISTestCase{
 
+	public void testKeyword() throws Exception {
+		Central cen = CentralConfig.newRam().build() ;
+		Indexer indexer = cen.newIndexer();
+		indexer.index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument doc = isession.newDocument().number("num", 2000).keyword("knum", "2000").unknown("date", new Date());
+				isession.insertDocument(doc) ;
+				return null;
+			}
+		}) ;
+		
+		Searcher searcher = cen.newSearcher();
+		
+		assertEquals(1, searcher.search("num:2000").getDocument().size()) ;
+		assertEquals(1, searcher.search("knum:2000").getDocument().size()) ;
+		cen.close() ;
+	}
+	
 	public void testUnknownNumber() throws Exception {
 		Central cen = writeDocument() ;
 		

@@ -8,6 +8,7 @@ import net.ion.framework.util.DateFormatUtil;
 import net.ion.framework.util.DateUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.IndexField;
+import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
@@ -15,6 +16,7 @@ import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.search.Searcher;
 
 import org.apache.commons.validator.GenericValidator;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 
@@ -71,43 +73,51 @@ public class TestFieldIndexingStrategy extends TestCase {
 }
 
 class TestStrategy extends FieldIndexingStrategy {
-	
-	public IndexField unknown(String name, String value) {
-		return FieldIndexingStrategy.DEFAULT.keyword(name, value) ;
-	}
-	
 
-	public IndexField keyword(String name, String value) {
-		return FieldIndexingStrategy.DEFAULT.keyword(name, value) ;
+	@Override
+	public void date(Document doc, MyField field, String name, int yyyymmdd, int hh24miss) {
+		FieldIndexingStrategy.DEFAULT.date(doc, field, name, yyyymmdd, hh24miss) ;
 	}
 
-	public IndexField number(String name, long number) {
-		return FieldIndexingStrategy.DEFAULT.number(name, number) ;
+	@Override
+	public void keyword(Document doc, MyField field, String name, String value) {
+		FieldIndexingStrategy.DEFAULT.keyword(doc, field, name, value) ;
 	}
 
-	public IndexField number(String name, double number) {
-		return FieldIndexingStrategy.DEFAULT.number(name, number) ;
+	@Override
+	public void manual(Document doc, String name, String value, Store store, Index index) {
+		FieldIndexingStrategy.DEFAULT.manual(doc, name, value, store, index) ;
 	}
 
-	public IndexField date(String name, int yyyymmdd, int hh24miss) {
-		return FieldIndexingStrategy.DEFAULT.date(name, yyyymmdd, hh24miss) ;
+	@Override
+	public void noStoreText(Document doc, MyField field, String name, String value) {
+		FieldIndexingStrategy.DEFAULT.noStoreText(doc, field, name, value) ;
 	}
-	
-	public IndexField text(String name, String value) {
-		return FieldIndexingStrategy.DEFAULT.text(name, value) ;
-	}
-	
-	
-	public IndexField noStoreText(String name, String value) {
-		return FieldIndexingStrategy.DEFAULT.noStoreText(name, value) ;
-	}
-	
-	public IndexField unknown(String name, Object obj){
-		return FieldIndexingStrategy.DEFAULT.unknown(name, obj) ;
 
+	@Override
+	public void number(Document doc, MyField field, String name, long number) {
+		FieldIndexingStrategy.DEFAULT.number(doc, field, name, number) ;
 	}
-	public IndexField manual(String name, String value, Store store, Index index) {
-		return FieldIndexingStrategy.DEFAULT.manual(name, value, store, index) ;
+
+	@Override
+	public void number(Document doc, MyField field, String name, double number) {
+		FieldIndexingStrategy.DEFAULT.number(doc, field, name, number) ;
 	}
+
+	@Override
+	public void text(Document doc, MyField field, String name, String value) {
+		FieldIndexingStrategy.DEFAULT.text(doc, field, name, value) ;
+	}
+
+	@Override
+	public void unknown(Document doc, MyField field, String name, Object obj) {
+		FieldIndexingStrategy.DEFAULT.unknown(doc, field, name, obj) ;
+	}
+
+	@Override
+	public void unknown(Document doc, MyField field, String name, String value) {
+		FieldIndexingStrategy.DEFAULT.unknown(doc, field, name, value) ;
+	}
+	
 
 };

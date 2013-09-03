@@ -67,7 +67,7 @@ public class TestSort extends ISTestCase{
 		Central central = writeDocument();
 		
 		Searcher newSearcher = central.newSearcher() ;
-		SearchResponse result = newSearcher.createRequest("(name:bleujin) AND (int:[100 TO 200])").descending("int _number").offset(5).find() ;
+		SearchResponse result = newSearcher.createRequest("(name:bleujin) AND (int:[100 TO 200])").descending("int").offset(5).find() ;
 		
 		List<ReadDocument> docs = result.getDocument() ;
 		Integer beforeValue = 200 ; // max

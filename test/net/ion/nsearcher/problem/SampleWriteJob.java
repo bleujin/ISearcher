@@ -26,6 +26,7 @@ public class SampleWriteJob implements IndexJob<Void> {
 	}
 	
 	public Void handle(IndexSession isession) throws Exception {
+		isession.setIgnoreBody(true) ;
 		File file = new File("C:/temp/freebase-datadump-tsv/data/medicine/drug_label_section.tsv") ;
 		
 		CsvReader reader = new CsvReader(new BufferedReader(new FileReader(file)));
@@ -49,7 +50,7 @@ public class SampleWriteJob implements IndexJob<Void> {
 //			isession.testDocument(doc) ;
 			
 			line = reader.readLine() ;
-			if ((max % 5000) == 0) {
+			if ((max % 20000) == 0) {
 				System.out.print('.') ;
 				isession.continueUnit() ;
 			} 

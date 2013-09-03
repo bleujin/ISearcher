@@ -92,7 +92,7 @@ public class AsyncIndexer {
 							} else if (event.getEventType().isShutDown()) {
 								throw new IndexCancelException(event.toString());
 							} else if (event.getEventType().isNormal()) {
-								WriteDocument[] docs = ((CollectorEvent) event).makeDocument();
+								WriteDocument[] docs = ((CollectorEvent) event).makeDocument(isession);
 								for (WriteDocument doc : docs) {
 									beforeHandle((CollectorEvent) event, doc);
 									getWritePolicy().apply(isession, doc);

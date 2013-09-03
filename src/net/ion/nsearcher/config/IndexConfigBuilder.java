@@ -118,7 +118,7 @@ public class IndexConfigBuilder {
 	}
 
 	private Analyzer indexAnalyzer(Version version) {
-		return ObjectUtil.coalesce(this.analyzer, new CJKAnalyzer(version));
+		return ObjectUtil.coalesce(this.analyzer, new MyKoreanAnalyzer(version));
 	}
 
 	public Central build() throws CorruptIndexException, IOException{

@@ -57,6 +57,11 @@ public class InfoReader {
 	public IndexReader getIndexReader() throws IOException{
 		return searcher.indexReader() ;
 	}
+
+	public DirectoryReader getDirectoryReader() throws IOException{
+		return dreader ;
+	}
+
 	
 	public List<String> getFieldNames() throws IOException{
 		List<String> result = new ArrayList<String>() ;

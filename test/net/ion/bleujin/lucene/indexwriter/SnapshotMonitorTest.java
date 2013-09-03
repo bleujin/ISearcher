@@ -157,18 +157,18 @@ class SelfWriterThread implements Runnable {
 	public void run() {
 		Indexer indexer = central.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws Exception {
-				WriteDocument[] docs = ISTestCase.makeTestDocument(maxCount) ;
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument[] docs = ISTestCase.makeTestDocument(isession, maxCount) ;
 				for (WriteDocument doc : docs) {
-					session.insertDocument(doc) ;
+					isession.insertDocument(doc) ;
 					try {
 						Thread.sleep(50) ;
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 					Debug.debug(doc.get("NAME")) ;
-					if (RandomUtil.nextBoolean()) session.commit() ; 
-					else session.rollback() ;
+					if (RandomUtil.nextBoolean()) isession.commit() ; 
+					else isession.rollback() ;
 				}
 				return null ;
 			}
@@ -195,18 +195,18 @@ class OnlyWriterThread implements Runnable {
 		Indexer indexer = central.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {
 
-			public Void handle(IndexSession session) throws Exception {
-				WriteDocument[] docs = ISTestCase.makeTestDocument(maxCount) ;
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument[] docs = ISTestCase.makeTestDocument(isession, maxCount) ;
 				for (WriteDocument doc : docs) {
-					session.insertDocument(doc) ;
+					isession.insertDocument(doc) ;
 					try {
 						Thread.sleep(50) ;
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 					Debug.debug(doc.get("NAME")) ;
-					if (RandomUtil.nextBoolean()) session.commit() ; 
-					else session.rollback() ;
+					if (RandomUtil.nextBoolean()) isession.commit() ; 
+					else isession.rollback() ;
 				}
 				return null ;
 			}
@@ -226,23 +226,27 @@ class WriterThread implements Runnable {
 	}
 	
 	public void run() {
-		WriteDocument[] docs = ISTestCase.makeTestDocument(maxCount) ;
 		
-		for (final WriteDocument doc : docs) {
-			Indexer indexer = central.newIndexer() ;
-			indexer.index(new IndexJob<Void>() {
-				public Void handle(IndexSession session) throws Exception {
-					session.insertDocument(doc) ;
-					return null;
+		Indexer indexer = central.newIndexer() ;
+		
+		indexer.index(new IndexJob<Void>() {
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument[] docs = ISTestCase.makeTestDocument(isession, maxCount) ;
+				
+				for (final WriteDocument doc : docs) {
+					isession.insertDocument(doc) ;
+					try {
+						Thread.sleep(50) ;
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					Debug.debug(doc.get("subject")) ;
 				}
-			}) ;
-			try {
-				Thread.sleep(50) ;
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+				
+				
+				return null;
 			}
-			Debug.debug(doc.get("subject")) ;
-		}
+		}) ;
 	}
 	
 }

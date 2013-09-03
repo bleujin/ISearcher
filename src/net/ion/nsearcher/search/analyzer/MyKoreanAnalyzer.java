@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.nio.CharBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -152,18 +153,21 @@ class WordGroup {
 	}
 
 	static Reader adjustReader(Reader reader) {
+//		return reader ;
 		try {
-			StringBuilder result = new StringBuilder();
+			StringBuilder result = new StringBuilder(40);
 			int pretype = 0;
-			char[] cbuffr = new char[100];
-			while (reader.read(cbuffr) != -1) {
-				for (char c : cbuffr) {
+//			char[] cbuffr = new char[100];
+			CharBuffer cbuffer = CharBuffer.allocate(40);
+			while (reader.read(cbuffer) != -1) {
+				for (char c : cbuffer.array()) {
 					int currtype = Character.getType(c);
 					if (isSplit(pretype, currtype))
 						result.append(' ');
 					result.append(c);
 					pretype = currtype;
 				}
+				cbuffer.flip() ;
 			}
 			return new StringReader(result.toString());
 		} catch (IOException ex) {

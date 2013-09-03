@@ -6,6 +6,7 @@ import net.ion.framework.util.ObjectUtil;
 import net.ion.nsearcher.common.SearchConstant;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.debug.standard.DCJKAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 
@@ -35,7 +36,7 @@ public class SearchConfigBuilder {
 	}
 	
 	public Analyzer queryAnalyzer(){
-		return ObjectUtil.coalesce(queryAnalyzer, new DCJKAnalyzer(centralConfig.version())) ;
+		return ObjectUtil.coalesce(queryAnalyzer, new CJKAnalyzer(centralConfig.version())) ;
 	}
 	
 	

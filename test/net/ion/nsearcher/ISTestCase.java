@@ -122,10 +122,10 @@ public class ISTestCase extends TestCase{
 		Indexer indexer = central.newIndexer() ;
 		
 		indexer.index(analyzer, new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws IOException {
-				WriteDocument[] docs = ISTestCase.makeTestMyDocument(20) ;
+			public Void handle(IndexSession isession) throws IOException {
+				WriteDocument[] docs = ISTestCase.makeTestMyDocument(isession,  20) ;
 				for (WriteDocument doc : docs) {
-					session.insertDocument(doc) ;	
+					isession.insertDocument(doc) ;	
 				}
 				return null;
 			}
@@ -159,11 +159,11 @@ public class ISTestCase extends TestCase{
 		return adapterListener;
 	}
 	
-	public static WriteDocument[] makeTestMyDocument(int count){
+	public static WriteDocument[] makeTestMyDocument(IndexSession isession, int count){
 		List<WriteDocument> list = new ArrayList<WriteDocument>() ;
 		String[] ranName = new String[]{"bleujin", "novision", "iihi", "k2sun"} ;
 		for (int j = 0; j < count; j++) {
-			WriteDocument myDoc = IndexSession.testDocument() ;
+			WriteDocument myDoc = isession.newDocument() ;
 			// int : 100 - 200
 			myDoc.add(MyField.number("int", 100 + RandomUtil.nextInt(100))) ;
 			myDoc.add(MyField.keyword("date", DateUtils.formatDate(RandomUtil.nextCalendar(10).getTime(), "yyyyMMdd-HH24mmss"))) ;
@@ -172,7 +172,7 @@ public class ISTestCase extends TestCase{
 			list.add(myDoc) ;
 		}
 		
-		WriteDocument myDoc1 = IndexSession.testDocument() ;
+		WriteDocument myDoc1 = isession.newDocument() ;
 		//myDoc1.add(MyField.number("int", 2)) ;
 		//myDoc1.add(MyField.text("int", "2")) ;
 		myDoc1.add(MyField.number("int", 3)) ;
@@ -182,7 +182,7 @@ public class ISTestCase extends TestCase{
 		myDoc1.add(MyField.text("content", RandomStringUtils.random(400, new char[]{'A','B','C','D','E', ' '}))) ;
 		list.add(myDoc1) ;
 
-		WriteDocument myDoc2 = IndexSession.testDocument() ;
+		WriteDocument myDoc2 = isession.newDocument() ;
 		myDoc2.add(MyField.keyword("int", "3")) ;
 		myDoc2.add(MyField.number("int", 3)) ;
 		myDoc2.add(MyField.number("INT", 4)) ;
@@ -196,13 +196,13 @@ public class ISTestCase extends TestCase{
 		list.add(myDoc2) ;
 
 		
-		WriteDocument myDoc3 = IndexSession.testDocument() ;
+		WriteDocument myDoc3 = isession.newDocument() ;
 		myDoc3.add(MyField.number("long", 1234L)) ;
 		myDoc3.add(MyField.keyword("key", "long")) ;
 		myDoc3.add(MyField.keyword("name", "test")) ;
 		list.add(myDoc3) ;
 
-		WriteDocument myDoc4 = IndexSession.testDocument() ;
+		WriteDocument myDoc4 = isession.newDocument() ;
 		myDoc4.add(MyField.date("date", 20100725, 232010)) ;
 		myDoc4.add(MyField.keyword("name", "date")) ;
 		list.add(myDoc4) ;
@@ -211,8 +211,8 @@ public class ISTestCase extends TestCase{
 		return (WriteDocument[])list.toArray(new WriteDocument[0]);	}
 	
 	
-	public static WriteDocument[] makeTestDocument(int count) {
-		WriteDocument[] mydocs = makeTestMyDocument(count) ;
+	public static WriteDocument[] makeTestDocument(IndexSession isession, int count) {
+		WriteDocument[] mydocs = makeTestMyDocument(isession, count) ;
 		List<WriteDocument> list = ListUtil.newList() ;
 		
 		for (WriteDocument mydoc : mydocs) {

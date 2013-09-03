@@ -16,6 +16,7 @@ import org.apache.lucene.index.IndexableFieldType;
 import org.apache.lucene.index.FieldInfo.IndexOptions;
 import org.apache.lucene.util.BytesRef;
 
+@Deprecated
 public class IndexField implements IndexableField {
 
 	private static final long serialVersionUID = -7320846412631501001L;
@@ -44,9 +45,6 @@ public class IndexField implements IndexableField {
 		more.add(field);
 	}
 
-	public void addMoreField(IndexField ifield) {
-		more.add(ifield.inner);
-	}
 
 	public String toString() {
 		return getRealField().toString();
@@ -72,7 +70,8 @@ public class IndexField implements IndexableField {
 
 
 	public IndexField addTo(Document doc) {
-		doc.add(this);
+		if (inner == null) return this ;
+		doc.add(inner);
 		for (IndexableField more : this.getMoreField()) {
 			doc.add(more);
 		}

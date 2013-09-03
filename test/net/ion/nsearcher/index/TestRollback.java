@@ -49,17 +49,17 @@ public class TestRollback extends ISTestCase{
 		searcher.search("bleujin") ;
 		InfoReader reader = central.newReader() ;
 		
-		final WriteDocument[] newDocs = makeTestMyDocument(10) ;
 		
 		Indexer indexer = central.newIndexer();
-		indexer.index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws IOException {
+		final WriteDocument firstDoc = indexer.index(new IndexJob<WriteDocument>() {
+			public WriteDocument handle(IndexSession isession) throws IOException {
+				final WriteDocument[] newDocs = makeTestMyDocument(isession, 10) ;
 				for (WriteDocument newdoc : newDocs) {
 					newdoc.add(MyField.keyword("name", "bleuher")) ;
-					session.updateDocument(newdoc) ;
+					isession.updateDocument(newdoc) ;
 				}
-				session.rollback() ;
-				return null;
+				isession.rollback() ;
+				return newDocs[0];
 			}
 		}) ;
 		
@@ -72,7 +72,7 @@ public class TestRollback extends ISTestCase{
 		Indexer newIndexer = central.newIndexer();
 		newIndexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws IOException {
-				session.updateDocument(newDocs[0]) ;
+				session.updateDocument(firstDoc) ;
 				session.rollback() ;
 				return null;
 			}
@@ -89,11 +89,11 @@ public class TestRollback extends ISTestCase{
 		InfoReader oldReader = central.newReader() ;
 		Indexer indexer = central.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws IOException {
-				WriteDocument[] newDocs = makeTestMyDocument(10) ;
+			public Void handle(IndexSession isession) throws IOException {
+				WriteDocument[] newDocs = makeTestMyDocument(isession, 10) ;
 				for (WriteDocument newdoc : newDocs) {
 					newdoc.add(MyField.keyword("name", "bleuher")) ;
-					session.updateDocument(newdoc) ;
+					isession.updateDocument(newdoc) ;
 				}
 				return null;
 			}

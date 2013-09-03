@@ -21,22 +21,7 @@ public class TestDocument extends ISTestCase{
 	
 	private String fileName = "c:/temp/abc.ser" ;
 	private int maxLength = 5;
-	public void xtestDocument() throws Exception {
-		WriteDocument[] docs = makeTestDocument(maxLength) ;
-		
-		ObjectPersistor<WriteDocument> persistor = new ObjectPersistor<WriteDocument>() ;
-		new File(fileName).delete() ;
-		StackFile<WriteDocument> stack = new StackFile<WriteDocument>(fileName, persistor) ;
 
-		for (int i = 0; i < maxLength; i++) {
-			stack.push(docs[i]) ;
-		}
-
-		for (int i = 0; i < maxLength; i++) {
-			WriteDocument doc = stack.pop() ;
-		}
-		stack.close() ;
-	}
 	
 	public void testCaseSensitive() throws Exception {
 		Central central = writeDocument() ;
@@ -66,18 +51,6 @@ public class TestDocument extends ISTestCase{
 		Searcher searcher  = central.newSearcher() ;
 		searcher.addPostListener(new StdOutProcessor()) ;
 		SearchResponse result = searcher.search("ud1:sky");
-	}
-	
-	public void xtestSerializable() throws Exception {
-		File file = new File("c:/temp/docs") ;
-		WriteDocument[] docs = makeTestDocument(maxLength) ;
-
-		
-		ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file)) ; 
-		while( maxLength-- > 0) {
-			output.writeObject((Serializable)docs[maxLength]) ;
-		} 
-		output.close() ;
 	}
 	
 

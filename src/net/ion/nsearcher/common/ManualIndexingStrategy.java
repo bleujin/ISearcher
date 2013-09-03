@@ -1,36 +1,66 @@
 package net.ion.nsearcher.common;
 
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.Field.Store;
+
 
 public abstract class ManualIndexingStrategy extends FieldIndexingStrategy{
 
 	@Override
-	public IndexField date(String name, int yyyymmdd, int hh24miss) {
-		return IndexField.BLANK;
+	public void date(Document doc, MyField field, String name, int yyyymmdd, int hh24miss) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public IndexField keyword(String name, String value) {
-		return IndexField.BLANK;
+	public void keyword(Document doc, MyField field, String name, String value) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public IndexField noStoreText(String name, String value) {
-		return IndexField.BLANK;
+	public void noStoreText(Document doc, MyField field, String name, String value) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public IndexField number(String name, long number) {
-		return IndexField.BLANK;
+	public void number(Document doc, MyField field, String name, long number) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public IndexField number(String name, double number) {
-		return IndexField.BLANK;
+	public void number(Document doc, MyField field, String name, double number) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public IndexField text(String name, String value) {
-		return IndexField.BLANK;
+	public void text(Document doc, MyField field, String name, String value) {
+		// TODO Auto-generated method stub
+		
 	}
+
+	@Override
+	public void unknown(Document doc, MyField field, String name, Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void unknown(Document doc, MyField field, String name, String value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void manual(Document doc, String name, String value, Store store, Index index) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 
 }

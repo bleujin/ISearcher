@@ -11,6 +11,6 @@ public interface DocumentHandler {
 	public final static float HEAD_BOOST = 2f;
 	
 
-	WriteDocument[] makeDocument(CollectorEvent event) throws IOException;
+	WriteDocument[] makeDocument(IndexSession isession, CollectorEvent event) throws IOException;
 
 }

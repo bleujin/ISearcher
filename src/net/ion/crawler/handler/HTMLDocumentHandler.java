@@ -27,7 +27,7 @@ public class HTMLDocumentHandler implements DocumentHandler {
 	public HTMLDocumentHandler() {
 	}
 
-	public WriteDocument[] makeDocument(CollectorEvent _event) throws IOException {
+	public WriteDocument[] makeDocument(IndexSession isession, CollectorEvent _event) throws IOException {
 		if (!(_event instanceof ParserEvent))
 			return new WriteDocument[0];
 
@@ -43,7 +43,7 @@ public class HTMLDocumentHandler implements DocumentHandler {
 			}
 			
 			Link link = pageData.getLink();
-			WriteDocument doc = IndexSession.testDocument(String.valueOf(event.getEventId())).event(event).text("uri" ,link.getURI());
+			WriteDocument doc = isession.newDocument(String.valueOf(event.getEventId())).event(event).text("uri" ,link.getURI());
 			for (MyField field : fields) {
 				doc.add(field) ;
 			}

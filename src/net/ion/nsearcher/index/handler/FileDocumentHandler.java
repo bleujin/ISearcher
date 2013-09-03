@@ -15,13 +15,13 @@ public class FileDocumentHandler implements DocumentHandler {
 	}
 
 
-	public WriteDocument[] makeDocument(CollectorEvent _event) throws IOException {
+	public WriteDocument[] makeDocument(IndexSession isession, CollectorEvent _event) throws IOException {
 		if (! (_event instanceof FileEvent)) return new WriteDocument[0] ;
 
 		FileEvent event = (FileEvent)_event ;
 
 		File file = event.getFile();
-		WriteDocument doc = IndexSession.testDocument(String.valueOf(event.getEventId())).event(event).name(file.getName());
+		WriteDocument doc = isession.newDocument(String.valueOf(event.getEventId())).event(event).name(file.getName());
 
 		MyField name = MyField.text("name", file.getName());
 		doc.add(name);

@@ -2,6 +2,8 @@ package net.ion.nsearcher.common;
 
 import net.ion.framework.util.ObjectUtil;
 
+import org.apache.ecs.wml.Do;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 
@@ -9,9 +11,9 @@ public abstract class MyField {
 
 	public final static String SORT_POSTFIX = "_for_sort";
 	
-	protected float boost = 0.0f; 
+	private float boost = 0.5f; 
 
-	public abstract IndexField indexField(FieldIndexingStrategy strategy) ;
+	public abstract void indexField(FieldIndexingStrategy strategy, Document doc) ;
 	public abstract String name() ;
 	public abstract String stringValue() ;
 
@@ -55,6 +57,10 @@ public abstract class MyField {
 		this.boost = boost ;
 		return this ;
 	}
+	
+	public float boost(){
+		return this.boost;
+	}
 
 }
 
@@ -66,8 +72,8 @@ class KeywordField extends MyField {
 		this.name = name.toLowerCase() ;
 		this.value = value ;
 	}
-	public IndexField indexField(FieldIndexingStrategy strategy) {
-		return strategy.keyword(name, value); 
+	public void indexField(FieldIndexingStrategy strategy, Document doc) {
+		strategy.keyword(doc, this, name, value) ; 
 	}
 	public String name() {
 		return name;
@@ -85,8 +91,8 @@ class LongField extends MyField {
 		this.name = name.toLowerCase() ;
 		this.value = value ;
 	}
-	public IndexField indexField(FieldIndexingStrategy strategy) {
-		return strategy.number(name, value); 
+	public void indexField(FieldIndexingStrategy strategy, Document doc) {
+		strategy.number(doc, this, name, value); 
 	}
 	public String name() {
 		return name;
@@ -103,8 +109,8 @@ class DoubleField extends MyField {
 		this.name = name.toLowerCase() ;
 		this.value = value ;
 	}
-	public IndexField indexField(FieldIndexingStrategy strategy) {
-		return strategy.number(name, value); 
+	public void indexField(FieldIndexingStrategy strategy, Document doc) {
+		strategy.number(doc, this, name, value); 
 	}
 	public String name() {
 		return name;
@@ -123,8 +129,8 @@ class DateField extends MyField {
 		this.yyyymmdd = yyyymmdd ;
 		this.hh24miss = hh24miss ;
 	}
-	public IndexField indexField(FieldIndexingStrategy strategy) {
-		return strategy.date(name, yyyymmdd, hh24miss); 
+	public void indexField(FieldIndexingStrategy strategy, Document doc) {
+		strategy.date(doc, this, name, yyyymmdd, hh24miss); 
 	}
 	public String name() {
 		return name;
@@ -141,8 +147,8 @@ class UnknownField extends MyField {
 		this.name = name.toLowerCase() ;
 		this.value = value ;
 	}
-	public IndexField indexField(FieldIndexingStrategy strategy) {
-		return strategy.unknown(name, value); 
+	public void indexField(FieldIndexingStrategy strategy, Document doc) {
+		strategy.unknown(doc, this, name, value); 
 	}
 	public String name() {
 		return name;
@@ -159,8 +165,8 @@ class UnknownStringField extends MyField {
 		this.name = name.toLowerCase() ;
 		this.value = value ;
 	}
-	public IndexField indexField(FieldIndexingStrategy strategy) {
-		return strategy.unknown(name, value); 
+	public void indexField(FieldIndexingStrategy strategy, Document doc) {
+		strategy.unknown(doc, this, name, value); 
 	}
 	public String name() {
 		return name;
@@ -183,8 +189,8 @@ class ManualField extends MyField {
 		this.store = store ;
 		this.index = index ;
 	}
-	public IndexField indexField(FieldIndexingStrategy strategy) {
-		return strategy.manual(name, value, store, index); 
+	public void indexField(FieldIndexingStrategy strategy, Document doc) {
+		strategy.manual(doc, name, value, store, index); 
 	}
 	public String name() {
 		return name;
@@ -201,11 +207,10 @@ class TextField extends MyField {
 		this.name = name.toLowerCase() ;
 		this.value = value ;
 	}
-	public IndexField indexField(FieldIndexingStrategy strategy) {
-		final IndexField result = strategy.text(name, value);
-		if (this.boost > 0.1f) result.setBoost(this.boost) ;
-		return result; 
+	public void indexField(FieldIndexingStrategy strategy, Document doc) {
+		strategy.text(doc, this, name, value);
 	}
+	
 	public String name() {
 		return name;
 	}
@@ -221,8 +226,8 @@ class NoStoreTextField extends MyField {
 		this.name = name.toLowerCase() ;
 		this.value = value ;
 	}
-	public IndexField indexField(FieldIndexingStrategy strategy) {
-		return strategy.noStoreText(name, value); 
+	public void indexField(FieldIndexingStrategy strategy, Document doc) {
+		strategy.noStoreText(doc, this, name, value); 
 	}
 	public String name() {
 		return name;

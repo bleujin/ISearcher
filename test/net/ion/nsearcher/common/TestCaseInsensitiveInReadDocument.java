@@ -4,19 +4,36 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import net.ion.framework.util.ArrayUtil;
+import net.ion.nsearcher.config.Central;
+import net.ion.nsearcher.config.CentralConfig;
+import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
+import net.ion.nsearcher.index.Indexer;
 
 import org.apache.lucene.index.IndexableField;
 
 public class TestCaseInsensitiveInReadDocument extends TestCase {
 
 	private ReadDocument rdoc;
+	private Central cen;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		WriteDocument wdoc = IndexSession.testDocument().unknown("NAME", "bleujin").unknown("Age", 20) ;
-		this.rdoc = ReadDocument.loadDocument(wdoc.toLuceneDoc(FieldIndexingStrategy.DEFAULT));
+		this.cen = CentralConfig.newRam().build();
+	 	Indexer indexer = cen.newIndexer();
+	 	this.rdoc = indexer.index(new IndexJob<ReadDocument>() {
+			@Override
+			public ReadDocument handle(IndexSession isession) throws Exception {
+				return ReadDocument.loadDocument(isession.newDocument().unknown("Name", "bleujin").unknown("Age", 20).toLuceneDoc(isession));
+			}
+		}) ;
+	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		cen.close() ;
+		super.tearDown();
 	}
 	
 	public void testGet() throws Exception {

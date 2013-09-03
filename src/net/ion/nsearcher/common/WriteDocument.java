@@ -19,6 +19,7 @@ import net.ion.framework.parse.gson.JsonElement;
 import net.ion.framework.parse.gson.JsonObject;
 import net.ion.framework.parse.gson.JsonUtil;
 import net.ion.framework.util.StringUtil;
+import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.event.CollectorEvent;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -44,34 +45,31 @@ public class WriteDocument extends AbDocument {
 		return docId;
 	}
 	
-	public Document toLuceneDoc(FieldIndexingStrategy strategy) {
+	public Document toLuceneDoc(IndexSession isession) {
 		
+		FieldIndexingStrategy strategy = isession.fieldIndexingStrategy(); 
 		Document doc = new Document();
-		StringBuilder bodyBuilder = new StringBuilder(1024);
-		
+		StringBuilder bodyBuilder = new StringBuilder(512);
 		bodyBuilder.append(docId + " ") ;
+		
 		for (MyField field : fields.values()) {
-			
-			if (field == null)
+			if (field == null || isReservedField(field.name()))
 				continue;
-			final IndexField indexField = field.indexField(strategy);
-			if (indexField == IndexField.BLANK) continue ;
 			
-			indexField.addTo(doc) ;
+			field.indexField(strategy, doc);
 
-			if (isReservedField(field.name())) // except timestamp
-				continue;
-
-			bodyBuilder.append(field.stringValue() + " ");
+			if (isession.handleBody()) bodyBuilder.append(field.stringValue() + " ");
 		}
 
-		doc.add(MyField.manual(ISKey, idValue(), Store.YES, Index.NOT_ANALYZED).indexField(strategy));
+		MyField.manual(ISKey, idValue(), Store.YES, Index.NOT_ANALYZED).indexField(strategy, doc);
 		final String bodyString = bodyBuilder.toString();
-		doc.add(MyField.manual(ISBody, String.valueOf(HashFunction.hashGeneral(bodyString)), Store.YES, Index.NOT_ANALYZED).indexField(strategy));
-		doc.add(MyField.manual(TIMESTAMP, String.valueOf(System.currentTimeMillis()), Store.YES, Index.NOT_ANALYZED).indexField(strategy));
+		MyField.manual(ISBody, String.valueOf(HashFunction.hashGeneral(bodyString)), Store.YES, Index.NOT_ANALYZED).indexField(strategy, doc);
+		MyField.manual(TIMESTAMP, String.valueOf(System.currentTimeMillis()), Store.YES, Index.NOT_ANALYZED).indexField(strategy, doc);
 
+		
+		
 		// @TODO : compress, Store.No
-		doc.add(MyField.manual(ISALL_FIELD, bodyString, Store.NO, Index.ANALYZED).indexField(strategy));
+		if (isession.handleBody()) MyField.manual(ISALL_FIELD, bodyString, Store.NO, Index.ANALYZED).indexField(strategy, doc);
 
 		return doc;
 	}
@@ -187,16 +185,18 @@ public class WriteDocument extends AbDocument {
 		return add(field);
 	}
 
-	public MyField myField(String name) {
-		return getFirstField(name) ;
-	}
-
 	
 	public WriteDocument add(MyField field) {
 		fields.put(field.name(), field);
 		return this;
 	}
 
+	
+	
+	public MyField myField(String name) {
+		return getFirstField(name) ;
+	}
+	
 	public Collection<MyField> getFields() {
 		return fields.values();
 	}

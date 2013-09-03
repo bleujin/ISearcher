@@ -14,7 +14,7 @@ public class DataRowDocumentHandler implements DocumentHandler {
 	public DataRowDocumentHandler() {
 	}
 
-	public WriteDocument[] makeDocument(CollectorEvent _event) throws IOException {
+	public WriteDocument[] makeDocument(IndexSession isession, CollectorEvent _event) throws IOException {
 		if (! (_event instanceof DataRowEvent)) return new WriteDocument[0] ;
 		
 		DataRowEvent event = (DataRowEvent)_event ;
@@ -26,7 +26,7 @@ public class DataRowDocumentHandler implements DocumentHandler {
 			docName += keyValues.get(key) + "_" ;
 		}
 		
-		WriteDocument doc = IndexSession.testDocument(String.valueOf(event.getEventId())).event(event).name(docName);
+		WriteDocument doc = isession.newDocument(String.valueOf(event.getEventId())).event(event).name(docName);
 		for (String colName : keyValues.getKeySet()) {
 			Object value = keyValues.get(colName);
 			if (value != null) {

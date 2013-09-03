@@ -18,10 +18,10 @@ public class TestDeamonIndexer extends TestCase {
 		Indexer indexer = c.newIndexer();
 
 		indexer.index(new IndexJob<Void>(){
-			public Void handle(IndexSession session) throws Exception {
+			public Void handle(IndexSession isession) throws Exception {
 				for (int i : ListUtil.rangeNum(123)) {
-					WriteDocument doc = testDocument().add(MyField.keyword("test", "_" + i));
-					session.updateDocument(doc);
+					WriteDocument doc = isession.newDocument("test").add(MyField.keyword("test", "_" + i));
+					isession.updateDocument(doc);
 				}
 				return null;
 			}
@@ -29,10 +29,6 @@ public class TestDeamonIndexer extends TestCase {
 
 		c.newSearcher().search("").debugPrint();
 		assertEquals(1, c.newSearcher().search("").size());
-	}
-
-	private static WriteDocument testDocument() {
-		return IndexSession.testDocument("test") ;
 	}
 
 }

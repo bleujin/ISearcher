@@ -13,12 +13,28 @@ import org.apache.lucene.document.Document;
 
 public class TestWriteDocument extends TestCase {
 
+	private Central cen;
+	private Indexer indexer;
 	private WriteDocument wdoc;
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		this.wdoc = IndexSession.testDocument().unknown("Name", "bleujin").unknown("age", 20);
+		this.cen = CentralConfig.newRam().build();
+	 	this.indexer = cen.newIndexer();
+	 	this.wdoc = indexer.index(new IndexJob<WriteDocument>() {
+			@Override
+			public WriteDocument handle(IndexSession isession) throws Exception {
+				return isession.newDocument().unknown("Name", "bleujin").unknown("age", 20);
+			}
+		}) ;
 	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		cen.close() ;
+		super.tearDown();
+	}
+	
 	
 	public void testNameCase() throws Exception {
 		assertEquals("bleujin", wdoc.get("name"));
@@ -27,10 +43,12 @@ public class TestWriteDocument extends TestCase {
 	
 	
 	public void testNameCaseInReadDoc() throws Exception {
-		WriteDocument wdoc = IndexSession.testDocument().unknown("Name", "bleujin");
-		
-		ReadDocument rdoc = ReadDocument.loadDocument(wdoc.toLuceneDoc(FieldIndexingStrategy.DEFAULT));
-		
+		ReadDocument rdoc = indexer.index(new IndexJob<ReadDocument>() {
+			@Override
+			public ReadDocument handle(IndexSession isession) throws Exception {
+				return ReadDocument.loadDocument(wdoc.toLuceneDoc(isession));
+			}
+		}) ;
 		assertEquals("bleujin", rdoc.get("name")) ;
 		assertEquals("bleujin", rdoc.get("Name")) ;
 	}
@@ -79,14 +97,11 @@ public class TestWriteDocument extends TestCase {
 	
 	
 	public void testReserved() throws Exception {
-		Central cen = CentralConfig.newRam().build();
-		
-		Indexer indexer = cen.newIndexer();
 		Document doc = indexer.index(new IndexJob<Document>() {
-			public Document handle(IndexSession session) throws Exception {
-				final WriteDocument writeDoc = session.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
-				session.insertDocument(writeDoc) ;
-				return writeDoc.toLuceneDoc(session.fieldIndexingStrategy());
+			public Document handle(IndexSession isession) throws Exception {
+				final WriteDocument writeDoc = isession.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
+				isession.insertDocument(writeDoc) ;
+				return writeDoc.toLuceneDoc(isession);
 			}
 		}) ;
 		
@@ -103,10 +118,13 @@ public class TestWriteDocument extends TestCase {
 	}
 	
 	public void testId() throws Exception {
-		WriteDocument doc1 = IndexSession.testDocument();
-		WriteDocument doc2 = IndexSession.testDocument();
-		
-		Debug.line(doc1.idValue(), doc2.idValue()) ;
+		assertEquals(Boolean.FALSE, indexer.index(new IndexJob<Boolean>() {
+			@Override
+			public Boolean handle(IndexSession isession) throws Exception {
+				// TODO Auto-generated method stub
+				return isession.newDocument().equals(isession.newDocument());
+			}
+		})) ;
 	}
 	
 	

@@ -22,8 +22,8 @@ public abstract class CollectorEvent implements ICollectorEvent{
 		return EventType.Normal;
 	}
 
-	public WriteDocument[] makeDocument() throws IOException {
-		return getCollector().getDocumentHandler().makeDocument(this) ;
+	public WriteDocument[] makeDocument(IndexSession isession) throws IOException {
+		return getCollector().getDocumentHandler().makeDocument(isession, this) ;
 	}
 	
 	public long getStartTime() {
