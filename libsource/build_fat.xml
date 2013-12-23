@@ -31,7 +31,8 @@
         	<fatjar.jarsource file="${basedir}\search440\lucene-codecs-4.4.0.jar" relpath=""/>  
         	<fatjar.jarsource file="${basedir}\search440\lucene-facet-4.4.0.jar" relpath=""/>  
             <fatjar.jarsource file="${basedir}\search440\lucene-analyzers-common-4.4.0.jar" relpath=""/>  
-            <fatjar.jarsource file="${basedir}\search440\koreananalyzer.4x-20130430.jar" relpath=""/>  
+            <fatjar.jarsource file="${basedir}\search440\koreananalyzer.4x-20130430.jar" relpath=""/>
+        	
         </fatjar.build>
     </target>
 

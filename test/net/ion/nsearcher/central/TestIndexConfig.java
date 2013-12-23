@@ -16,7 +16,7 @@ public class TestIndexConfig extends ISTestCase{
 		Central cen = config.build() ;
 		cen.newIndexer().index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
-				assertEquals(100, session.getIndexWriterConfig().getMaxBufferedDocs()) ;
+				assertEquals(100, session.indexWriterConfig().getMaxBufferedDocs()) ;
 				return null;
 			}
 		}) ;

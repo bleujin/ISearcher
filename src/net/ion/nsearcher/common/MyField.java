@@ -1,5 +1,7 @@
 package net.ion.nsearcher.common;
 
+import java.util.Map;
+
 import net.ion.framework.util.ObjectUtil;
 
 import org.apache.ecs.wml.Do;
@@ -11,7 +13,8 @@ public abstract class MyField {
 
 	public final static String SORT_POSTFIX = "_for_sort";
 	
-	private float boost = 0.5f; 
+	private float boost = 0.5f;
+	private boolean ignoreBody; 
 
 	public abstract void indexField(FieldIndexingStrategy strategy, Document doc) ;
 	public abstract String name() ;
@@ -62,6 +65,13 @@ public abstract class MyField {
 		return this.boost;
 	}
 
+	public boolean isIgnoreBody(){
+		return ignoreBody ;
+	}
+	public MyField ignoreBody() {
+		this.ignoreBody = true ;
+		return this;
+	}
 }
 
 class KeywordField extends MyField {
@@ -198,6 +208,7 @@ class ManualField extends MyField {
 	public String stringValue() {
 		return ObjectUtil.toString(value) ;
 	}
+
 }
 
 class TextField extends MyField {

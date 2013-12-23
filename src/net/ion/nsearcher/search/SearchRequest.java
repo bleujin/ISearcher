@@ -94,16 +94,18 @@ public class SearchRequest {
 
 
 
-	public void setParam(String key, Object value) {
+	public SearchRequest setParam(String key, Object value) {
 		param.put(key, value);
+		return this ;
 	}
 
 	public Object getParam(String key) {
 		return param.get(key);
 	}
 	
-	public void setFilter(Filter filter) {
+	public SearchRequest setFilter(Filter filter) {
 		this.filter = filter;
+		return this ;
 		
 	}
 

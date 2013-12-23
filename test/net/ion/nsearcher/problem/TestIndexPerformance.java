@@ -50,26 +50,26 @@ public class TestIndexPerformance extends TestCase {
 	// 107sec(defalut( / 61 sec fieldIndexStrategy override(
 	public void testUseCentral() throws Exception {
 		long start = System.currentTimeMillis() ;
-		central.indexConfig().fieldIndexingStrategy(new ManualIndexingStrategy(){
-			@Override
-			public void unknown(Document doc, MyField field, String name, Object obj) {
-				doc.add(new Field(name, obj.toString(), Store.YES, Index.ANALYZED)) ;
-			}
-
-			@Override
-			public void unknown(Document doc, MyField field, String name, String value) {
-				doc.add(new Field(name, value, Store.YES, Index.ANALYZED)) ;
-			}
-
-			@Override
-			public void manual(Document doc, String name, String value, Store store, Index index) {
-				doc.add(new Field(name, value, store, index)) ;
-			}
-		}) ;
+//		central.indexConfig().fieldIndexingStrategy(new ManualIndexingStrategy(){
+//			@Override
+//			public void unknown(Document doc, MyField field, String name, Object obj) {
+//				doc.add(new Field(name, obj.toString(), Store.YES, Index.ANALYZED)) ;
+//			}
+//
+//			@Override
+//			public void unknown(Document doc, MyField field, String name, String value) {
+//				doc.add(new Field(name, value, Store.YES, Index.ANALYZED)) ;
+//			}
+//
+//			@Override
+//			public void manual(Document doc, String name, String value, Store store, Index index) {
+//				doc.add(new Field(name, value, store, index)) ;
+//			}
+//		}) ;
 		
 		Indexer indexer = central.newIndexer();
 
-		indexer.index(new SampleWriteJob(100000)) ;
+		indexer.index(new SampleWriteJob(20000)) ;
 		Debug.line(System.currentTimeMillis() - start) ;
 	}
 	
@@ -84,7 +84,7 @@ public class TestIndexPerformance extends TestCase {
 		reader.setFieldDelimiter('\t') ;
 		String[] headers = reader.readLine();
 		String[] line = reader.readLine() ;
-		int max = 100000 ;
+		int max = 20000 ;
 		while(line != null && line.length > 0 && max-- > 0 ){
 			Document doc = new Document() ; 
 			for (int ii = 0, last = headers.length; ii < last ; ii++) {

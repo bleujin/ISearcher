@@ -28,7 +28,7 @@ public class IndexSession {
 
 	private final SingleSearcher searcher;
 	private IndexWriter writer;
-	private final IndexWriterConfig wconfig;
+	private IndexWriterConfig wconfig;
 	private String owner;
 	private FieldIndexingStrategy fieldIndexingStrategy;
 	private boolean ignoreBody;
@@ -207,7 +207,12 @@ public class IndexSession {
 		return doc.get(SearchConstant.ISBody);
 	}
 
-	public IndexWriterConfig getIndexWriterConfig() {
+	public IndexSession indexWriterConfig(IndexWriterConfig wconfig){
+		this.wconfig = wconfig ;
+		return this ;
+	}
+	
+	public IndexWriterConfig indexWriterConfig() {
 		return wconfig;
 	}
 

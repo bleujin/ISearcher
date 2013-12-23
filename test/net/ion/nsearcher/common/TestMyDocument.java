@@ -8,6 +8,8 @@ import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.IndexableField;
 
 public class TestMyDocument extends TestCase {
@@ -112,7 +114,8 @@ public class TestMyDocument extends TestCase {
 			assertEquals(field.stringValue(), doc.get(field.name())) ;
 		}
 	}
-
+	
+	
 }
 
 

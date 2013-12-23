@@ -58,7 +58,8 @@ public class WriteDocument extends AbDocument {
 			
 			field.indexField(strategy, doc);
 
-			if (isession.handleBody()) bodyBuilder.append(field.stringValue() + " ");
+//			if (isession.handleBody() && (!field.isManual())) bodyBuilder.append(field.stringValue() + " ");
+			if (isession.handleBody() && (!field.isIgnoreBody())) bodyBuilder.append(field.stringValue() + " ");
 		}
 
 		MyField.manual(ISKey, idValue(), Store.YES, Index.NOT_ANALYZED).indexField(strategy, doc);
