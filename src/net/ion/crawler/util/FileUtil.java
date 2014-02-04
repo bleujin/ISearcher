@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
  * @author bleujin
  * @version $Revision: 1.3 $
  */
-public final class FileUtil {
+public final class FileUtil extends net.ion.framework.util.FileUtil{
 
     private static final transient Log LOG = LogFactory.getLog(FileUtil.class);
  
