@@ -2,16 +2,13 @@ package net.ion.nsearcher.index;
 
 import java.io.IOException;
 
-import javax.print.Doc;
-
-import net.ion.framework.util.Debug;
 import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.MapUtil;
 import net.ion.framework.util.ObjectId;
+import net.ion.nsearcher.common.AbDocument.Action;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.common.WriteDocument;
-import net.ion.nsearcher.common.AbDocument.Action;
 import net.ion.nsearcher.search.SingleSearcher;
 
 import org.apache.lucene.analysis.Analyzer;

@@ -1,10 +1,7 @@
 package net.ion.nsearcher.common;
 
-import java.util.Map;
-
 import net.ion.framework.util.ObjectUtil;
 
-import org.apache.ecs.wml.Do;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;

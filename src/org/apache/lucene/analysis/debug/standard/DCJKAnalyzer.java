@@ -19,10 +19,8 @@ package org.apache.lucene.analysis.debug.standard;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 
 import net.ion.framework.util.Debug;
-import net.ion.framework.util.IOUtil;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -102,9 +100,6 @@ public final class DCJKAnalyzer extends StopwordAnalyzerBase {
 //			e.printStackTrace();
 //		}
 //		StringReader copy = new StringReader(readerString) ;
-		
-		Debug.line(reader) ;
-		
 		
 		if (matchVersion.onOrAfter(Version.LUCENE_36)) {
 			final Tokenizer source = new StandardTokenizer(matchVersion, reader);

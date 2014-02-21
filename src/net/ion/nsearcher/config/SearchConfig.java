@@ -1,5 +1,6 @@
 package net.ion.nsearcher.config;
 
+import net.ion.framework.util.Debug;
 import net.ion.framework.util.StringUtil;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -60,6 +61,12 @@ class QueryParserWithNumericRange extends ExtendableQueryParser {
 		} else {
 			return super.getRangeQuery(field, part1, part2, startInclusive, endInclusive);
 		}
+	}
+	
+	@Override
+	public Query newTermQuery(org.apache.lucene.index.Term t) {
+		Debug.debug(t);
+		return super.newTermQuery(t) ;
 	}
 
 	private static boolean isNumeric(String str) {

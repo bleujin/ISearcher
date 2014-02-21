@@ -127,5 +127,9 @@ public class Searcher {
 		return this.createRequest(new TermQuery(new Term(IKeywordField.ISKey, key))) ;
 	}
 
+	public SearchRequest createRequestByTerm(String tid, String value) {
+		return this.createRequest(new TermQuery(new Term(tid, value))) ;
+	}
+
 
 }
