@@ -46,7 +46,7 @@ public class TestWriteDocument extends TestCase {
 		ReadDocument rdoc = indexer.index(new IndexJob<ReadDocument>() {
 			@Override
 			public ReadDocument handle(IndexSession isession) throws Exception {
-				return ReadDocument.loadDocument(wdoc.toLuceneDoc(isession));
+				return ReadDocument.loadDocument(wdoc.toLuceneDoc());
 			}
 		}) ;
 		assertEquals("bleujin", rdoc.get("name")) ;
@@ -101,7 +101,7 @@ public class TestWriteDocument extends TestCase {
 			public Document handle(IndexSession isession) throws Exception {
 				final WriteDocument writeDoc = isession.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
 				isession.insertDocument(writeDoc) ;
-				return writeDoc.toLuceneDoc(isession);
+				return writeDoc.toLuceneDoc();
 			}
 		}) ;
 		

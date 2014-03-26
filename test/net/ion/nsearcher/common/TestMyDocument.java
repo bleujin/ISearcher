@@ -37,7 +37,7 @@ public class TestMyDocument extends TestCase {
 				isession.fieldIndexingStrategy(FieldIndexingStrategy.DEFAULT) ;
 				WriteDocument mdoc = isession.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
 				assertEquals("bleujin", mdoc.idValue()) ;
-				assertEquals(9, mdoc.toLuceneDoc(isession).getFields().size()) ; // 1 + 2 + 3 + 2
+				assertEquals(9, mdoc.toLuceneDoc().getFields().size()) ; // 1 + 2 + 3 + 2
 				return null;
 			}
 		}) ;
@@ -51,7 +51,7 @@ public class TestMyDocument extends TestCase {
 				isession.fieldIndexingStrategy(FieldIndexingStrategy.DEFAULT) ;
 				WriteDocument writedoc = isession.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
 				
-				Document doc = writedoc.toLuceneDoc(isession) ;
+				Document doc = writedoc.toLuceneDoc() ;
 				assertEquals(9, doc.getFields().size()) ; // 1 + 2 + 3 + 2 + 1
 				
 				assertEquals(writedoc.idValue(), doc.get(IKeywordField.ISKey)) ;
@@ -78,7 +78,7 @@ public class TestMyDocument extends TestCase {
 				isession.fieldIndexingStrategy(FieldIndexingStrategy.DEFAULT) ;
 				
 				WriteDocument writeDoc = isession.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
-				Document doc = writeDoc.toLuceneDoc(isession) ;
+				Document doc = writeDoc.toLuceneDoc() ;
 				ReadDocument loadDoc = ReadDocument.loadDocument(doc) ;
 
 				for (MyField field : writeDoc.getFields()) {
@@ -103,7 +103,7 @@ public class TestMyDocument extends TestCase {
 			public Document handle(IndexSession isession) throws Exception {
 				final WriteDocument writeDoc = isession.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
 				isession.insertDocument(writeDoc) ;
-				return writeDoc.toLuceneDoc(isession);
+				return writeDoc.toLuceneDoc();
 			}
 		}) ;
 		

@@ -35,8 +35,10 @@ public class WriteDocument extends AbDocument {
 	private String docId;
 	private Action action = Action.Unknown;
 
-	private ArrayListMultimap<String, MyField> fields = ArrayListMultimap.create() ;;
-	public WriteDocument(String docId) {
+	private ArrayListMultimap<String, MyField> fields = ArrayListMultimap.create() ;
+	private IndexSession isession;
+	public WriteDocument(IndexSession indexSession, String docId) {
+		this.isession = indexSession ;
 		this.docId = docId;
 	}
 
@@ -45,7 +47,7 @@ public class WriteDocument extends AbDocument {
 		return docId;
 	}
 	
-	public Document toLuceneDoc(IndexSession isession) {
+	public Document toLuceneDoc() {
 		
 		FieldIndexingStrategy strategy = isession.fieldIndexingStrategy(); 
 		Document doc = new Document();
@@ -213,6 +215,14 @@ public class WriteDocument extends AbDocument {
 
 	public List<MyField> getFields(String name) {
 		return fields.get(StringUtil.lowerCase(name)) ;
+	}
+
+	public void update() throws IOException {
+		isession.updateDocument(this) ;
+	}
+
+	public void insert() throws IOException {
+		isession.insertDocument(this) ;
 	}
 
 }

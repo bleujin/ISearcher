@@ -25,7 +25,7 @@ public class TestCaseInsensitiveInReadDocument extends TestCase {
 	 	this.rdoc = indexer.index(new IndexJob<ReadDocument>() {
 			@Override
 			public ReadDocument handle(IndexSession isession) throws Exception {
-				return ReadDocument.loadDocument(isession.newDocument().unknown("Name", "bleujin").unknown("Age", 20).toLuceneDoc(isession));
+				return ReadDocument.loadDocument(isession.newDocument().unknown("Name", "bleujin").unknown("Age", 20).toLuceneDoc());
 			}
 		}) ;
 	}

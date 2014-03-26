@@ -9,6 +9,7 @@ import java.util.Set;
 
 import net.ion.framework.util.ArrayUtil;
 import net.ion.framework.util.DateUtil;
+import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.NumberUtil;
 import net.ion.framework.util.SetUtil;
@@ -110,6 +111,17 @@ public class ReadDocument extends AbDocument {
 		}
 		return set.toArray(new String[0]);
 	}
+	
+	public String[] getSortedFieldNames() {
+		Set<String> set = SetUtil.newSet() ;
+		for (IndexableField field : doc.getFields()) {
+			if (! field.name().endsWith(MyField.SORT_POSTFIX)) continue ;
+			set.add(field.name()) ;
+		}
+		return set.toArray(new String[0]);
+	}
+	
+	
 
 	public Document toLuceneDoc() {
 		return doc;
@@ -121,12 +133,10 @@ public class ReadDocument extends AbDocument {
 
 	public String toString(){
 		ToStringHelper helper = Objects.toStringHelper(this.getClass());
-		for (String fieldName : getFieldNames()) {
-			int i = 0 ;
-			for (IndexableField field : getFields(fieldName)) {
-				IndexableFieldType fieldType = field.fieldType();
-				helper.add(fieldName + "[" + (i++) + "]", field.stringValue()).add("Indexed", fieldType.indexed()).add("Stored", fieldType.stored()).add("Tokenized", fieldType.tokenized()) ;
-			}
+		helper.addValue(idValue()) ;
+		for (String sortName : getSortedFieldNames()) {
+			String fieldName = StringUtil.substringBefore(sortName, MyField.SORT_POSTFIX);
+			helper.add(fieldName, getField(fieldName)) ; //   + "[" + (fieldType.indexed() ? "I" : "") +  (fieldType.stored() ? "S" : "") +  (fieldType.tokenized() ? "T" : "") + "]"
 		}
 		return helper.toString() ;
 	}

@@ -65,7 +65,6 @@ class QueryParserWithNumericRange extends ExtendableQueryParser {
 	
 	@Override
 	public Query newTermQuery(org.apache.lucene.index.Term t) {
-		Debug.debug(t);
 		return super.newTermQuery(t) ;
 	}
 

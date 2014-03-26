@@ -56,12 +56,12 @@ public class IndexSession {
 	
 	
 	public WriteDocument newDocument(String docId){
-		return new WriteDocument(docId) ;
+		return new WriteDocument(this, docId) ;
 	}
 	
 	public WriteDocument newDocument(){
 		final String docId = new ObjectId().toString();
-		return new WriteDocument(docId) ;
+		return new WriteDocument(this, docId) ;
 	}
 	
 	public FieldIndexingStrategy fieldIndexingStrategy() {
@@ -91,12 +91,12 @@ public class IndexSession {
 	}
 
 	public Action insertDocument(WriteDocument doc) throws IOException {
-		writer.addDocument(doc.toLuceneDoc(this));
+		writer.addDocument(doc.toLuceneDoc());
 		return Action.Insert;
 	}
 
 	public Action updateDocument(WriteDocument doc) throws IOException {
-		final Document idoc = doc.toLuceneDoc(this);
+		final Document idoc = doc.toLuceneDoc();
 		writer.updateDocument(new Term(SearchConstant.ISKey, doc.idValue()), idoc);
 		return Action.Update;
 	}
