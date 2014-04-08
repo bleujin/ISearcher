@@ -1,6 +1,7 @@
 package net.ion.nsearcher.config;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
 
 import net.ion.framework.util.ObjectUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
@@ -29,6 +30,7 @@ public class IndexConfigBuilder {
 	private IndexWriterConfig clone = new IndexWriterConfig(SearchConstant.LuceneVersion, new DStandardAnalyzer(SearchConstant.LuceneVersion)) ;
 	private Analyzer analyzer ;
 	private FieldIndexingStrategy fieldIndexingStrategy = FieldIndexingStrategy.DEFAULT ;
+	private ExecutorService es;
 	
 	IndexConfigBuilder(CentralConfig centralConfig) {
 		this.centralConfig = centralConfig ;
@@ -112,9 +114,15 @@ public class IndexConfigBuilder {
 		return this ;
 	}
 	
+	public IndexConfigBuilder setExecutorService(ExecutorService es){
+		this.es = es ;
+		return this ;
+	}
+	
+	
 	
 	IndexConfig buildSelf(CentralConfig config){
-		return new IndexConfig(config.version(), indexAnalyzer(config.version()), clone, this.fieldIndexingStrategy) ;
+		return new IndexConfig(config.version(), this.es, indexAnalyzer(config.version()), clone, this.fieldIndexingStrategy) ;
 	}
 
 	private Analyzer indexAnalyzer(Version version) {

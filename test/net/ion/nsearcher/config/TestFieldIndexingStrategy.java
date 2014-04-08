@@ -52,7 +52,7 @@ public class TestFieldIndexingStrategy extends TestCase {
 		}) ;
 		
 		Searcher searcher = central.newSearcher();
-		assertEquals(0, searcher.createRequest("num:[+40 TO +100]").find().size()) ;
+		assertEquals(1, searcher.createRequest("num:[+40 TO +100]").find().size()) ;
 		assertEquals(1, searcher.createRequest("num:50").find().size()) ;
 	}
 	

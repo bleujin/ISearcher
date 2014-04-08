@@ -1,15 +1,12 @@
 package net.ion.nsearcher.index;
 
-import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import net.ion.framework.util.Debug;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
+import net.ion.nsearcher.config.IndexConfig;
 import net.ion.nsearcher.exception.IndexException;
 import net.ion.nsearcher.search.SingleSearcher;
 
@@ -18,18 +15,19 @@ import org.apache.lucene.analysis.Analyzer;
 public class Indexer {
 
 	private Central central;
+	private IndexConfig iconfig;
 	private SingleSearcher searcher ;
 	
-	private ExecutorService singleExecutor = Executors.newSingleThreadExecutor() ;
 	private IndexExceptionHandler<Void> ehandler = IndexExceptionHandler.DEFAULT ;
 	
-	private Indexer(CentralConfig config, Central central, SingleSearcher searcher) {
+	private Indexer(CentralConfig config, IndexConfig iconfig, Central central, SingleSearcher searcher) {
 		this.central = central;
+		this.iconfig = iconfig ;
 		this.searcher = searcher ;
 	}
 
-	public static Indexer create(CentralConfig config, Central central, SingleSearcher searcher) {
-		return new Indexer(config, central, searcher);
+	public static Indexer create(CentralConfig config, IndexConfig iconfig, Central central, SingleSearcher searcher) {
+		return new Indexer(config, iconfig, central, searcher);
 	}
 
 	public <T> T index(IndexJob<T> indexJob) {
@@ -87,11 +85,10 @@ public class Indexer {
 	}
 	
 	public <T> Future<T> asyncIndex(final String name, final Analyzer analyzer, final IndexJob<T> indexJob, final IndexExceptionHandler handler) {
-		return singleExecutor.submit(new Callable<T>(){
+		return iconfig.indexExecutor().submit(new Callable<T>(){
 			public T call() throws Exception {
 				IndexSession session = null ;
 				try {
-					
 					session = IndexSession.create(searcher, analyzer);
 					session.begin(name) ;
 					T result = indexJob.handle(session);
@@ -111,7 +108,7 @@ public class Indexer {
 	}
 
 	public void close() {
-		singleExecutor.shutdown() ;
+		iconfig.indexExecutor().shutdown() ;
 	}
 
 	

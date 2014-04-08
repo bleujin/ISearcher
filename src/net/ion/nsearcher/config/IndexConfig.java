@@ -1,5 +1,8 @@
 package net.ion.nsearcher.config;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -28,9 +31,11 @@ public class IndexConfig {
 	private Version version ;
 	private Analyzer analyzer ;
 	private FieldIndexingStrategy fieldIndexingStrategy;
+	private ExecutorService es;
 	
-	IndexConfig(Version version, Analyzer analyzer, IndexWriterConfig clone, FieldIndexingStrategy fiStrategy) {
+	IndexConfig(Version version, ExecutorService es, Analyzer analyzer, IndexWriterConfig clone, FieldIndexingStrategy fiStrategy) {
 		this.version = version ;
+		this.es = ((es == null) ? Executors.newSingleThreadExecutor() : es) ;
 		this.analyzer = analyzer;
 		
 		this.indexDeletionPolicy = clone.getIndexDeletionPolicy();
@@ -133,6 +138,10 @@ public class IndexConfig {
 
 	public Analyzer indexAnalyzer() {
 		return analyzer;
+	}
+
+	public ExecutorService indexExecutor() {
+		return es;
 	}
 
 }

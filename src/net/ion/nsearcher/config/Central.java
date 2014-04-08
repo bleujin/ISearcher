@@ -26,7 +26,7 @@ public class Central implements Closeable{
 		this.sconfig = config.searchConfigBuilder().buildSelf(config) ;
 		this.dir = dir ;
 		this.singleSearcher = SingleSearcher.create(this) ;
-		this.indexer = Indexer.create(config, this, singleSearcher) ;
+		this.indexer = Indexer.create(config, iconfig, this, singleSearcher) ;
 	}
 
 	static Central create(CentralConfig config) throws CorruptIndexException, IOException {
