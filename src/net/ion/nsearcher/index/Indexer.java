@@ -42,9 +42,9 @@ public class Indexer {
 		try {
 			return asyncIndex(name, analyzer, indexJob).get() ;
 		} catch (InterruptedException e) {
-			ehandler.onException(e) ;
+			ehandler.onException(indexJob, e) ;
 		} catch (ExecutionException e) {
-			ehandler.onException(e) ;
+			ehandler.onException(indexJob, e) ;
 		}
 		return null ;
 	}
@@ -92,7 +92,7 @@ public class Indexer {
 					return result;
 				} catch(Throwable ex) {
 					if (session != null) session.rollback();
-					handler.onException(ex) ;
+					handler.onException(indexJob, ex) ;
 //					return null ;
 					throw new IndexException(ex.getMessage(), ex) ;
 				} finally {
