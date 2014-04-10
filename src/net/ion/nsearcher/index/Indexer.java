@@ -18,7 +18,7 @@ public class Indexer {
 	private IndexConfig iconfig;
 	private SingleSearcher searcher ;
 	
-	private IndexExceptionHandler<Void> ehandler = IndexExceptionHandler.DEFAULT ;
+	private IndexExceptionHandler<?> ehandler = IndexExceptionHandler.DEFAULT ;
 	
 	private Indexer(CentralConfig config, IndexConfig iconfig, Central central, SingleSearcher searcher) {
 		this.central = central;
@@ -34,13 +34,8 @@ public class Indexer {
 		return index(central.indexConfig().indexAnalyzer(), indexJob) ;
 	}
 	
-	public <T> T index(Analyzer analyzer, IndexJob<T> indexJob) {
-		return index(analyzer, indexJob, new IndexExceptionHandler<T>() {
-			public T onException(Throwable ex) {
-				ehandler.onException(ex) ;
-				return null;
-			}
-		}) ;
+	public <T> T index(Analyzer analyzer, final IndexJob<T> indexJob) {
+		return index("emanon", analyzer, indexJob) ;
 	}
 
 	public <T> T index(String name, Analyzer analyzer, IndexJob<T> indexJob) {
@@ -59,9 +54,9 @@ public class Indexer {
 		try {
 			return asyncIndex("emanon", analyzer, indexJob).get() ;
 		} catch (InterruptedException e) {
-			return handler.onException(e) ;
+			return handler.onException(indexJob, e) ;
 		} catch (ExecutionException e) {
-			return handler.onException(e) ;
+			return handler.onException(indexJob, e) ;
 		}
 	}
 

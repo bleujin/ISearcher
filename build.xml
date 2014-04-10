@@ -45,6 +45,8 @@
 		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../AradonExtend/lib/" />
 		<echo>Copy to Craken</echo>
 		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../craken/lib/ref/" />
+		<echo>Copy to TalkServer</echo>
+		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../talkserver/lib/ref/" />
 	</target>
 
 	<target name="copy_novision" depends="publish">

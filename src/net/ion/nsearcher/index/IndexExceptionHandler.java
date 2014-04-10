@@ -7,7 +7,13 @@ public interface IndexExceptionHandler<T> {
 			ex.printStackTrace() ;
 			return null ;
 		}
+
+		@Override
+		public Void onException(IndexJob<Void> job, Throwable ex) {
+			return onException(ex);
+		}
 	};
 	
 	public T onException(Throwable ex) ;
+	public T onException(IndexJob<T> job, Throwable ex) ;
 }
