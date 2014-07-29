@@ -25,7 +25,7 @@ public class Central implements Closeable{
 		this.iconfig = config.indexConfigBuilder().buildSelf(config) ;
 		this.sconfig = config.searchConfigBuilder().buildSelf(config) ;
 		this.dir = dir ;
-		this.singleSearcher = SingleSearcher.create(this) ;
+		this.singleSearcher = SingleSearcher.create(sconfig, this) ;
 		this.indexer = Indexer.create(config, iconfig, this, singleSearcher) ;
 	}
 
@@ -49,6 +49,8 @@ public class Central implements Closeable{
 	}
 
 	public void destroySelf() {
+		IOUtil.closeQuietly(indexer);
+		IOUtil.close(singleSearcher);
 		IOUtil.closeQuietly(dir) ;
 	}
 

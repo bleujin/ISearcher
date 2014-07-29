@@ -39,7 +39,7 @@ public class Searcher {
 	}
 	
 	public SearchRequest createRequest(String query) throws ParseException {
-		return createRequest(query, searcher.searchConfig().queryAnalyzer()) ;
+		return createRequest(query, sconfig.queryAnalyzer()) ;
 	}
 
 	public SearchRequest createRequest(Query query) {
@@ -129,6 +129,10 @@ public class Searcher {
 
 	public SearchRequest createRequestByTerm(String tid, String value) {
 		return this.createRequest(new TermQuery(new Term(tid, value))) ;
+	}
+
+	public Analyzer queryAnalyzer() {
+		return sconfig.queryAnalyzer() ;
 	}
 
 

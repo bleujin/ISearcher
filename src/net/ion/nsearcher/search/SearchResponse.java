@@ -24,20 +24,23 @@ public class SearchResponse {
 	private final long endTime;
 	private Future<Void> postFuture ;
 	private List<Integer> docs ;
-	private SearchResponse(SingleSearcher searcher, SearchRequest sreq, List<Integer> docs, long startTime) {
+	private TopDocs tdocs;
+	private SearchResponse(SingleSearcher searcher, SearchRequest sreq, List<Integer> docs, TopDocs tdocs, long startTime) {
 		this.searcher = searcher ;
 		this.sreq = sreq ;
 		this.startTime = startTime;
 		this.endTime = System.currentTimeMillis();
 		this.docs = docs ;
+		this.tdocs = tdocs ;
 	}
 
 	public static SearchResponse create(SingleSearcher searcher, SearchRequest sreq, TopDocs docs, long startTime) throws IOException {
-		return new SearchResponse(searcher, sreq, makeDocument(searcher, sreq, docs), startTime);
+		return new SearchResponse(searcher, sreq, makeDocument(searcher, sreq, docs), docs, startTime);
 	}
 
 	public int totalCount() {
-		return new Searcher(searcher, sreq.searcher().config()).totalCount(sreq.resetClone(Integer.MAX_VALUE)) ;
+		return tdocs.totalHits ;
+//		return new Searcher(searcher, sreq.searcher().config()).totalCount(sreq.resetClone(Integer.MAX_VALUE)) ;
 	}
 	
 	public int size(){
@@ -49,20 +52,20 @@ public class SearchResponse {
 	}
 
 	public void debugPrint() throws IOException {
-		for (ReadDocument doc : getDocument()) {
-			Debug.line(doc) ;
-		}
-	}
-	
-	public List<ReadDocument> getDocument() throws IOException{
-		List<ReadDocument> result = ListUtil.newList() ;
-		for (Integer docId : docs) {
-			result.add(searcher.doc(docId, sreq));
-		}
-		return result ;
+		eachDoc(EachDocHandler.DEBUG) ;
 	}
 
-	private static List<Integer> makeDocument(SingleSearcher searcher, SearchRequest sreq, TopDocs docs) throws IOException {
+	public <T> T eachDoc(EachDocHandler<T> handler){
+		EachDocIterator iter = new EachDocIterator(searcher, sreq, docs) ;
+		return handler.handle(iter) ;
+	}
+	
+	
+	public List<ReadDocument> getDocument() throws IOException{
+		return eachDoc(EachDocHandler.TOLIST) ;
+	}
+
+	private static List<Integer> makeDocument(SingleSearcher searcher, SearchRequest sreq, TopDocs docs) {
 		ScoreDoc[] sdocs = docs.scoreDocs;
 		List<Integer> result = ListUtil.newList() ;
 

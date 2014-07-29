@@ -1,5 +1,6 @@
 package net.ion.nsearcher.index;
 
+import java.io.Closeable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -11,8 +12,9 @@ import net.ion.nsearcher.exception.IndexException;
 import net.ion.nsearcher.search.SingleSearcher;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 
-public class Indexer {
+public class Indexer implements Closeable{
 
 	private Central central;
 	private IndexConfig iconfig;
@@ -25,13 +27,18 @@ public class Indexer {
 		this.iconfig = iconfig ;
 		this.searcher = searcher ;
 	}
+	
+	public Analyzer analyzer() {
+		return this.iconfig.indexAnalyzer();
+	}
 
+	
 	public static Indexer create(CentralConfig config, IndexConfig iconfig, Central central, SingleSearcher searcher) {
 		return new Indexer(config, iconfig, central, searcher);
 	}
 
 	public <T> T index(IndexJob<T> indexJob) {
-		return index(central.indexConfig().indexAnalyzer(), indexJob) ;
+		return index(iconfig.indexAnalyzer(), indexJob) ;
 	}
 	
 	public <T> T index(Analyzer analyzer, final IndexJob<T> indexJob) {
@@ -105,6 +112,7 @@ public class Indexer {
 	public void close() {
 		iconfig.indexExecutor().shutdown() ;
 	}
+
 
 	
 }

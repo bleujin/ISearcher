@@ -23,6 +23,7 @@ public class TestAllIndexer {
 		ts.addTestSuite(TestStackFile.class) ;
 		ts.addTestSuite(TestIndexer.class) ;
 		ts.addTestSuite(TestIndexSession.class) ;
+		ts.addTestSuite(TestIndexAnalyzer.class);
 		
 		ts.addTestSuite(TestFieldIndexingStrategy.class) ;
 		

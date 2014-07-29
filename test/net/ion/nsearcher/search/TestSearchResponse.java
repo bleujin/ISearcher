@@ -1,17 +1,13 @@
 package net.ion.nsearcher.search;
 
 import junit.framework.TestCase;
-import net.ion.framework.util.Debug;
-import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
-import net.ion.nsearcher.search.filter.FilterUtil;
 
-public class TestSearchRequest extends TestCase {
+public class TestSearchResponse extends TestCase {
 
-	
 	private Central central;
 	private Searcher searcher;
 
@@ -33,21 +29,7 @@ public class TestSearchRequest extends TestCase {
 		}) ;
 	}
 	
-	public void testGetField() throws Exception {
-		ReadDocument doc = searcher.createRequest("bleujin").findOne();
-		String[] fields = doc.getFieldNames() ;
-		assertEquals(3, fields.length); // except text field(default strategy not store texttype)
-	}
 	
-	public void testTerm() throws Exception {
-		searcher.createRequest("").setFilter(FilterUtil.newBuilder().term("name", "jin").gte("int", 3).andBuild()).find().debugPrint();
-	}
 	
-	public void testSearchFilter() throws Exception {
-		assertEquals(2, searcher.andFilter(FilterUtil.newBuilder().gte("int", 3).andBuild()).createRequest("").find().size()) ;
-		assertEquals(2, searcher.createRequest("").find().size());
-		
-		assertEquals(4, central.newSearcher().createRequest("").find().size()) ;
-	}
-	
+
 }

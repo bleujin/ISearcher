@@ -24,7 +24,7 @@ public class SingleSearcher implements Closeable, TSearcher{
 
 	private DirectoryReader dreader;
 	private IndexSearcher isearcher;
-	private ExecutorService es = Executors.newSingleThreadExecutor() ;
+	private ExecutorService es ;
 	private InfoReader reader ;
 	private CachedFilter filters = new CachedFilter() ;
 
@@ -34,9 +34,10 @@ public class SingleSearcher implements Closeable, TSearcher{
 		this.dreader = dreader ;
 		this.isearcher = new IndexSearcher(dreader) ;
 		this.reader = InfoReader.create(this, dreader) ;
+		this.es = central.searchConfig().executorService() ;
 	}
 
-	public static SingleSearcher create(Central central) throws IOException {
+	public static SingleSearcher create(SearchConfig sconfig, Central central) throws IOException {
 		return new SingleSearcher(central, DirectoryReader.open(central.dir()));
 	}
 

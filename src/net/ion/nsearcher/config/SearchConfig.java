@@ -1,5 +1,7 @@
 package net.ion.nsearcher.config;
 
+import java.util.concurrent.ExecutorService;
+
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.StringUtil;
 
@@ -17,8 +19,10 @@ public class SearchConfig {
 	private final Version version;
 	private Analyzer queryAnalyzer;
 	private final String defaultSearchFieldName;
+	private ExecutorService es;
 
-	SearchConfig(Version version, Analyzer queryAnalyzer, String defaultSearchFieldName) {
+	SearchConfig(ExecutorService es, Version version, Analyzer queryAnalyzer, String defaultSearchFieldName) {
+		this.es = es ;
 		this.version = version;
 		this.queryAnalyzer = queryAnalyzer;
 		this.defaultSearchFieldName = defaultSearchFieldName;
@@ -26,6 +30,10 @@ public class SearchConfig {
 
 	public Analyzer queryAnalyzer() {
 		return queryAnalyzer;
+	}
+	
+	public ExecutorService executorService(){
+		return this.es ;
 	}
 
 	public SearchConfig queryAnalyzer(Analyzer queryAnalyzer) {

@@ -57,6 +57,11 @@ public class IndexConfig {
 		this.fieldIndexingStrategy = fiStrategy ;
 	}
 
+	public IndexConfig indexAnalyzer(Analyzer analyzer) {
+		this.analyzer = analyzer ;
+		return this ;
+	}
+
 	public IndexDeletionPolicy getIndexDeletionPolicy() {
 		return indexDeletionPolicy;
 	}
@@ -143,5 +148,6 @@ public class IndexConfig {
 	public ExecutorService indexExecutor() {
 		return es;
 	}
+
 
 }

@@ -23,6 +23,9 @@ public class TestAllSearcher extends TestSuite{
 		ts.addTestSuite(TestReader.class);
 		ts.addTestSuite(TestSort.class);
 		
+		ts.addTestSuite(TestSearchRequest.class);
+		ts.addTestSuite(TestSearchResponse.class);
+		
 		return ts;
 	}
 }
