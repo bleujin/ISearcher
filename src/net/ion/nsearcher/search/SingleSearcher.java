@@ -78,6 +78,7 @@ public class SingleSearcher implements Closeable, TSearcher{
 			dreader.close() ;
 			filters.clear() ;
 			this.dreader = newReader ;
+			this.reader = InfoReader.create(this, newReader) ;
 			this.isearcher = new IndexSearcher(this.dreader) ;
 		}
 	}

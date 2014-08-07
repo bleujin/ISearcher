@@ -24,8 +24,10 @@ public class TestAllIndexer {
 		ts.addTestSuite(TestIndexer.class) ;
 		ts.addTestSuite(TestIndexSession.class) ;
 		ts.addTestSuite(TestIndexAnalyzer.class);
+		ts.addTestSuite(TestIndexCommit.class) ;
 		
 		ts.addTestSuite(TestFieldIndexingStrategy.class) ;
+		ts.addTestSuite(TestIndexSchema.class) ;
 		
 		return ts ;
 	} 

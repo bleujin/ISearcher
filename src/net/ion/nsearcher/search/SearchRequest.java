@@ -3,12 +3,11 @@ package net.ion.nsearcher.search;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import net.ion.framework.db.Page;
 import net.ion.framework.util.CaseInsensitiveHashMap;
-import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.SetUtil;
 import net.ion.framework.util.StringUtil;
@@ -21,8 +20,6 @@ import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.SortField;
-import org.apache.lucene.search.SortField.Type;
 
 public class SearchRequest {
 
@@ -81,6 +78,14 @@ public class SearchRequest {
 	public int limit() {
 		return skip + offset;
 	}
+	
+	public SearchRequest sort(String expr){
+		if (StringUtil.isBlank(expr)) return this ;
+		for (String e : StringUtil.split(expr, ",")) {
+			sortExpression.add(e) ;
+		}
+		return this ;
+	}
 
 	public SearchRequest ascending(String field) {
 		sortExpression.add(field);
@@ -99,6 +104,10 @@ public class SearchRequest {
 		return this ;
 	}
 
+	public Set<String> paramKeys(){
+		return param.keySet() ;
+	}
+	
 	public Object getParam(String key) {
 		return param.get(key);
 	}

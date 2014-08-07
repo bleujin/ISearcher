@@ -2,16 +2,19 @@ package net.ion.nsearcher.config;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.IndexDeletionPolicy;
+import org.apache.lucene.index.IndexWriter.IndexReaderWarmer;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.MergeScheduler;
-import org.apache.lucene.index.IndexWriter.IndexReaderWarmer;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.util.Version;
+
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 public class IndexConfig {
 
@@ -35,7 +38,7 @@ public class IndexConfig {
 	
 	IndexConfig(Version version, ExecutorService es, Analyzer analyzer, IndexWriterConfig clone, FieldIndexingStrategy fiStrategy) {
 		this.version = version ;
-		this.es = ((es == null) ? Executors.newSingleThreadExecutor() : es) ;
+		this.es = ((es == null) ? Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("isearch-indexer-%d").build()) : es) ;
 		this.analyzer = analyzer;
 		
 		this.indexDeletionPolicy = clone.getIndexDeletionPolicy();

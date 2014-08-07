@@ -2,6 +2,7 @@ package net.ion.nsearcher.search;
 
 import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
+import net.ion.framework.util.ListUtil;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
@@ -9,11 +10,19 @@ import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
+import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 import net.ion.nsearcher.search.processor.StdOutProcessor;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.kr.morph.WordEntry;
 import org.apache.lucene.analysis.kr.utils.DictionaryUtil;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.analysis.util.CharArraySet;
+import org.apache.lucene.util.Version;
+import org.restlet.engine.io.IoState;
 
 public class TestAnalyzer extends TestCase {
 
@@ -55,6 +64,22 @@ public class TestAnalyzer extends TestCase {
 //	}
 	
 	
+	
+	public void testToken() throws Exception {
+		Analyzer analyzer = new MyKoreanAnalyzer(Version.LUCENE_44, new CharArraySet(Version.LUCENE_44, ListUtil.toList("생각"), true)) ;// new CJKAnalyzer(Version.LUCENE_44, new CharArraySet(Version.LUCENE_44, ListUtil.toList("생각"), true)) ;
+		TokenStream tokenStream = analyzer.tokenStream("text", "사람이 존재하는 이유는 생각하기 때문인가");
+		OffsetAttribute offsetAttribute = tokenStream.getAttribute(OffsetAttribute.class);
+		CharTermAttribute charTermAttribute = tokenStream.addAttribute(CharTermAttribute.class);
+
+		tokenStream.reset();
+		while (tokenStream.incrementToken()) {
+		    int startOffset = offsetAttribute.startOffset();
+		    int endOffset = offsetAttribute.endOffset();
+		    String term = charTermAttribute.toString();
+		    Debug.line(startOffset, endOffset, term);
+		}
+		analyzer.close(); 
+	}
 	
 	
 	

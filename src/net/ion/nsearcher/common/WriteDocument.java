@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 import net.ion.framework.parse.gson.JsonElement;
 import net.ion.framework.parse.gson.JsonObject;
 import net.ion.framework.parse.gson.JsonUtil;
+import net.ion.framework.util.ObjectId;
 import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.event.CollectorEvent;
@@ -37,14 +38,26 @@ public class WriteDocument extends AbDocument {
 
 	private ArrayListMultimap<String, MyField> fields = ArrayListMultimap.create() ;
 	private IndexSession isession;
+	private boolean newDoc = false;
+	
 	public WriteDocument(IndexSession indexSession, String docId) {
 		this.isession = indexSession ;
 		this.docId = docId;
 	}
 
-	public String idValue() {
+	public WriteDocument(IndexSession indexSession) {
+		this.isession = indexSession ;
+		this.docId = new ObjectId().toString();
+		this.newDoc = true ;
+	}
 
+	
+	public String idValue() {
 		return docId;
+	}
+
+	public boolean isNewDoc(){
+		return newDoc ;
 	}
 	
 	public Document toLuceneDoc() {

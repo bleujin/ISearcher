@@ -20,6 +20,7 @@ public class Central implements Closeable{
 
 	private final IndexConfig iconfig;
 	private final SearchConfig sconfig;
+	private long startTime ;
 	
 	private Central(CentralConfig config, Directory dir) throws IOException{
 		this.iconfig = config.indexConfigBuilder().buildSelf(config) ;
@@ -27,6 +28,7 @@ public class Central implements Closeable{
 		this.dir = dir ;
 		this.singleSearcher = SingleSearcher.create(sconfig, this) ;
 		this.indexer = Indexer.create(config, iconfig, this, singleSearcher) ;
+		this.startTime = System.currentTimeMillis() ;
 	}
 
 	static Central create(CentralConfig config) throws CorruptIndexException, IOException {
@@ -54,6 +56,10 @@ public class Central implements Closeable{
 		IOUtil.closeQuietly(dir) ;
 	}
 
+	public long startTime(){
+		return startTime ;
+	}
+	
 	public Directory dir(){
 		return dir ;
 	}

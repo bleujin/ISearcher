@@ -1,6 +1,7 @@
 package net.ion.nsearcher.index;
 
 import java.io.IOException;
+import java.util.Map;
 
 import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.MapUtil;
@@ -60,8 +61,7 @@ public class IndexSession {
 	}
 	
 	public WriteDocument newDocument(){
-		final String docId = new ObjectId().toString();
-		return new WriteDocument(this, docId) ;
+		return new WriteDocument(this) ;
 	}
 	
 	public FieldIndexingStrategy fieldIndexingStrategy() {
@@ -97,7 +97,10 @@ public class IndexSession {
 
 	public Action updateDocument(WriteDocument doc) throws IOException {
 		final Document idoc = doc.toLuceneDoc();
-		writer.updateDocument(new Term(SearchConstant.ISKey, doc.idValue()), idoc);
+		
+		if (doc.isNewDoc()) writer.addDocument(idoc);
+		else writer.updateDocument(new Term(SearchConstant.ISKey, doc.idValue()), idoc);
+		
 		return Action.Update;
 	}
 
@@ -117,8 +120,6 @@ public class IndexSession {
 	// }
 
 	public IndexSession end() {
-		final String lastmodified = String.valueOf(System.currentTimeMillis());
-		writer.setCommitData(MapUtil.<String>chainKeyMap().put(VERSION, SearchConstant.LuceneVersion.toString()).put(LASTMODIFIED, lastmodified).toMap()) ;
 		IOUtil.close(writer);
 		this.writer = null ;
 		release();
@@ -129,8 +130,14 @@ public class IndexSession {
 	public void commit() throws CorruptIndexException, IOException {
 		if (alreadyCancelled)
 			return;
-		if (writer != null)
+		if (writer != null) {
+//			writer.prepareCommit(); 
+
+			final String lastmodified = String.valueOf(System.currentTimeMillis());
+			writer.setCommitData(MapUtil.<String>chainKeyMap().put(VERSION, SearchConstant.LuceneVersion.toString()).put(LASTMODIFIED, lastmodified).toMap()) ;
+			
 			writer.commit();
+		}
 	}
 
 	private boolean alreadyCancelled = false;

@@ -64,6 +64,13 @@ public class SortExpression {
 	private static SortField.Type getSortFieldType(String sp) {
 		return (ORDER_ENCODING.containsKey(sp)) ?  ORDER_ENCODING.get(sp) : SortField.Type.STRING;
 	}
+
+	public static SearchRequest applySort(SearchRequest sreq, String exprString) {
+		
+		
+		
+		return sreq;
+	}
 	
 	
 	

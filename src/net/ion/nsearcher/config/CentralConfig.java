@@ -16,6 +16,7 @@ public abstract class CentralConfig {
 
 	private IndexConfigBuilder iconfigBuilder ;
 	private SearchConfigBuilder sconfigBuilder ;
+	private IndexSchemaBuilder schemaBuidler;
 	
 	private LockFactory lockFactory ;
 	private Version version = SearchConstant.LuceneVersion ;
@@ -25,6 +26,7 @@ public abstract class CentralConfig {
 	public CentralConfig(){
 		this.iconfigBuilder = new IndexConfigBuilder(this) ;
 		this.sconfigBuilder = new SearchConfigBuilder(this) ;
+		this.schemaBuidler = new IndexSchemaBuilder(this) ;
 	}
 	
 	public static CentralLocalConfig newLocalFile() {
@@ -77,6 +79,11 @@ public abstract class CentralConfig {
 	
 	public SearchConfigBuilder searchConfigBuilder(){
 		return sconfigBuilder ;
+	}
+
+	@Deprecated
+	IndexSchemaBuilder indexSchemaBuilder() {
+		return schemaBuidler ;
 	}
 
 	
