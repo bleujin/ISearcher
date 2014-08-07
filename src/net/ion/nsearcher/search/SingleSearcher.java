@@ -33,7 +33,7 @@ public class SingleSearcher implements Closeable, TSearcher{
 		this.central = central ;
 		this.dreader = dreader ;
 		this.isearcher = new IndexSearcher(dreader) ;
-		this.reader = InfoReader.create(this, dreader) ;
+		this.reader = InfoReader.create(this) ;
 		this.es = central.searchConfig().executorService() ;
 	}
 
@@ -78,7 +78,7 @@ public class SingleSearcher implements Closeable, TSearcher{
 			dreader.close() ;
 			filters.clear() ;
 			this.dreader = newReader ;
-			this.reader = InfoReader.create(this, newReader) ;
+			this.reader = InfoReader.create(this) ;
 			this.isearcher = new IndexSearcher(this.dreader) ;
 		}
 	}
@@ -99,6 +99,12 @@ public class SingleSearcher implements Closeable, TSearcher{
 		reloadReader() ;
 		return isearcher.getIndexReader();
 	}
+
+	public DirectoryReader dirReader() {
+		return dreader;
+	}
+
+
 	
 	public synchronized void close() throws IOException {
 		dreader.close() ;

@@ -27,14 +27,12 @@ public class InfoReader {
 	}
 	
 	private SingleSearcher searcher ;
-	private DirectoryReader dreader;
-	private InfoReader(SingleSearcher searcher, DirectoryReader dreader)  {
+	private InfoReader(SingleSearcher searcher)  {
 		this.searcher = searcher;
-		this.dreader = dreader ;
 	}
 
-	public final static InfoReader create(SingleSearcher searcher, DirectoryReader direader)  {
-		return new InfoReader(searcher, direader);
+	public final static InfoReader create(SingleSearcher searcher)  {
+		return new InfoReader(searcher);
 	}
 
 	
@@ -43,7 +41,7 @@ public class InfoReader {
 //	}
 	
 	public <T> T info(InfoHandler<T> ihandler) throws IOException{
-		return ihandler.view(searcher.indexReader(), dreader) ;
+		return ihandler.view(searcher.indexReader(), searcher.dirReader()) ;
 	}
 	
 	public int maxDoc() throws IOException{
@@ -59,7 +57,7 @@ public class InfoReader {
 	}
 
 	public DirectoryReader getDirectoryReader() throws IOException{
-		return dreader ;
+		return searcher.dirReader() ;
 	}
 
 	
@@ -80,7 +78,7 @@ public class InfoReader {
 	}
 
 	public Map<String, String> commitUserData() throws IOException {
-		List<IndexCommit> list = DirectoryReader.listCommits(dreader.directory());
+		List<IndexCommit> list = DirectoryReader.listCommits(getDirectoryReader().directory());
 		if (list.size() <= 0) return MapUtil.EMPTY ;
 		return list.get(0).getUserData() ;
 	}
