@@ -19,13 +19,13 @@ import com.google.common.base.Function;
 public class SearchResponse {
 
 	private SearchRequest sreq;
-	private SingleSearcher searcher;
+	private ISearchable searcher;
 	private final long startTime;
 	private final long endTime;
 	private Future<Void> postFuture ;
 	private List<Integer> docs ;
 	private TopDocs tdocs;
-	private SearchResponse(SingleSearcher searcher, SearchRequest sreq, List<Integer> docs, TopDocs tdocs, long startTime) {
+	private SearchResponse(ISearchable searcher, SearchRequest sreq, List<Integer> docs, TopDocs tdocs, long startTime) {
 		this.searcher = searcher ;
 		this.sreq = sreq ;
 		this.startTime = startTime;
@@ -34,13 +34,14 @@ public class SearchResponse {
 		this.tdocs = tdocs ;
 	}
 
-	public static SearchResponse create(SingleSearcher searcher, SearchRequest sreq, TopDocs docs, long startTime) throws IOException {
+	public static SearchResponse create(ISearchable searcher, SearchRequest sreq, TopDocs docs, long startTime) throws IOException {
 		return new SearchResponse(searcher, sreq, makeDocument(searcher, sreq, docs), docs, startTime);
 	}
 
 	public int totalCount() {
 		return tdocs.totalHits ;
-//		return new Searcher(searcher, sreq.searcher().config()).totalCount(sreq.resetClone(Integer.MAX_VALUE)) ;
+		// 전체 total은 searcherImpl이 구함. 
+//		return searcher.totalCount(sreq, sreq.getFilter()) ;
 	}
 	
 	public int size(){
@@ -65,7 +66,7 @@ public class SearchResponse {
 		return eachDoc(EachDocHandler.TOLIST) ;
 	}
 
-	private static List<Integer> makeDocument(SingleSearcher searcher, SearchRequest sreq, TopDocs docs) {
+	private static List<Integer> makeDocument(ISearchable searcher, SearchRequest sreq, TopDocs docs) {
 		ScoreDoc[] sdocs = docs.scoreDocs;
 		List<Integer> result = ListUtil.newList() ;
 

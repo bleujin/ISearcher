@@ -18,7 +18,7 @@ public class TestPostProcessor extends ISTestCase{
 	}
 
 	public void tearDown() throws Exception {
-		searcher.forceClose();
+		
 	}
 
 	public void testInit() throws Exception {

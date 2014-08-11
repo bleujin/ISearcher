@@ -2,14 +2,18 @@ package net.ion.nsearcher.config;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import net.ion.framework.util.IOUtil;
+import net.ion.framework.util.ListUtil;
 import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.reader.InfoReader;
+import net.ion.nsearcher.search.CompositeSearcher;
 import net.ion.nsearcher.search.Searcher;
+import net.ion.nsearcher.search.SearcherImpl;
 import net.ion.nsearcher.search.SingleSearcher;
 
 import org.apache.lucene.index.CorruptIndexException;
@@ -41,8 +45,18 @@ public class Central implements Closeable{
 	}
 
 	public Searcher newSearcher() throws IOException {
-		return new Searcher(singleSearcher, sconfig); 
+		return new SearcherImpl(singleSearcher, sconfig); 
 	}
+	
+	public Searcher newSearcher(Central another, Central... other) {
+		
+		List<Central> others = ListUtil.newList() ;
+		others.add(another) ;
+		others.addAll(ListUtil.toList(other)) ;
+		
+		return new CompositeSearcher(this, others) ;
+	}
+
 	
 	public Indexer newIndexer() {
 		return indexer  ;
@@ -86,5 +100,6 @@ public class Central implements Closeable{
 	public Lock writeLock(){
 		return rwlock.writeLock() ;
 	}
+
 
 }

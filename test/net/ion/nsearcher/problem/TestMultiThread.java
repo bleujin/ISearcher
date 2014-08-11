@@ -47,8 +47,34 @@ public class TestMultiThread extends TestCase {
 		
 		
 		searcher.search("").debugPrint(); 
-		
 	}
+	
+	
+	public void testLongTimeIndex() throws Exception {
+		Central central = CentralConfig.newRam().build() ;
+		
+		central.newIndexer().index(IndexJobs.create("before", 1)) ;
+		Searcher searcher = central.newSearcher() ;
+		assertEquals(1, searcher.search("").size()) ;
+		long start = System.currentTimeMillis() ;
+		
+		central.newIndexer().asyncIndex(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument wdoc = isession.newDocument("after") ;
+				Thread.sleep(4000);
+				isession.updateDocument(wdoc) ;
+				return null;
+			}
+		}) ;
+		
+		Thread.sleep(100);
+		assertEquals(1, searcher.search("").size()) ;
+		assertEquals(true, System.currentTimeMillis() - start < 200); // not wait 
+	}
+	
+	
+	
 	
 	public void testSimulDeadLock() throws Exception {
 		ReentrantReadWriteLock locker = new ReentrantReadWriteLock() ;

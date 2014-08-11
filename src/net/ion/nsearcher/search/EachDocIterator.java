@@ -11,12 +11,12 @@ import org.apache.lucene.search.TopDocs;
 public class EachDocIterator implements Iterator<ReadDocument>{
 
 
-	private final SingleSearcher searcher;
+	private final ISearchable searcher;
 	private Iterator<Integer> docIter;
 	private SearchRequest req;
 	private int count;
 
-	public EachDocIterator(SingleSearcher searcher, SearchRequest req, List<Integer> docIds) {
+	public EachDocIterator(ISearchable searcher, SearchRequest req, List<Integer> docIds) {
 		this.searcher = searcher ;
 		this.req = req ;
 		this.count = docIds.size() ;

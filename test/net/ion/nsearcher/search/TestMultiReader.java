@@ -15,6 +15,7 @@ import net.ion.framework.util.Debug;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
+import net.ion.nsearcher.index.IndexJobs;
 import net.ion.nsearcher.index.IndexSession;
 import junit.framework.TestCase;
 
@@ -27,10 +28,10 @@ public class TestMultiReader extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		this.c1 = CentralConfig.newRam().build();
-		c1.newIndexer().index(IndexJob.SAMPLE);
+		c1.newIndexer().index(IndexJobs.create("jin", 3));
 
 		this.c2 = CentralConfig.newRam().build();
-		c2.newIndexer().index(IndexJob.SAMPLE);
+		c2.newIndexer().index(IndexJobs.create("hero", 2));
 	}
 	
 	@Override
@@ -41,8 +42,8 @@ public class TestMultiReader extends TestCase {
 	}
 
 	public void testCreate() throws Exception {
-		assertEquals(1, c1.newSearcher().search("").size());
-		assertEquals(1, c2.newSearcher().search("").size());
+		assertEquals(3, c1.newSearcher().search("").size());
+		assertEquals(2, c2.newSearcher().search("").size());
 	}
 
 	public void testSearchLucene() throws Exception {
@@ -57,13 +58,34 @@ public class TestMultiReader extends TestCase {
 			Debug.line(fdoc);
 		}
 		
-		c1.newSearcher().search("").debugPrint(); 
+//		c1.newSearcher().search("").debugPrint(); 
 	}
 	
 	public void testInterface() throws Exception {
-//		c1.newSearcher(c2) ;
+		Searcher searcher = c1.newSearcher(c2) ;
+		assertEquals(3+2, searcher.search("").size()) ; 
+	}
+	
+	public void testSearchWhenIndexing() throws Exception {
+		Searcher searcher = c1.newSearcher(c2) ;
+		assertEquals(5, searcher.search("").size()); 
+//		Debug.line();
 		
-		
+		c2.newIndexer().asyncIndex(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				isession.updateDocument(isession.newDocument("long")) ;
+				Thread.sleep(500);
+				return null;
+			}
+		}) ;
+
+		for (int i = 0; i < 4; i++) {
+			Thread.sleep(100);
+			assertEquals(5, searcher.search("").size());
+		}
+		Thread.sleep(200);
+		assertEquals(6, searcher.search("").size());
 	}
 
 }

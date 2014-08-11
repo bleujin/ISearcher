@@ -4,17 +4,17 @@ import java.util.List;
 
 public class TransformerKey {
 
-	private SingleSearcher searcher;
+	private ISearchable searcher;
 	private List<Integer> docs;
 	private SearchRequest sreq;
 
-	public TransformerKey(SingleSearcher searcher, List<Integer> docs, SearchRequest sreq) {
+	public TransformerKey(ISearchable searcher, List<Integer> docs, SearchRequest sreq) {
 		this.searcher = searcher;
 		this.docs = docs;
 		this.sreq = sreq;
 	}
 
-	public TSearcher searcher() {
+	public ISearchable searcher() {
 		return searcher;
 	}
 

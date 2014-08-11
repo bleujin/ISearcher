@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 import net.ion.framework.util.Debug;
@@ -21,7 +22,7 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.TopDocs;
 
-public class SingleSearcher implements Closeable, TSearcher {
+public class SingleSearcher implements Closeable, ISearchable {
 
 	private DirectoryReader dreader;
 	private IndexSearcher isearcher;
@@ -44,15 +45,22 @@ public class SingleSearcher implements Closeable, TSearcher {
 	public SearchResponse search(SearchRequest sreq, Filter filters) throws IOException {
 		reloadReader();
 
-		long startTime = System.currentTimeMillis();
-		TopDocs docs = isearcher.search(sreq.query(), filters, sreq.limit(), sreq.sort());
-		return SearchResponse.create(this, sreq, docs, startTime);
+		Lock rlock = central.readLock() ;
+		boolean locked = false ;
+		try {
+			locked = rlock.tryLock(); 
+			long startTime = System.currentTimeMillis();
+			TopDocs docs = isearcher.search(sreq.query(), filters, sreq.limit(), sreq.sort());
+			return SearchResponse.create(this, sreq, docs, startTime);
+		} finally {
+			if (locked) rlock.unlock(); 
+		}
 	}
 
 	public int totalCount(SearchRequest sreq, Filter filters) {
 		try {
 			// reloadReader() ;
-			TopDocs docs = isearcher.search(sreq.query(), filters, sreq.limit());
+			TopDocs docs = isearcher.search(sreq.query(), filters, Integer.MAX_VALUE);
 			return docs.totalHits;
 		} catch (IOException e) {
 			return -1;
@@ -78,6 +86,7 @@ public class SingleSearcher implements Closeable, TSearcher {
 	
 				if (newReader != null) {
 					// TODO : after closer
+					
 					dreader.close();
 	
 					filters.clear();

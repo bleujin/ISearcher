@@ -62,7 +62,7 @@ public class TestSideEffWith extends ISTestCase{
 		response.awaitPostFuture() ;
 		
 		Debug.line(confirmProcessor.getTotalCount());
-//		assertEquals(true, confirmProcessor.getTotalCount() > 0) ;  ///.....?
+		assertEquals(true, confirmProcessor.getTotalCount() > 0) ;  ///.....?
 		
 	
 		secondListener.waitForCompleted();
