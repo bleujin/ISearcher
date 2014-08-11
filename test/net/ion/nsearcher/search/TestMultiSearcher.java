@@ -19,7 +19,7 @@ import net.ion.nsearcher.index.IndexJobs;
 import net.ion.nsearcher.index.IndexSession;
 import junit.framework.TestCase;
 
-public class TestMultiReader extends TestCase {
+public class TestMultiSearcher extends TestCase {
 
 	private Central c1;
 	private Central c2;
