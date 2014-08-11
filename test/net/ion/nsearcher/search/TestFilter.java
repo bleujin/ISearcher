@@ -2,6 +2,7 @@ package net.ion.nsearcher.search;
 
 import java.util.List;
 
+import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.MyField;
@@ -93,9 +94,10 @@ public class TestFilter extends ISTestCase {
 			}
 		}.start();
 
-		Thread.sleep(100) ;
+		Thread.sleep(200) ;
 		for (int i : ListUtil.rangeNum(10)) {
 //			searcher.reopen() ;
+//			Debug.debug(searcher.search("bleujin").size());
 			assertEquals(true, searcher.search("bleujin").size() > 0);
 			Thread.sleep(50) ;
 		}

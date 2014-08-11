@@ -21,6 +21,6 @@ public class TestIndexConfig extends ISTestCase{
 			}
 		}) ;
 		
-		
+		cen.close(); 
 	}
 }

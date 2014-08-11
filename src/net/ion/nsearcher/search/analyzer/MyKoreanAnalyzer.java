@@ -172,7 +172,7 @@ class WordGroup {
 			return new StringReader(result.toString());
 		} catch (IOException ex) {
 			ex.printStackTrace() ;
-			return new StringReader("");
+			return reader ;
 		}
 	}
 

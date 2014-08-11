@@ -2,6 +2,7 @@ package net.ion.nsearcher.index;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
 
 import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.MapUtil;
@@ -48,10 +49,22 @@ public class IndexSession {
 		this.owner = owner;
 		this.writer = null;
 		this.writer = new IndexWriter(searcher.central().dir(), wconfig);
+		
+	}
+	
+
+	// finally 
+	public IndexSession end() {
+		IOUtil.close(writer);
+		this.writer = null ;
+		
+		release();
+
+		return this;
 	}
 
 	private void release() {
-
+		 
 	}
 	
 	
@@ -119,13 +132,6 @@ public class IndexSession {
 	// return this ;
 	// }
 
-	public IndexSession end() {
-		IOUtil.close(writer);
-		this.writer = null ;
-		release();
-
-		return this;
-	}
 
 	public void commit() throws CorruptIndexException, IOException {
 		if (alreadyCancelled)

@@ -2,6 +2,9 @@ package net.ion.nsearcher.config;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import net.ion.framework.util.IOUtil;
 import net.ion.nsearcher.index.Indexer;
@@ -21,6 +24,7 @@ public class Central implements Closeable{
 	private final IndexConfig iconfig;
 	private final SearchConfig sconfig;
 	private long startTime ;
+	private ReadWriteLock rwlock = new ReentrantReadWriteLock() ;
 	
 	private Central(CentralConfig config, Directory dir) throws IOException{
 		this.iconfig = config.indexConfigBuilder().buildSelf(config) ;
@@ -45,14 +49,12 @@ public class Central implements Closeable{
 	}
 
 	public void close() throws IOException {
-		indexer.close() ;
-		singleSearcher.close();
-		dir.close() ;
+		destroySelf(); 
 	}
 
 	public void destroySelf() {
-		IOUtil.closeQuietly(indexer);
 		IOUtil.close(singleSearcher);
+		IOUtil.closeQuietly(indexer);
 		IOUtil.closeQuietly(dir) ;
 	}
 
@@ -76,10 +78,13 @@ public class Central implements Closeable{
 		return sconfig;
 	}
 	
-	
+	public Lock readLock(){
+		
+		return rwlock.readLock() ;
+	}
 
+	public Lock writeLock(){
+		return rwlock.writeLock() ;
+	}
 
-
-	
-	
 }

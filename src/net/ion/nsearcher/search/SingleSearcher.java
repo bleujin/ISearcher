@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.locks.Lock;
 
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.common.ReadDocument;
@@ -20,21 +21,20 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.TopDocs;
 
-public class SingleSearcher implements Closeable, TSearcher{
+public class SingleSearcher implements Closeable, TSearcher {
 
 	private DirectoryReader dreader;
 	private IndexSearcher isearcher;
-	private ExecutorService es ;
-	private InfoReader reader ;
-	private CachedFilter filters = new CachedFilter() ;
+	private ExecutorService es;
+	private CachedFilter filters = new CachedFilter();
 
-	private final Central central ;
+	private final Central central;
+
 	private SingleSearcher(Central central, DirectoryReader dreader) {
-		this.central = central ;
-		this.dreader = dreader ;
-		this.isearcher = new IndexSearcher(dreader) ;
-		this.reader = InfoReader.create(this) ;
-		this.es = central.searchConfig().executorService() ;
+		this.central = central;
+		this.dreader = dreader;
+		this.isearcher = new IndexSearcher(dreader);
+		this.es = central.searchConfig().executorService();
 	}
 
 	public static SingleSearcher create(SearchConfig sconfig, Central central) throws IOException {
@@ -42,61 +42,69 @@ public class SingleSearcher implements Closeable, TSearcher{
 	}
 
 	public SearchResponse search(SearchRequest sreq, Filter filters) throws IOException {
-		reloadReader() ;
-		
-		long startTime = System.currentTimeMillis() ;
+		reloadReader();
+
+		long startTime = System.currentTimeMillis();
 		TopDocs docs = isearcher.search(sreq.query(), filters, sreq.limit(), sreq.sort());
-		return SearchResponse.create(this, sreq, docs, startTime) ;
+		return SearchResponse.create(this, sreq, docs, startTime);
 	}
-	
-	
+
 	public int totalCount(SearchRequest sreq, Filter filters) {
 		try {
-//			reloadReader() ;
+			// reloadReader() ;
 			TopDocs docs = isearcher.search(sreq.query(), filters, sreq.limit());
-			return docs.totalHits ;
+			return docs.totalHits;
 		} catch (IOException e) {
-			return -1 ;
+			return -1;
 		}
 	}
-	
-	
-	public <T> Future<T> submit(Callable<T> task){
-		return es.submit(task) ;
+
+	public <T> Future<T> submit(Callable<T> task) {
+		return es.submit(task);
 	}
+
+	private void reloadReader() throws IOException {
+		boolean locked = false;
+		Lock lock = central.writeLock();
+		try {
+			locked = lock.tryLock(); 
+			if (locked){
+				DirectoryReader newReader = DirectoryReader.openIfChanged(dreader);
+				// try {
+				// newReader = IndexReader.openIfChanged(ireader);
+				// } catch(AlreadyClosedException e){
+				// newReader = IndexReader.open(central.dir()) ;
+				// }
 	
-	private synchronized void reloadReader() throws IOException {
-		DirectoryReader newReader = DirectoryReader.openIfChanged(dreader);
-//		try {
-//			newReader = IndexReader.openIfChanged(ireader);
-//		} catch(AlreadyClosedException e){
-//			newReader = IndexReader.open(central.dir()) ;
-//		}
-		
-		if (newReader != null){
-			// TODO : after closer
-			dreader.close() ;
-			filters.clear() ;
-			this.dreader = newReader ;
-			this.reader = InfoReader.create(this) ;
-			this.isearcher = new IndexSearcher(this.dreader) ;
+				if (newReader != null) {
+					// TODO : after closer
+					dreader.close();
+	
+					filters.clear();
+					this.dreader = newReader;
+					this.isearcher = new IndexSearcher(this.dreader);
+				}
+			}
+		} finally {
+			if (locked) lock.unlock();
 		}
 	}
-	
-	public ReadDocument doc(int docId, SearchRequest request) throws IOException{
+
+	public ReadDocument doc(int docId, SearchRequest request) throws IOException {
 		Set<String> fields = request.selectorField();
-		if (fields == null || fields.size() == 0){
+		if (fields == null || fields.size() == 0) {
 			return ReadDocument.loadDocument(dreader.document(docId));
 		}
-		return  ReadDocument.loadDocument(dreader.document(docId, request.selectorField()));
+		return ReadDocument.loadDocument(dreader.document(docId, request.selectorField()));
 	}
 
 	public InfoReader reader() {
-		return reader;
+		return InfoReader.create(this);
 	}
 
 	public IndexReader indexReader() throws IOException {
-		reloadReader() ;
+
+		reloadReader();
 		return isearcher.getIndexReader();
 	}
 
@@ -104,26 +112,21 @@ public class SingleSearcher implements Closeable, TSearcher{
 		return dreader;
 	}
 
-
-	
 	public synchronized void close() throws IOException {
-		dreader.close() ;
+		isearcher.getIndexReader().close();
+		dreader.close();
 	}
 
-	public CachedFilter cachedFilter(){
-		return filters ;
+	public CachedFilter cachedFilter() {
+		return filters;
 	}
 
 	public Central central() {
 		return this.central;
-	}	
-	
-	public SearchConfig searchConfig(){
-		return central.searchConfig() ;
 	}
 
-	
-	
+	public SearchConfig searchConfig() {
+		return central.searchConfig();
+	}
 
-	
 }

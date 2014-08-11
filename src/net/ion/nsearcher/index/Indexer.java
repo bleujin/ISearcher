@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.locks.Lock;
 
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
@@ -90,7 +91,9 @@ public class Indexer implements Closeable{
 		return iconfig.indexExecutor().submit(new Callable<T>(){
 			public T call() throws Exception {
 				IndexSession session = null ;
+				Lock lock = central.writeLock() ;
 				try {
+					lock.lock();
 					session = IndexSession.create(searcher, analyzer);
 					session.begin(name) ;
 					T result = indexJob.handle(session);
@@ -104,6 +107,7 @@ public class Indexer implements Closeable{
 					throw new IndexException(ex.getMessage(), ex) ;
 				} finally {
 					session.end() ;
+					lock.unlock();
 				}
 			}
 		}) ;

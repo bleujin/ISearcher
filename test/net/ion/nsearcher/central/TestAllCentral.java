@@ -7,12 +7,12 @@ import net.ion.framework.util.Debug;
 public class TestAllCentral {
 	
 	public static Test suite(){
-		System.setProperty(Debug.PROPERTY_KEY, "off") ;
+//		System.setProperty(Debug.PROPERTY_KEY, "off") ;
 		TestSuite ts = new TestSuite("ALL Central") ;
 		
+		ts.addTestSuite(TestThread.class) ;
 		ts.addTestSuite(TestCentral.class) ;
 		ts.addTestSuite(TestIndexConfig.class) ;
-		ts.addTestSuite(TestThread.class) ;
 		
 		return ts ;
 	}

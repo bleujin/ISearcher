@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
 
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.MapUtil;
@@ -41,7 +42,14 @@ public class InfoReader {
 //	}
 	
 	public <T> T info(InfoHandler<T> ihandler) throws IOException{
-		return ihandler.view(searcher.indexReader(), searcher.dirReader()) ;
+//		Lock lock = searcher.central().readLock() ;
+		try {
+//			lock.lock(); 
+			T result = ihandler.view(searcher.indexReader(), searcher.dirReader());
+			return result ;
+		} finally {
+//			lock.unlock(); 
+		}
 	}
 	
 	public int maxDoc() throws IOException{
@@ -52,10 +60,12 @@ public class InfoReader {
 		return getIndexReader().numDocs() ;
 	}
 	
+	@Deprecated
 	public IndexReader getIndexReader() throws IOException{
 		return searcher.indexReader() ;
 	}
 
+	@Deprecated
 	public DirectoryReader getDirectoryReader() throws IOException{
 		return searcher.dirReader() ;
 	}

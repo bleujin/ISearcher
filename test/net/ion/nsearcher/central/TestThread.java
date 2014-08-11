@@ -3,6 +3,9 @@ package net.ion.nsearcher.central;
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.config.Central;
+import net.ion.nsearcher.config.CentralConfig;
+import net.ion.nsearcher.index.IndexJob;
+import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.index.NonBlockingListener;
 import net.ion.nsearcher.index.collect.FileCollector;
@@ -13,6 +16,7 @@ import net.ion.nsearcher.search.processor.StdOutProcessor;
 
 public class TestThread extends ISTestCase{
 
+	
 
 	public void testThread() throws Exception {
 		Central central = writeDocument() ;
@@ -62,6 +66,8 @@ public class TestThread extends ISTestCase{
 		final SearchResponse response = s3.search("tdump");
 		response.awaitPostFuture() ;
 		assertEquals(true, confirmProcessor.getTotalCount() > 0) ;
+		
+		central.close(); 
 	}
 	
 	public void testWriteMulti() throws Exception {
@@ -75,7 +81,7 @@ public class TestThread extends ISTestCase{
 		col.addListener(new DefaultReporter(false)) ;
 		new Thread(col, "FIRST").start() ;
 
-		Thread.sleep(50) ;
+		Thread.sleep(20) ;
 
 		FileCollector col2 = new FileCollector(getTestDirFile(), true);
 		NonBlockingListener secondListener = getNonBlockingListener(central.newIndexer() );
@@ -91,8 +97,10 @@ public class TestThread extends ISTestCase{
 		final SearchResponse response = searcher.search("tdump");
 		response.awaitPostFuture() ;
 		
-		
+		Debug.line(confirmProcessor.getTotalCount());
 		assertEquals(true, confirmProcessor.getTotalCount() > 0) ;
 		
+		secondListener.waitForCompleted(); 
+		central.close(); 
 	}
 }

@@ -24,7 +24,9 @@ public class TestCentral extends ISTestCase{
 		
 		Searcher searcher = central.newSearcher() ;
 		searcher.addPostListener(new StdOutProcessor()) ;
-		assertEquals(true, searcher.search("bleujin").getDocument().size() > 0) ; 
+		assertEquals(true, searcher.search("bleujin").getDocument().size() > 0) ;
+		
+		central.close(); 
 	}
 	
 
