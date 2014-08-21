@@ -28,6 +28,10 @@ public class SearchConfig {
 		this.defaultSearchFieldName = defaultSearchFieldName;
 	}
 
+	public final static SearchConfig create(ExecutorService es, Version version, Analyzer queryAnalyzer, String defaultSearchFieldName){
+		return new SearchConfig(es, version, queryAnalyzer, defaultSearchFieldName) ;
+	}
+	
 	public Analyzer queryAnalyzer() {
 		return queryAnalyzer;
 	}

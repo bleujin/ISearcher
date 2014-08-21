@@ -9,6 +9,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.ListUtil;
+import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.reader.InfoReader;
 import net.ion.nsearcher.search.CompositeSearcher;
@@ -16,6 +17,7 @@ import net.ion.nsearcher.search.Searcher;
 import net.ion.nsearcher.search.SearcherImpl;
 import net.ion.nsearcher.search.SingleSearcher;
 
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.store.Directory;
 
@@ -48,13 +50,15 @@ public class Central implements Closeable{
 		return new SearcherImpl(singleSearcher, sconfig); 
 	}
 	
-	public Searcher newSearcher(Central another, Central... other) {
+	public Searcher newSearcher(Central another, Central... other) throws IOException {
 		
-		List<Central> others = ListUtil.newList() ;
-		others.add(another) ;
-		others.addAll(ListUtil.toList(other)) ;
+		List<Central> all = ListUtil.newList() ;
+		all.add(this) ;
+		all.add(another) ;
+		all.addAll(ListUtil.toList(other)) ;
 		
-		return new CompositeSearcher(this, others) ;
+		SearchConfig nconfig = SearchConfig.create(this.searchConfig().executorService(), SearchConstant.LuceneVersion, new StandardAnalyzer(SearchConstant.LuceneVersion), SearchConstant.ISALL_FIELD) ;
+		return CompositeSearcher.create(nconfig, all) ;
 	}
 
 	

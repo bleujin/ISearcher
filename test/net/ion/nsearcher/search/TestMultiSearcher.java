@@ -87,5 +87,13 @@ public class TestMultiSearcher extends TestCase {
 		Thread.sleep(200);
 		assertEquals(6, searcher.search("").size());
 	}
+	
+	
+	public void testBlank() throws Exception {
+		Searcher esearcher = CompositeSearcher.createBlank() ;
+		
+		esearcher.search("").debugPrint(); 
+	}
+	
 
 }

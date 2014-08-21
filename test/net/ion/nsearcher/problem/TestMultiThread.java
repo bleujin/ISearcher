@@ -28,119 +28,134 @@ import junit.framework.TestCase;
 
 public class TestMultiThread extends TestCase {
 
-	
 	public void testDeadLock() throws Exception {
 		final Central c = CentralConfig.newRam().indexConfigBuilder().setExecutorService(Executors.newCachedThreadPool()).build();
-		
-		Searcher searcher = c.newSearcher() ;
-		InfoReader reader = c.newReader() ;
-		c.newIndexer().index(IndexJobs.create("bleujin", 3)) ;
-		
+
+		Searcher searcher = c.newSearcher();
+		InfoReader reader = c.newReader();
+		c.newIndexer().index(IndexJobs.create("bleujin", 3));
+
 		reader.info(new InfoHandler<Void>() {
 			@Override
 			public Void view(IndexReader ireader, DirectoryReader dreader) throws IOException {
-				c.newIndexer().index(IndexJobs.create("hero", 2)) ;
+				c.newIndexer().index(IndexJobs.create("hero", 2));
 				Debug.line(ireader.maxDoc(), dreader.getIndexCommit());
 				return null;
 			}
-		}) ;
-		
-		
-		searcher.search("").debugPrint(); 
+		});
+
+		searcher.search("").debugPrint();
 	}
-	
-	
-	public void testLongTimeIndex() throws Exception {
-		Central central = CentralConfig.newRam().build() ;
-		
-		central.newIndexer().index(IndexJobs.create("before", 1)) ;
-		Searcher searcher = central.newSearcher() ;
-		assertEquals(1, searcher.search("").size()) ;
-		long start = System.currentTimeMillis() ;
-		
+
+	public void testAfterCommit() throws Exception {
+		Central central = CentralConfig.newRam().build();
+
+		central.newIndexer().index(IndexJobs.create("before", 1));
+		Searcher searcher = central.newSearcher();
+		assertEquals(1, searcher.search("").size());
+		long start = System.currentTimeMillis();
+
 		central.newIndexer().asyncIndex(new IndexJob<Void>() {
 			@Override
 			public Void handle(IndexSession isession) throws Exception {
-				WriteDocument wdoc = isession.newDocument("after") ;
+				isession.newDocument("pre").update();
+				isession.commit(); 
 				Thread.sleep(4000);
-				isession.updateDocument(wdoc) ;
+				isession.newDocument("after").update();
 				return null;
 			}
-		}) ;
-		
+		});
+
 		Thread.sleep(100);
-		assertEquals(1, searcher.search("").size()) ;
-		assertEquals(true, System.currentTimeMillis() - start < 200); // not wait 
+		assertEquals(1, searcher.search("").size());
 	}
-	
-	
-	
-	
+
+	public void testLongTimeIndex() throws Exception {
+		Central central = CentralConfig.newRam().build();
+
+		central.newIndexer().index(IndexJobs.create("before", 1));
+		Searcher searcher = central.newSearcher();
+		assertEquals(1, searcher.search("").size());
+		long start = System.currentTimeMillis();
+
+		central.newIndexer().asyncIndex(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument wdoc = isession.newDocument("after");
+				Thread.sleep(4000);
+				isession.updateDocument(wdoc);
+				return null;
+			}
+		});
+
+		Thread.sleep(100);
+		assertEquals(1, searcher.search("").size());
+		assertEquals(true, System.currentTimeMillis() - start < 200); // not wait
+	}
+
 	public void testSimulDeadLock() throws Exception {
-		ReentrantReadWriteLock locker = new ReentrantReadWriteLock() ;
-		
-		ReadLock rlock = locker.readLock() ;
-		rlock.lock(); 
-		
-		WriteLock wlock = locker.writeLock() ;
-		wlock.lock(); 
-		
-		rlock.unlock(); 
+		ReentrantReadWriteLock locker = new ReentrantReadWriteLock();
+
+		ReadLock rlock = locker.readLock();
+		rlock.lock();
+
+		WriteLock wlock = locker.writeLock();
+		wlock.lock();
+
+		rlock.unlock();
 		wlock.unlock();
-		
+
 		Debug.line();
 	}
-	
-	
+
 	public void testSimulNormal() throws Exception {
-		final ReentrantReadWriteLock locker = new ReentrantReadWriteLock() ;
-		
-		ExecutorService es = Executors.newCachedThreadPool() ;
+		final ReentrantReadWriteLock locker = new ReentrantReadWriteLock();
+
+		ExecutorService es = Executors.newCachedThreadPool();
 
 		for (int i = 0; i < 1000; i++) {
 			es.submit(new Callable<Void>() {
 				@Override
 				public Void call() throws Exception {
-					ReadLock rlock = locker.readLock() ;
+					ReadLock rlock = locker.readLock();
 					try {
 						rlock.lock();
 						Thread.sleep(RandomUtil.nextInt(5));
 					} finally {
-						rlock.unlock(); 
+						rlock.unlock();
 						System.out.print('r');
 					}
 					return null;
 				}
-			}) ;
-			
+			});
+
 			es.submit(new Callable<Void>() {
 				@Override
 				public Void call() throws Exception {
-					WriteLock rlock = locker.writeLock() ;
+					WriteLock rlock = locker.writeLock();
 					try {
 						rlock.lock();
 						Thread.sleep(RandomUtil.nextInt(30));
 					} finally {
-						rlock.unlock(); 
+						rlock.unlock();
 						System.out.print('w');
 					}
 					return null;
 				}
-			}) ;
-			
+			});
+
 		}
-		
-		es.awaitTermination(100, TimeUnit.SECONDS) ;
+
+		es.awaitTermination(100, TimeUnit.SECONDS);
 		Debug.line();
 	}
-	
-	
+
 	public void testReadsWrite() throws Exception {
 
 		ExecutorService outer = Executors.newCachedThreadPool();
 
 		ExecutorService es = Executors.newCachedThreadPool();
-		// ExecutorService es = Executors.newSingleThreadExecutor() ; 
+		// ExecutorService es = Executors.newSingleThreadExecutor() ;
 		final Central c = CentralConfig.newRam().indexConfigBuilder().setExecutorService(es).build();
 
 		for (int i = 0; i < 100; i++) {
@@ -171,15 +186,15 @@ public class TestMultiThread extends TestCase {
 				@Override
 				public Void call() throws Exception {
 					Searcher searcher = c.newSearcher();
-//					searcher.search(RandomUtil.nextInt(10) + "").size() ;
-					 Debug.line(searcher.search(RandomUtil.nextInt(10) + "").size());
+					// searcher.search(RandomUtil.nextInt(10) + "").size() ;
+					Debug.line(searcher.search(RandomUtil.nextInt(10) + "").size());
 					return null;
 				}
 			});
 			Thread.sleep(RandomUtil.nextInt(20));
 		}
-		
-		new InfinityThread().startNJoin(); 
+
+		new InfinityThread().startNJoin();
 
 	}
 }

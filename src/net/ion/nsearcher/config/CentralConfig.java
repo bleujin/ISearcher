@@ -69,6 +69,10 @@ public abstract class CentralConfig {
 		return dir ;
 	}
 	
+	public CentralConfig create(){
+		return this ;
+	}
+	
 	public Central build() throws CorruptIndexException, IOException {
 		return Central.create(this);
 	}

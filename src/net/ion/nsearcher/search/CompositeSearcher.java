@@ -11,16 +11,22 @@ import java.util.concurrent.Future;
 import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.StringUtil;
+import net.ion.framework.util.WithinThreadExecutor;
 import net.ion.nsearcher.common.IKeywordField;
 import net.ion.nsearcher.common.ReadDocument;
+import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.config.Central;
+import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.config.SearchConfig;
+import net.ion.nsearcher.config.SearchConfigBuilder;
 import net.ion.nsearcher.reader.InfoReader;
 import net.ion.nsearcher.search.filter.FilterUtil;
 import net.ion.nsearcher.search.processor.PostProcessor;
 import net.ion.nsearcher.search.processor.PreProcessor;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.MultiReader;
 import org.apache.lucene.index.Term;
@@ -34,20 +40,33 @@ import org.apache.lucene.search.TopDocs;
 
 public class CompositeSearcher implements Searcher {
 
-	private Central main;
 	private SearchConfig sconfig;
 	private Set<PostProcessor> postListeners = new HashSet<PostProcessor>();
 	private Set<PreProcessor> preListeners = new HashSet<PreProcessor>();
 	private MultiSearcher searcher;
 
-	public CompositeSearcher(Central main, List<Central> others) {
-		this.main = main;
-		this.searcher = new MultiSearcher(main, others) ;
-		this.sconfig = main.searchConfig();
+
+	public CompositeSearcher(MultiSearcher searcher, SearchConfig sconfig) {
+		this.searcher = searcher ;
+		this.sconfig = sconfig ;
+	}
+
+	public static Searcher create(SearchConfig sconfig, List<Central> others) throws IOException {
+		return new CompositeSearcher(new MultiSearcher(sconfig.executorService(), others), sconfig);
+	}
+
+	public static Searcher createBlank() throws CorruptIndexException, IOException {
+		WithinThreadExecutor bes = new WithinThreadExecutor();
+		SearchConfig nconfig = SearchConfig.create(bes, SearchConstant.LuceneVersion, new StandardAnalyzer(SearchConstant.LuceneVersion), SearchConstant.ISALL_FIELD) ;
+		return new CompositeSearcher(new MultiSearcher(bes, ListUtil.EMPTY), nconfig) ;
 	}
 
 	public SearchConfig config(){
 		return sconfig ;
+	}
+	
+	public int readerCount(){
+		return searcher.readerCount() ;
 	}
 	
 	public SearchRequest createRequest(String query) throws ParseException {
@@ -140,25 +159,25 @@ public class CompositeSearcher implements Searcher {
 		return sconfig.queryAnalyzer() ;
 	}
 
+
+
 }
 
 class MultiSearcher implements ISearchable{
 
 	private ExecutorService es;
 	private List<Central> cs;
+	private IndexSearcher isearcher;
 
-	public MultiSearcher(Central main, List<Central> others) {
-		this.es = main.searchConfig().executorService() ;
-		this.cs = ListUtil.newList() ;
-		cs.add(main) ;
-		for (Central other : others) {
-			cs.add(other) ;
-		}
+	public MultiSearcher(ExecutorService es, List<Central> targets) throws IOException {
+		this.es = es;
+		this.cs = targets ;
 	}
 	
 	public SearchResponse search(SearchRequest sreq, Filter filters) throws IOException {
 		long startTime = System.currentTimeMillis();
-		TopDocs docs = createIndexSearcher().search(sreq.query(), filters, sreq.limit(), sreq.sort());
+		this.isearcher = createIndexSearcher();
+		TopDocs docs = isearcher.search(sreq.query(), filters, sreq.limit(), sreq.sort());
 		return SearchResponse.create(this, sreq, docs, startTime);
 	}
 
@@ -177,25 +196,30 @@ class MultiSearcher implements ISearchable{
 
 	// Once you have a new IndexReader, it's relatively cheap to create a new IndexSearcher from it. 
 	private IndexSearcher createIndexSearcher() throws IOException {
-		return new IndexSearcher(indexReader());
+		return new IndexSearcher(multiIndexReader());
 	}
 
 	@Override
 	public ReadDocument doc(int docId, SearchRequest request) throws IOException {
+		
 		Set<String> fields = request.selectorField();
 		if (fields == null || fields.size() == 0) {
-			return ReadDocument.loadDocument(indexReader().document(docId));
+			return ReadDocument.loadDocument(isearcher.doc(docId));
 		}
-		return ReadDocument.loadDocument(indexReader().document(docId, request.selectorField()));
+		return ReadDocument.loadDocument(isearcher.doc(docId, request.selectorField()));
 	}
 
-	private IndexReader indexReader() throws IOException{
+	private IndexReader multiIndexReader() throws IOException{
 		IndexReader[] ireaders = new IndexReader[cs.size()] ;
 		int i = 0 ;
 		for (Central c : cs) {
 			ireaders[i++] = c.newReader().getIndexReader() ;
 		}
 		return new MultiReader(ireaders) ;
+	}
+	
+	public int readerCount(){
+		return cs.size() ;
 	}
 	
 	@Override
