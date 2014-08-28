@@ -10,6 +10,7 @@ import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.debug.standard.DCJKAnalyzer;
 import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -114,19 +115,17 @@ public class IndexConfigBuilder {
 		return this ;
 	}
 	
-	public IndexConfigBuilder setExecutorService(ExecutorService es){
+	public IndexConfigBuilder executorService(ExecutorService es){
 		this.es = es ;
 		return this ;
 	}
-	
-	
 	
 	IndexConfig buildSelf(CentralConfig config){
 		return new IndexConfig(config.version(), this.es, indexAnalyzer(config.version()), clone, this.fieldIndexingStrategy) ;
 	}
 
 	private Analyzer indexAnalyzer(Version version) {
-		return ObjectUtil.coalesce(this.analyzer, new MyKoreanAnalyzer(version));
+		return ObjectUtil.coalesce(this.analyzer, new StandardAnalyzer(version));
 	}
 
 	public Central build() throws CorruptIndexException, IOException{
@@ -142,6 +141,6 @@ public class IndexConfigBuilder {
 		this.fieldIndexingStrategy = fiStrategy ;
 		return this ;
 	}
-	 
+
 
 }

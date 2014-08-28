@@ -8,11 +8,13 @@ import java.util.concurrent.TimeUnit;
 
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.ObjectUtil;
+import net.ion.framework.util.WithinThreadExecutor;
 import net.ion.nsearcher.common.SearchConstant;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.debug.standard.DCJKAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 
 public class SearchConfigBuilder {
@@ -20,7 +22,7 @@ public class SearchConfigBuilder {
 	private CentralConfig centralConfig ;
 	private Analyzer queryAnalyzer ;
 	private String dftSearchFieldName = SearchConstant.ISALL_FIELD ;
-	private ExecutorService es = new WithInExecutorService() ;
+	private ExecutorService es = new WithinThreadExecutor() ;
 	
 	public SearchConfigBuilder(CentralConfig centralConfig) {
 		this.centralConfig = centralConfig ;
@@ -41,7 +43,7 @@ public class SearchConfigBuilder {
 	}
 	
 	public Analyzer queryAnalyzer(){
-		return ObjectUtil.coalesce(queryAnalyzer, new CJKAnalyzer(centralConfig.version())) ;
+		return ObjectUtil.coalesce(queryAnalyzer, new StandardAnalyzer(centralConfig.version())) ;
 	}
 	
 	
@@ -62,40 +64,6 @@ public class SearchConfigBuilder {
 
 	SearchConfig buildSelf(CentralConfig parent) {
 		return new SearchConfig(this.es, parent.version(), queryAnalyzer(), defaultSearchFieldName());
-	}
-
-}
-
-class WithInExecutorService extends AbstractExecutorService {
-	private volatile boolean shutDown;
-
-	public WithInExecutorService() {
-		shutDown = false;
-	}
-
-	public void execute(Runnable command) {
-		command.run();
-	}
-
-	public void shutdown() {
-		shutDown = true;
-	}
-
-	public List shutdownNow() {
-		shutDown = true;
-		return ListUtil.EMPTY ;
-	}
-
-	public boolean isShutdown() {
-		return shutDown;
-	}
-
-	public boolean isTerminated() {
-		return shutDown;
-	}
-
-	public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
-		return shutDown;
 	}
 
 }

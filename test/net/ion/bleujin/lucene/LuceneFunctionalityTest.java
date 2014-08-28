@@ -39,7 +39,7 @@ public class LuceneFunctionalityTest extends ISTestCase {
 
 		List<ReadDocument> docs = result.getDocument();
 		for (ReadDocument doc : docs) {
-			Debug.debug(doc.asString("name"), doc.asString("subject"), doc.getFields().size(), result.size());
+			Debug.debug(doc.asString("name"), doc.asString("subject"), doc.fields().size(), result.size());
 		}
 	}
 	

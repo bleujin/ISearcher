@@ -4,6 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import net.ion.nsearcher.impl.TestField;
 import net.ion.nsearcher.impl.TestPostProcessor;
+import net.ion.nsearcher.index.TestReaderInfo;
 
 public class TestAllSearcher extends TestSuite{
 
@@ -26,7 +27,8 @@ public class TestAllSearcher extends TestSuite{
 		
 		ts.addTestSuite(TestSearchRequest.class);
 		ts.addTestSuite(TestSearchResponse.class);
-		
+		ts.addTestSuite(TestReaderInfo.class) ;
+
 		return ts;
 	}
 }

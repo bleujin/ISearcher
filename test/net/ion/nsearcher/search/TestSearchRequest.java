@@ -35,7 +35,7 @@ public class TestSearchRequest extends TestCase {
 	
 	public void testGetField() throws Exception {
 		ReadDocument doc = searcher.createRequest("bleujin").findOne();
-		String[] fields = doc.getFieldNames() ;
+		String[] fields = doc.fieldNames() ;
 		assertEquals(3, fields.length); // except text field(default strategy not store texttype)
 	}
 	

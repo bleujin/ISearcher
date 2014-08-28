@@ -68,7 +68,7 @@ public class SearchJSONFormater extends AbstractDocumentFormater implements Sear
 		List<Map<String, Object>> nodeList = new ArrayList<Map<String, Object>>();
 		for (ReadDocument doc : docs) {
 			Map<String, Object> node = new HashMap<String, Object>();
-			List<IndexableField> fields = doc.getFields();
+			List<IndexableField> fields = doc.fields();
 			for (IndexableField field : fields) {
 				if(node.containsKey(field.name())){
 					if(field.stringValue().length() > ((String)node.get(field.name())).length()){
@@ -89,7 +89,7 @@ public class SearchJSONFormater extends AbstractDocumentFormater implements Sear
 		List<Map<String, Object>> nodeList = new ArrayList<Map<String, Object>>();
 		for (ReadDocument doc : docs) {
 			Map<String, Object> node = new HashMap<String, Object>();
-			List<IndexableField> fields = doc.getFields();
+			List<IndexableField> fields = doc.fields();
 			for (IndexableField field : fields) {
 				node.put(field.name(), field.stringValue());
 			}

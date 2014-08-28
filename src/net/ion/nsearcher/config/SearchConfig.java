@@ -36,7 +36,7 @@ public class SearchConfig {
 		return queryAnalyzer;
 	}
 	
-	public ExecutorService executorService(){
+	public ExecutorService searchExecutor(){
 		return this.es ;
 	}
 

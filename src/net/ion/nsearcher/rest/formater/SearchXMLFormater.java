@@ -50,7 +50,7 @@ public class SearchXMLFormater extends AbstractDocumentFormater implements Searc
 
 		for (ReadDocument doc : docs) {
 			XML node = new XML("node");
-			List<IndexableField> fields = doc.getFields();
+			List<IndexableField> fields = doc.fields();
 			for (IndexableField field : fields) {
 				XML property = new XML("property");
 				property.addAttribute("name", field.name());

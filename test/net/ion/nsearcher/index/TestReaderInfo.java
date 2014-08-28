@@ -13,13 +13,13 @@ import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.reader.InfoReader.InfoHandler;
 import junit.framework.TestCase;
 
-public class TestIndexCommit extends TestCase {
+public class TestReaderInfo extends TestCase {
 
 	public void testIndexCommitUserData() throws Exception {
 		Central central = CentralConfig.newRam().build() ;
-		central.newIndexer().index(IndexJob.SAMPLE) ;
-		central.newIndexer().index(IndexJob.SAMPLE) ;
-		central.newIndexer().index(IndexJob.SAMPLE) ;
+		central.newIndexer().index(IndexJobs.create("/hero", 2)) ;
+		central.newIndexer().index(IndexJobs.create("/jin", 3)) ;
+		central.newIndexer().index(IndexJobs.create("/bleu", 2)) ;
 		
 		central.newReader().info(new InfoHandler<Void>() {
 			@Override

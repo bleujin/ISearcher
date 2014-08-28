@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 public class TestMultiThread extends TestCase {
 
 	public void testDeadLock() throws Exception {
-		final Central c = CentralConfig.newRam().indexConfigBuilder().setExecutorService(Executors.newCachedThreadPool()).build();
+		final Central c = CentralConfig.newRam().indexConfigBuilder().executorService(Executors.newCachedThreadPool()).build();
 
 		Searcher searcher = c.newSearcher();
 		InfoReader reader = c.newReader();
@@ -156,7 +156,7 @@ public class TestMultiThread extends TestCase {
 
 		ExecutorService es = Executors.newCachedThreadPool();
 		// ExecutorService es = Executors.newSingleThreadExecutor() ;
-		final Central c = CentralConfig.newRam().indexConfigBuilder().setExecutorService(es).build();
+		final Central c = CentralConfig.newRam().indexConfigBuilder().executorService(es).build();
 
 		for (int i = 0; i < 100; i++) {
 			outer.submit(new Callable<Void>() {

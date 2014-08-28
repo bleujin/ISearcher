@@ -166,7 +166,7 @@ class SelfWriterThread implements Runnable {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					Debug.debug(doc.get("NAME")) ;
+					Debug.debug(doc.asString("NAME")) ;
 					if (RandomUtil.nextBoolean()) isession.commit() ; 
 					else isession.rollback() ;
 				}
@@ -204,7 +204,7 @@ class OnlyWriterThread implements Runnable {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					Debug.debug(doc.get("NAME")) ;
+					Debug.debug(doc.asString("NAME")) ;
 					if (RandomUtil.nextBoolean()) isession.commit() ; 
 					else isession.rollback() ;
 				}
@@ -240,7 +240,7 @@ class WriterThread implements Runnable {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					Debug.debug(doc.get("subject")) ;
+					Debug.debug(doc.asString("subject")) ;
 				}
 				
 				

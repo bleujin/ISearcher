@@ -57,7 +57,7 @@ public class Central implements Closeable{
 		all.add(another) ;
 		all.addAll(ListUtil.toList(other)) ;
 		
-		SearchConfig nconfig = SearchConfig.create(this.searchConfig().executorService(), SearchConstant.LuceneVersion, new StandardAnalyzer(SearchConstant.LuceneVersion), SearchConstant.ISALL_FIELD) ;
+		SearchConfig nconfig = SearchConfig.create(this.searchConfig().searchExecutor(), SearchConstant.LuceneVersion, new StandardAnalyzer(SearchConstant.LuceneVersion), SearchConstant.ISALL_FIELD) ;
 		return CompositeSearcher.create(nconfig, all) ;
 	}
 

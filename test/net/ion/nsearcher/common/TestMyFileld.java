@@ -29,7 +29,7 @@ public class TestMyFileld extends ISTestCase{
 		doc.add(MyField.unknown("double", 10.0d)) ;
 		doc.add(MyField.unknown("float", 10.0f)) ;
 
-		for(MyField f : doc.getFields()){
+		for(MyField f : doc.fields()){
 			Debug.line(f) ;
 		}
 		cen.close() ;

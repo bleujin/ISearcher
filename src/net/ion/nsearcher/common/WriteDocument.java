@@ -119,15 +119,17 @@ public class WriteDocument extends AbDocument {
 	}
 
 	
-	public String get(String name) {
-		return getFirstField(name) == null ? null : getFirstField(name).stringValue() ;
+	public String asString(String name) {
+		return firstField(name) == null ? null : firstField(name).stringValue() ;
 	}
 
+	@Deprecated
 	public WriteDocument name(String name) {
 		add(MyField.text(ISEventName, name));
 		return this;
 	}
 
+	@Deprecated
 	public WriteDocument event(CollectorEvent event) throws IOException {
 		add(MyField.number(BodyHash, event.getEventBody()));
 		add(MyField.text(ISCollectorName, event.getCollectorName()));
@@ -195,47 +197,45 @@ public class WriteDocument extends AbDocument {
 		return this;
 	}
 
-
-	public WriteDocument merge(MyField field) {
-		removeField(field.name());
-		return add(field);
-	}
-
-	
 	public WriteDocument add(MyField field) {
 		fields.put(field.name(), field);
 		return this;
 	}
 
-	
-	
-	public MyField myField(String name) {
-		return getFirstField(name) ;
-	}
-	
-	public Collection<MyField> getFields() {
+	public Collection<MyField> fields() {
 		return fields.values();
 	}
 
-	private MyField getFirstField(String _name){
-		String name = StringUtil.lowerCase(_name) ;
+	public MyField firstField(String name){
 		return fields.get(name).size() < 1 ? null : fields.get(name).get(0)  ;  
 	}
 	
 	public void removeField(String name) {
-		fields.removeAll(StringUtil.lowerCase(name));
+		fields.removeAll(name);
 	}
 
-	public List<MyField> getFields(String name) {
-		return fields.get(StringUtil.lowerCase(name)) ;
+	public List<MyField> fields(String name) {
+		return fields.get(name) ;
 	}
 
-	public void update() throws IOException {
+	public WriteDocument update() throws IOException {
 		isession.updateDocument(this) ;
+		return this ;
 	}
 
-	public void insert() throws IOException {
+	public WriteDocument insert() throws IOException {
 		isession.insertDocument(this) ;
+		return this ;
+	}
+
+	public Void updateVoid() throws IOException {
+		update() ;
+		return null ;
+	}
+
+	public Void insertVoid() throws IOException {
+		insert() ;
+		return null ;
 	}
 
 }

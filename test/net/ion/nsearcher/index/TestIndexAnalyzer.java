@@ -2,6 +2,7 @@ package net.ion.nsearcher.index;
 
 import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
+import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
@@ -14,23 +15,23 @@ import org.apache.lucene.util.Version;
 public class TestIndexAnalyzer extends TestCase{
 
 	public void testDefaultIndexerAnalyzer() throws Exception {
-		Central c = CentralConfig.newRam().indexConfigBuilder().indexAnalyzer(new StandardAnalyzer(Version.LUCENE_44)).build() ;
+		Central c = CentralConfig.newRam().indexConfigBuilder().indexAnalyzer(new StandardAnalyzer(SearchConstant.LuceneVersion)).build() ;
 		Indexer indexer = c.newIndexer() ;
 		
 		assertEquals(StandardAnalyzer.class, c.indexConfig().indexAnalyzer().getClass()) ;
 		assertEquals(StandardAnalyzer.class, indexer.analyzer().getClass()) ;
 
 		Searcher searhcer = c.newSearcher() ;
-		assertEquals(CJKAnalyzer.class, c.searchConfig().queryAnalyzer().getClass()) ;
-		assertEquals(CJKAnalyzer.class, searhcer.queryAnalyzer().getClass()) ;
+		assertEquals(StandardAnalyzer.class, c.searchConfig().queryAnalyzer().getClass()) ;
+		assertEquals(StandardAnalyzer.class, searhcer.queryAnalyzer().getClass()) ;
 	}
 	
 	
 	public void testAfterChangeIndexAnalyzer() throws Exception {
-		Central c = CentralConfig.newRam().indexConfigBuilder().indexAnalyzer(new StandardAnalyzer(Version.LUCENE_44)).build() ;
+		Central c = CentralConfig.newRam().indexConfigBuilder().indexAnalyzer(new StandardAnalyzer(SearchConstant.LuceneVersion)).build() ;
 		Indexer indexer = c.newIndexer() ;
 		
-		c.indexConfig().indexAnalyzer(new CJKAnalyzer(Version.LUCENE_44)) ;
+		c.indexConfig().indexAnalyzer(new CJKAnalyzer(SearchConstant.LuceneVersion)) ;
 		assertEquals(CJKAnalyzer.class, c.indexConfig().indexAnalyzer().getClass()) ;
 		assertEquals(CJKAnalyzer.class, indexer.analyzer().getClass()) ;
 		
@@ -49,10 +50,11 @@ public class TestIndexAnalyzer extends TestCase{
 	}
 	
 	public void testAfterChangeQueryAnalyzer() throws Exception {
-		Central c = CentralConfig.newRam().indexConfigBuilder().indexAnalyzer(new CJKAnalyzer(Version.LUCENE_44)).parent().searchConfigBuilder().queryAnalyzer(new StandardAnalyzer(Version.LUCENE_44)).build() ;
+		Central c = CentralConfig.newRam().indexConfigBuilder().indexAnalyzer(new CJKAnalyzer(SearchConstant.LuceneVersion)).parent().searchConfigBuilder()
+				.queryAnalyzer(new CJKAnalyzer(SearchConstant.LuceneVersion)).build() ;
 
 		Searcher searcher = c.newSearcher() ;
-		assertEquals(StandardAnalyzer.class, searcher.queryAnalyzer().getClass()) ; 
+		assertEquals(CJKAnalyzer.class, searcher.queryAnalyzer().getClass()) ; 
 
 		Indexer indexer = c.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {
@@ -66,7 +68,7 @@ public class TestIndexAnalyzer extends TestCase{
 		}) ;
 
 
-		c.searchConfig().queryAnalyzer(new CJKAnalyzer(Version.LUCENE_44)) ;
+		c.searchConfig().queryAnalyzer(new CJKAnalyzer(SearchConstant.LuceneVersion)) ;
 		Debug.line(searcher.queryAnalyzer()) ;
 		assertEquals(1, searcher.search("기가").size()) ; 
 

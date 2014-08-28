@@ -1,12 +1,17 @@
 package net.ion.nsearcher.config;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
+import net.ion.framework.util.MapUtil;
+import net.ion.framework.util.ObjectUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.index.IndexDeletionPolicy;
 import org.apache.lucene.index.IndexWriter.IndexReaderWarmer;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -33,6 +38,9 @@ public class IndexConfig {
 
 	private Version version ;
 	private Analyzer analyzer ;
+	
+	private final Map<String, Analyzer> analMap = MapUtil.newMap() ;
+	private PerFieldAnalyzerWrapper wrapperAnalyzer ;
 	private FieldIndexingStrategy fieldIndexingStrategy;
 	private ExecutorService es;
 	
@@ -58,6 +66,7 @@ public class IndexConfig {
 		this.termIndexInterval = clone.getTermIndexInterval();
 		this.writeLockTimeout = clone.getWriteLockTimeout();
 		this.fieldIndexingStrategy = fiStrategy ;
+		this.wrapperAnalyzer = new PerFieldAnalyzerWrapper(analyzer) ;
 	}
 
 	public IndexConfig indexAnalyzer(Analyzer analyzer) {
@@ -145,12 +154,20 @@ public class IndexConfig {
 	}
 
 	public Analyzer indexAnalyzer() {
-		return analyzer;
+		return analMap.size() == 0 ? this.analyzer : this.wrapperAnalyzer ; 
+	}
+	
+	public IndexConfig fieldAnalyzer(String fieldName, Analyzer analyzer) {
+		analMap.put(fieldName, analyzer) ;
+		this.wrapperAnalyzer = new PerFieldAnalyzerWrapper(this.analyzer, this.analMap) ;
+		return this;
 	}
 
 	public ExecutorService indexExecutor() {
 		return es;
 	}
+
+	
 
 
 }

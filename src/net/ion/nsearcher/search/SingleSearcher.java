@@ -38,7 +38,7 @@ public class SingleSearcher implements Closeable, ISearchable {
 		this.central = central;
 		this.dreader = dreader;
 		this.isearcher = new IndexSearcher(dreader);
-		this.es = central.searchConfig().executorService();
+		this.es = central.searchConfig().searchExecutor();
 	}
 
 	public static SingleSearcher create(SearchConfig sconfig, Central central) throws IOException {

@@ -4,6 +4,7 @@ import net.ion.nsearcher.common.WriteDocument;
 
 public class ApplyEvent implements IIndexEvent{
 
+	private static final long serialVersionUID = 435638710291949640L;
 	private WriteDocument doc ;
 	private long startTime ;
 	public ApplyEvent(WriteDocument doc){
@@ -14,7 +15,7 @@ public class ApplyEvent implements IIndexEvent{
 		return doc;
 	}
 	public String getDocumentField(String fieldName) {
-		return getDocument().get(fieldName);
+		return getDocument().asString(fieldName);
 	}
 	public long getStartTime() {
 		return startTime ;

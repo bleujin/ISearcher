@@ -1,7 +1,6 @@
 package net.ion.nsearcher.common;
 
 import junit.framework.TestCase;
-import net.ion.framework.util.Debug;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
@@ -36,38 +35,28 @@ public class TestWriteDocument extends TestCase {
 	}
 	
 	
-	public void testNameCase() throws Exception {
-		assertEquals("bleujin", wdoc.get("name"));
+	public void tetAsString() throws Exception {
+		assertEquals("bleujin", wdoc.asString("name"));
 	}
-	
-	
-	public void testNameCaseInReadDoc() throws Exception {
-		ReadDocument rdoc = indexer.index(new IndexJob<ReadDocument>() {
-			@Override
-			public ReadDocument handle(IndexSession isession) throws Exception {
-				return ReadDocument.loadDocument(wdoc.toLuceneDoc());
-			}
-		}) ;
-		assertEquals("bleujin", rdoc.asString("name")) ;
-	}
-	
-	public void testGetField() throws Exception {
-		MyField field = wdoc.myField("name");
+
+	public void testFirstField() throws Exception {
+		MyField field = wdoc.firstField("name");
 		assertEquals("bleujin", field.stringValue()) ;
 	}
+
 	
 	public void testDuplName() throws Exception {
 		wdoc.unknown("name", "hero") ;
 		
-		assertEquals(2, wdoc.getFields("name").size()) ;
-		assertEquals(0, wdoc.getFields("noname").size()) ;
+		assertEquals(2, wdoc.fields("name").size()) ;
+		assertEquals(0, wdoc.fields("noname").size()) ;
 		
-	 	assertEquals(3, wdoc.getFields().size()) ;
+	 	assertEquals(3, wdoc.fields().size()) ; // 2+1
 	 	
-	 	assertEquals("bleujin", wdoc.myField("name").stringValue()) ;
+	 	assertEquals("bleujin", wdoc.firstField("name").stringValue()) ;
+	 	assertEquals("hero", wdoc.fields("name").get(1).stringValue()) ;
 	 	
-	 	Central cen = CentralConfig.newRam().build();
-	 	Indexer indexer = cen.newIndexer();
+	 	// when save doc
 		indexer.index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
 				session.insertDocument(wdoc) ;
@@ -82,23 +71,10 @@ public class TestWriteDocument extends TestCase {
 	}
 	
 	
-	
-
-	public void testAddField() throws Exception {
-		final MyField field = MyField.keyword("name", "hero");
-		assertEquals("name", field.name()) ;
-
-		wdoc.add(field) ;
-		assertEquals(2, wdoc.getFields("name").size()) ;
-	}
-	
-	
-	public void testReserved() throws Exception {
+	public void testReservedField() throws Exception {
 		Document doc = indexer.index(new IndexJob<Document>() {
 			public Document handle(IndexSession isession) throws Exception {
-				final WriteDocument writeDoc = isession.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20);
-				isession.insertDocument(writeDoc) ;
-				return writeDoc.toLuceneDoc();
+				return isession.newDocument("bleujin").unknown("test", "he programmer").unknown("age", 20).insert().toLuceneDoc() ;
 			}
 		}) ;
 		
@@ -108,7 +84,6 @@ public class TestWriteDocument extends TestCase {
 		
 		Searcher searcher = cen.newSearcher();
 		ReadDocument rd = searcher.createRequest("").findOne() ;
-
 		
 		assertEquals(true, rd.reserved(IKeywordField.DocKey) != null) ;
 		assertEquals(true, rd.reserved(IKeywordField.BodyHash) == null) ;
@@ -116,13 +91,16 @@ public class TestWriteDocument extends TestCase {
 	}
 	
 	public void testId() throws Exception {
-		assertEquals(Boolean.FALSE, indexer.index(new IndexJob<Boolean>() {
+		indexer.index(new IndexJob<Void>() {
 			@Override
-			public Boolean handle(IndexSession isession) throws Exception {
-				// TODO Auto-generated method stub
-				return isession.newDocument().equals(isession.newDocument());
+			public Void handle(IndexSession isession) throws Exception {
+				isession.newDocument("newdoc").insert();
+				return null ;
 			}
-		})) ;
+		}) ;
+		
+		assertEquals(1, cen.newSearcher().createRequestByKey("newdoc").find().size()) ;
+		assertEquals(0, cen.newSearcher().createRequestByKey("NEWDOC").find().size()) ;
 	}
 	
 	

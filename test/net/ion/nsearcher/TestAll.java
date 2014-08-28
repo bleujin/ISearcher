@@ -17,7 +17,6 @@ public class TestAll {
 		ts.addTest(TestAllCentral.suite()) ;
 		ts.addTest(TestAllIndexer.suite()) ;
 		ts.addTest(TestAllSearcher.suite()) ;
-		ts.addTest(TestAllImpl.suite()) ;
 		
 		return ts ;
 	}

@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+
+import junit.framework.TestCase;
+import net.ion.framework.parse.gson.JsonObject;
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.MyField;
@@ -16,54 +20,58 @@ import net.ion.nsearcher.search.SearchResponse;
 import net.ion.nsearcher.search.Searcher;
 import net.ion.nsearcher.search.processor.StdOutProcessor;
 
-public class TestIndexer extends ISTestCase {
+public class TestIndexer extends TestCase {
 
-	File file = getTestDir("/ion_page");
-
-	public void testCreate() throws Exception {
-		Central central = sampleTestDocument() ;
-		
-		FileCollector col = new FileCollector(file, true);
-
-		NonBlockingListener adapterListener = getNonBlockingListener(central.newIndexer());
-		col.addListener(adapterListener) ;
-		// col.addListener(new DefaultReportor()) ;
-		
-		col.collect() ;
-		adapterListener.waitForCompleted() ;
-		central.destroySelf() ;
-	}
-
-	public void testAfterClose() throws Exception {
-		Central c = sampleTestDocument() ;
-		Searcher s1 = c.newSearcher() ;
-		s1.addPostListener(new StdOutProcessor()) ;
-		
-		c.newIndexer().index(new IndexJob<Void>() {
-			public Void handle(IndexSession session) throws IOException {
-				return null;
-			}
-		}) ;
-		
-		c.newSearcher() ; // new Searcher..
-		SearchResponse sr = s1.search("bleujin") ;
-		
-		List<ReadDocument> docs = sr.getDocument() ;
-		Debug.debug(docs) ;
-		
+	private Central central;
+	protected void setUp() throws Exception {
+		super.setUp();
+		this.central = CentralConfig.newRam().build() ;
 	}
 	
-	public void testOppsCommit() throws Exception {
-		Central c = CentralConfig.newRam().build() ;
+	protected void tearDown() throws Exception {
+		central.close() ;
+		super.tearDown();
+	}
+	
+	public void testCreate() throws Exception {
 		
-		Indexer indexer = c.newIndexer() ;
-		indexer.index(new IndexJob<Void>() {
+		Indexer indexer = central.newIndexer() ;
+		assertEquals(StandardAnalyzer.class, indexer.analyzer().getClass()) ;
+	}
+
+	public void testAfterIndex() throws Exception {
+		Searcher searcher = central.newSearcher() ;
+		
+		assertEquals(0, searcher.search("").size()) ;
+		
+		central.newIndexer().index(new IndexJob<Void>() {
 			public Void handle(IndexSession isession) throws IOException {
-				WriteDocument doc = isession.newDocument();
-				isession.insertDocument(doc.add(MyField.keyword("name", "bleujin"))) ;
+				isession.newDocument().insert() ;
 				return null;
 			}
 		}) ;
+		
+		SearchResponse sr = searcher.search("") ;
+		assertEquals(1, sr.size());
+	}
+	
+	
+	public void testIndexJson() throws Exception {
+		final JsonObject json = JsonObject.fromString("{name:'bleujin', age:20}") ;
+		
+		Indexer indexer = central.newIndexer() ;
+		indexer.index(new IndexJob<Void>() {
+			public Void handle(IndexSession isession) throws IOException {
+				isession.newDocument().add(json).insert() ;
+				return null;
+			}
+		}) ;
+		
+		assertEquals(1, central.newSearcher().search("name:bleujin").size()) ;
+		assertEquals(1, central.newSearcher().search("age:20").size()) ;
+		
+		assertEquals(1, central.newSearcher().search("bleujin").size()) ;
+		assertEquals(1, central.newSearcher().search("20").size()) ;
 	}
 
 

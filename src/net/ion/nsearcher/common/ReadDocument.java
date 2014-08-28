@@ -67,42 +67,42 @@ public class ReadDocument extends AbDocument {
 		}
 	}
 
-	public List<IndexableField> getFields() {
+	public List<IndexableField> fields() {
 		final List<IndexableField> result = ListUtil.newList() ;
 		
-		for (String fieldName : getFieldNames()) {
+		for (String fieldName : fieldNames()) {
 			result.add(getField(fieldName)) ;
 		}
 		
 		return Collections.unmodifiableList(result) ;
 	}
 	
-	public IndexableField[] getFields(String name) {
+	public IndexableField[] fields(String name) {
 		return doc.getFields(name) ;
 	}
 
-	private String[] getValues(String name) {
+	private String[] asStrings(String name) {
 		return doc.getValues(name);
 	}
 
 	public void write(MyDocumentTemplate mw){
 		mw.startDoc(this) ;
-		List<IndexableField> fields = getFields() ;
+		List<IndexableField> fields = fields() ;
 		for (IndexableField field : fields) {
 			mw.printField(field) ;
 		}
 		mw.endDoc(this) ;
 	}
 	
-	public String getIndexedDay(){
-		return DateUtil.timeMilliesToDay(Long.parseLong(asString(TIMESTAMP))) ;
+	public long timestamp(){
+		return Long.parseLong(reserved(TIMESTAMP)) ;
 	}
 
 	public String bodyValue() {
 		return reserved(IKeywordField.BodyHash);
 	}
 	
-	public String[] getFieldNames() {
+	public String[] fieldNames() {
 		Set<String> set = SetUtil.newSet() ;
 		for (IndexableField field : doc.getFields()) {
 			if (IKeywordField.Field.reservedId(field.name())) continue ;
@@ -120,8 +120,6 @@ public class ReadDocument extends AbDocument {
 		}
 		return set.toArray(new String[0]);
 	}
-	
-	
 
 	public Document toLuceneDoc() {
 		return doc;

@@ -23,10 +23,8 @@ public class TestIndexSession extends TestCase{
 		final Central cs = CentralConfig.newRam().build() ;
 		Central ct = CentralConfig.newRam().build() ;
 		
-		Analyzer anal = new MyKoreanAnalyzer() ;
-
-		cs.newIndexer().asyncIndex("hero", anal, new AddFiveEntryJob("hero")).get();
-		ct.newIndexer().asyncIndex("bleujin", anal, new AddFiveEntryJob("bleujin")).get() ;
+		cs.newIndexer().asyncIndex("hero", new AddFiveEntryJob("hero")).get();
+		ct.newIndexer().asyncIndex("bleujin", new AddFiveEntryJob("bleujin")).get() ;
 		
 		ct.newIndexer().index(new IndexJob<Void>() {
 			public Void handle(IndexSession session) throws Exception {
@@ -34,18 +32,20 @@ public class TestIndexSession extends TestCase{
 				return null;
 			}
 		}) ;
+		
 		assertEquals(10, ct.newSearcher().search("").size()) ;
 	}
 	
-	public void testCommitData() throws Exception {
+	public void testCommitUserData() throws Exception {
 		final Central cs = CentralConfig.newRam().build() ;
 
 		Analyzer anal = new MyKoreanAnalyzer() ;
 
 		cs.newIndexer().index("hero", anal, new AddFiveEntryJob("hero"));
-		cs.newIndexer().index("bleujin", anal, new AddFiveEntryJob("hero"));
+		cs.newIndexer().index("bleujin", anal, new AddFiveEntryJob("bleujin"));
 		Map<String, String> map = cs.newReader().commitUserData();
-		Debug.line(map) ;
+		assertEquals(true, map.containsKey("lastmodified"));
+		assertEquals(true, map.containsKey("version"));
 	}
 	
 	

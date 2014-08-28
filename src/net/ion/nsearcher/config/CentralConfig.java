@@ -85,10 +85,5 @@ public abstract class CentralConfig {
 		return sconfigBuilder ;
 	}
 
-	@Deprecated
-	IndexSchemaBuilder indexSchemaBuilder() {
-		return schemaBuidler ;
-	}
-
 	
 }

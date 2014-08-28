@@ -1,4 +1,4 @@
-package net.ion.nsearcher.central;
+package net.ion.nsearcher.index.collect;
 
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
@@ -14,7 +14,7 @@ import net.ion.nsearcher.search.SearchResponse;
 import net.ion.nsearcher.search.Searcher;
 import net.ion.nsearcher.search.processor.StdOutProcessor;
 
-public class TestThread extends ISTestCase{
+public class TestCollectThread extends ISTestCase{
 
 	
 

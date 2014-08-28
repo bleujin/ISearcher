@@ -82,6 +82,9 @@ public class Indexer implements Closeable{
 		return asyncIndex("emanon", analyzer, indexJob) ;
 	}
 
+	public <T> Future<T> asyncIndex(String name, IndexJob<T> indexJob) {
+		return asyncIndex(name, iconfig.indexAnalyzer(), indexJob);
+	}
 
 	public <T> Future<T> asyncIndex(final String name, final Analyzer analyzer, final IndexJob<T> indexJob) {
 		return asyncIndex(name, analyzer, indexJob, ehandler) ;
@@ -116,6 +119,7 @@ public class Indexer implements Closeable{
 	public void close() {
 		iconfig.indexExecutor().shutdown() ;
 	}
+
 
 
 	

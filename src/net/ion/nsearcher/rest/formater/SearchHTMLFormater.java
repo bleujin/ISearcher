@@ -43,7 +43,7 @@ public class SearchHTMLFormater extends AbstractDocumentFormater implements Sear
 		for (ReadDocument doc : docs) {
 			rw.write("<ul style='font-size: 10pt;'><li>", doc.idValue());
 			rw.write("<ul>");
-			List<IndexableField> fields = doc.getFields();
+			List<IndexableField> fields = doc.fields();
 			for (IndexableField field : fields) {
 				rw.write("<li>", field.name(), "[" + getFieldOption(field), "] : ", field.stringValue(), "<br/>");
 			}

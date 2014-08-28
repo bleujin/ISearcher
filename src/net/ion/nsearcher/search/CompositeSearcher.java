@@ -54,7 +54,7 @@ public class CompositeSearcher implements Searcher {
 	}
 
 	public static Searcher create(SearchConfig sconfig, List<Central> others) throws IOException {
-		return new CompositeSearcher(new MultiSearcher(sconfig.executorService(), others), sconfig);
+		return new CompositeSearcher(new MultiSearcher(sconfig.searchExecutor(), others), sconfig);
 	}
 
 	public static Searcher createBlank() throws CorruptIndexException, IOException {
