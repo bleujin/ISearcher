@@ -21,7 +21,7 @@ public class TestIndexer extends ISTestCase {
 	File file = getTestDir("/ion_page");
 
 	public void testCreate() throws Exception {
-		Central central = writeDocument() ;
+		Central central = sampleTestDocument() ;
 		
 		FileCollector col = new FileCollector(file, true);
 
@@ -35,7 +35,7 @@ public class TestIndexer extends ISTestCase {
 	}
 
 	public void testAfterClose() throws Exception {
-		Central c = writeDocument() ;
+		Central c = sampleTestDocument() ;
 		Searcher s1 = c.newSearcher() ;
 		s1.addPostListener(new StdOutProcessor()) ;
 		

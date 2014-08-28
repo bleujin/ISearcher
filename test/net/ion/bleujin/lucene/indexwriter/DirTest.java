@@ -42,7 +42,7 @@ public class DirTest extends ISTestCase{
 	
 	public void testMultiReader() throws Exception {
 		
-		Central cen1 = writeDocument() ;
+		Central cen1 = sampleTestDocument() ;
 		Central cen2 = write2Dir() ;
 		
 		IndexReader mreader = new MultiReader(new IndexReader[]{cen1.newReader().getIndexReader(), cen2.newReader().getIndexReader()}) ;

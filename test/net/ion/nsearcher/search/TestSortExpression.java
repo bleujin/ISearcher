@@ -2,9 +2,14 @@ package net.ion.nsearcher.search;
 
 import java.util.List;
 
+import net.ion.framework.util.Debug;
+import net.ion.framework.util.RandomUtil;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.config.Central;
+import net.ion.nsearcher.config.CentralConfig;
+import net.ion.nsearcher.index.IndexJob;
+import net.ion.nsearcher.index.IndexSession;
 
 import org.apache.lucene.search.SortField;
 
@@ -63,7 +68,7 @@ public class TestSortExpression extends ISTestCase{
 	}
 	
 	public void testAtSearchRequest() throws Exception {
-		Central central = writeDocument();
+		Central central = sampleTestDocument();
 		
 		Searcher newSearcher = central.newSearcher() ;
 		SearchRequest sreq = newSearcher.createRequest("(name:bleujin) AND (int:[100 TO 200])");
@@ -75,15 +80,27 @@ public class TestSortExpression extends ISTestCase{
 
 
 	public void testSort() throws Exception {
-		Central central = writeDocument();
+		Central central = CentralConfig.newRam().build() ;
+		central.newIndexer().index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				for (int i = 0; i < 10; i++) {
+					isession.newDocument().keyword("name", "bleuji").number("int", RandomUtil.nextInt(300)).update(); 
+				}
+				return null;
+			}
+		}) ;
 		
 		Searcher newSearcher = central.newSearcher() ;
 		SearchResponse result = newSearcher.createRequest("(name:bleujin) AND (int:[100 TO 200])").descending("int").offset(5).find() ;
 		
+		result.debugPrint("int");
+		
+		
 		List<ReadDocument> docs = result.getDocument() ;
 		Integer beforeValue = 200 ; // max
 		for (ReadDocument doc : docs) {
-			Integer currValue = Integer.valueOf(doc.get("int")) ;
+			Integer currValue = Integer.valueOf(doc.asString("int")) ;
 			assertEquals(true, beforeValue >= currValue) ;
 			beforeValue = currValue ;
 		}

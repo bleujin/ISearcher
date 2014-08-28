@@ -109,7 +109,7 @@ public class ISTestCase extends TestCase{
         }
         out.close() ;
 	}
-	protected Central writeDocument() throws CorruptIndexException, LockObtainFailedException, IOException, IndexException, InterruptedException, ExecutionException {
+	protected Central sampleTestDocument() throws CorruptIndexException, LockObtainFailedException, IOException, IndexException, InterruptedException, ExecutionException {
 		return writeDocument(createDefaultAnalyzer()) ;
 	}
 	

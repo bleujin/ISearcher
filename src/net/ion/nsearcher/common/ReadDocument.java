@@ -1,6 +1,6 @@
 package net.ion.nsearcher.common;
 
-import static net.ion.nsearcher.common.IKeywordField.ISKey;
+import static net.ion.nsearcher.common.IKeywordField.DocKey;
 import static net.ion.nsearcher.common.IKeywordField.TIMESTAMP;
 
 import java.util.Collections;
@@ -37,7 +37,7 @@ public class ReadDocument extends AbDocument {
 	}
 	
 	public String idValue(){
-		return reserved(ISKey) ;
+		return reserved(DocKey) ;
 	}
 
 	public String reserved(String reservedId){
@@ -48,14 +48,14 @@ public class ReadDocument extends AbDocument {
 		}
 	}
 	
-	public String get(String name) {
+	public String asString(String name) {
 		final IndexableField field = getField(name);
 		if (field == null) return null ;
 		return field.stringValue() ;
 	}
 
-	public long getAsLong(String name) {
-		return NumberUtil.toLong(getField(name).stringValue(), 0L);
+	public long asLong(String name, long dftValue) {
+		return NumberUtil.toLong(getField(name).stringValue(), dftValue);
 	}
 
 
@@ -63,7 +63,7 @@ public class ReadDocument extends AbDocument {
 		if ( ArrayUtil.contains(IKeywordField.KEYWORD_FIELD, name)) {
 			throw new IllegalArgumentException("["+ name + "] reserved field Id, use ReadDocuement.reserved Method.");
 		} else {
-			return doc.getField(StringUtil.lowerCase(name)) ;
+			return doc.getField(name) ;
 		}
 	}
 
@@ -95,11 +95,11 @@ public class ReadDocument extends AbDocument {
 	}
 	
 	public String getIndexedDay(){
-		return DateUtil.timeMilliesToDay(Long.parseLong(get(TIMESTAMP))) ;
+		return DateUtil.timeMilliesToDay(Long.parseLong(asString(TIMESTAMP))) ;
 	}
 
 	public String bodyValue() {
-		return reserved(IKeywordField.ISBody);
+		return reserved(IKeywordField.BodyHash);
 	}
 	
 	public String[] getFieldNames() {

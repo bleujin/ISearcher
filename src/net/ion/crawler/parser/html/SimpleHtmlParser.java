@@ -7,7 +7,6 @@ import java.util.HashSet;
 import net.ion.crawler.link.Link;
 import net.ion.crawler.parser.IParser;
 import net.ion.crawler.parser.PageData;
-import net.ion.crawler.util.StringUtil;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -90,12 +89,15 @@ public class SimpleHtmlParser implements IParser {
             // TODO check if full qualified links should be created similar to the SimpleHttpClientParser
             // if no filter is set or a set filter accepts the link, then add it
             // to the list
-            if (StringUtil.hasLength(link)) {
+            if (hasLength(link)) {
                 links.add(link);
             }
         }
 
         return links;
+    }
+    public static boolean hasLength(String s) {
+        return (s != null) && (s.length() > 0);
     }
 
     public static String getLink(Node node) {

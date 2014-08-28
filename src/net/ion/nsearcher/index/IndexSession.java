@@ -112,7 +112,7 @@ public class IndexSession {
 		final Document idoc = doc.toLuceneDoc();
 		
 		if (doc.isNewDoc()) writer.addDocument(idoc);
-		else writer.updateDocument(new Term(SearchConstant.ISKey, doc.idValue()), idoc);
+		else writer.updateDocument(new Term(SearchConstant.DocKey, doc.idValue()), idoc);
 		
 		return Action.Update;
 	}
@@ -168,12 +168,12 @@ public class IndexSession {
 	}
 
 	public Action deleteDocument(WriteDocument doc) throws IOException {
-		writer.deleteDocuments(new Term(SearchConstant.ISKey, doc.idValue()));
+		writer.deleteDocuments(new Term(SearchConstant.DocKey, doc.idValue()));
 		return Action.Delete;
 	}
 
 	public Action deleteDocument(String idValue) throws IOException {
-		writer.deleteDocuments(new Term(SearchConstant.ISKey, idValue));
+		writer.deleteDocuments(new Term(SearchConstant.DocKey, idValue));
 		return Action.Delete;
 	}
 
@@ -210,11 +210,11 @@ public class IndexSession {
 	// }
 
 	public String getIdValue(Document doc) {
-		return doc.get(SearchConstant.ISKey);
+		return doc.get(SearchConstant.DocKey);
 	}
 
 	public String getBodyValue(Document doc) {
-		return doc.get(SearchConstant.ISBody);
+		return doc.get(SearchConstant.BodyHash);
 	}
 
 	public IndexSession indexWriterConfig(IndexWriterConfig wconfig){

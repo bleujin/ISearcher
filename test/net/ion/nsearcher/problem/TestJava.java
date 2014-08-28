@@ -4,22 +4,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import net.ion.framework.util.Debug;
-import net.ion.nsearcher.common.IndexField;
+import junit.framework.TestCase;
 import net.ion.nsearcher.common.SearchConstant;
-import net.ion.nsearcher.common.FieldIndexingStrategy.FieldType;
 import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 import net.ion.radon.impl.util.CsvReader;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
 import org.apache.lucene.analysis.kr.AnalyzerUtil;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field.Index;
-import org.apache.lucene.document.Field.Store;
-
-import junit.framework.TestCase;
 
 public class TestJava extends TestCase {
 

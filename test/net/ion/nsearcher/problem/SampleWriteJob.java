@@ -4,15 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field.Index;
-import org.apache.lucene.document.Field.Store;
-
 import net.ion.framework.util.Debug;
-import net.ion.nsearcher.common.IndexField;
-import net.ion.nsearcher.common.AbDocument;
 import net.ion.nsearcher.common.WriteDocument;
-import net.ion.nsearcher.common.FieldIndexingStrategy.FieldType;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.radon.impl.util.CsvReader;

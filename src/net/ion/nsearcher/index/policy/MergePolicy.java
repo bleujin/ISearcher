@@ -38,7 +38,7 @@ public class MergePolicy extends AbstractWritePolicy {
 
 			if (hashData.containsKey(idValue)) {
 				String oldValue = hashData.get(idValue).getBodyValue();
-				if (oldValue.equals(newValue)) // same key and same body
+				if (oldValue != null && oldValue.equals(newValue)) // same key and same body
 					return Action.Unknown;
 				else
 					return wsession.updateDocument(doc);

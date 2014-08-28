@@ -56,6 +56,27 @@ public class SearchResponse {
 		eachDoc(EachDocHandler.DEBUG) ;
 	}
 
+	public void debugPrint(final String... fields) throws IOException {
+		eachDoc(new EachDocHandler<Void>() {
+
+			@Override
+			public <T> T handle(EachDocIterator iter) {
+				while(iter.hasNext()){
+					ReadDocument next = iter.next();
+					List list = ListUtil.newList() ;
+					list.add(next.toString()) ;
+					for (String field : fields) {
+						list.add(next.asString(field)) ;
+					}
+					Debug.line(list.toArray(new Object[0])) ;
+				}
+				return null;
+			}
+		}) ;
+	}
+
+
+	
 	public <T> T eachDoc(EachDocHandler<T> handler){
 		EachDocIterator iter = new EachDocIterator(searcher, sreq, docs) ;
 		return handler.handle(iter) ;
@@ -99,6 +120,10 @@ public class SearchResponse {
 		return result;
 	}
 
+	public String toString(){
+		return toXML().toString() ;
+	}
+	
 	public void awaitPostFuture() throws InterruptedException, ExecutionException {
 		postFuture.get() ;
 	}
@@ -106,6 +131,12 @@ public class SearchResponse {
 	public SearchResponse postFuture(Future<Void> postFuture) {
 		this.postFuture = postFuture ;
 		return this ;
+	}
+
+	public ReadDocument first() throws IOException {
+		List<ReadDocument> result = getDocument() ;
+		if (result.size() > 0) return result.get(0) ;
+		return null ;
 	}
 
 

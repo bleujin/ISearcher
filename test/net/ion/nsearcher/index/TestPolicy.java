@@ -32,7 +32,7 @@ public class TestPolicy extends ISTestCase{
 	
 	
 	private void executeTest(IWritePolicy policy) throws CorruptIndexException, LockObtainFailedException, IOException, InterruptedException, IndexException, ExecutionException {
-		Central central = writeDocument() ;
+		Central central = sampleTestDocument() ;
 
 		FileCollector col = new FileCollector(getTestDirFile(), true);
 		Indexer writer = central.newIndexer();

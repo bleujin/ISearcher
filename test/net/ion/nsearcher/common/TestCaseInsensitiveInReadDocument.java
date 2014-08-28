@@ -25,7 +25,7 @@ public class TestCaseInsensitiveInReadDocument extends TestCase {
 	 	this.rdoc = indexer.index(new IndexJob<ReadDocument>() {
 			@Override
 			public ReadDocument handle(IndexSession isession) throws Exception {
-				return ReadDocument.loadDocument(isession.newDocument().unknown("Name", "bleujin").unknown("Age", 20).toLuceneDoc());
+				return ReadDocument.loadDocument(isession.newDocument().unknown("name", "bleujin").unknown("age", 20).toLuceneDoc());
 			}
 		}) ;
 	}
@@ -37,19 +37,13 @@ public class TestCaseInsensitiveInReadDocument extends TestCase {
 	}
 	
 	public void testGet() throws Exception {
-		assertEquals("bleujin", rdoc.get("name")) ;
-		assertEquals("20", rdoc.get("age")) ;
-
-		assertEquals("bleujin", rdoc.get("Name")) ;
-		assertEquals("20", rdoc.get("AGE")) ;
+		assertEquals("bleujin", rdoc.asString("name")) ;
+		assertEquals("20", rdoc.asString("age")) ;
 	}
 	
 	public void testGetField() throws Exception {
 		assertEquals("bleujin", rdoc.getField("name").stringValue()) ;
 		assertEquals("20", rdoc.getField("age").stringValue()) ;
-
-		assertEquals("bleujin", rdoc.getField("Name").stringValue()) ;
-		assertEquals("20", rdoc.getField("AGE").stringValue()) ;
 	}
 	
 	public void testReserved() throws Exception {
@@ -59,7 +53,7 @@ public class TestCaseInsensitiveInReadDocument extends TestCase {
 		} catch(IllegalArgumentException expect){} ;
 
 		try {
-			rdoc.get(IKeywordField.ISKey) ;
+			rdoc.asString(IKeywordField.DocKey) ;
 			fail() ;
 		} catch(IllegalArgumentException expect){} ;
 	}
@@ -69,8 +63,7 @@ public class TestCaseInsensitiveInReadDocument extends TestCase {
 	}
 	
 	public void testGetAsLong() throws Exception {
-		assertEquals(20L, rdoc.getAsLong("AGE")) ;
-		assertEquals(20L, rdoc.getAsLong("age")) ;
+		assertEquals(20L, rdoc.asLong("age", 0)) ;
 	}
 	
 	public void testGetFieldNames() throws Exception {

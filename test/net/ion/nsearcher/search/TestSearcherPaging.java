@@ -39,9 +39,9 @@ public class TestSearcherPaging extends TestCase {
 
 		response.debugPrint();
 
-		assertEquals("95", list.get(0).get("idx"));
-		assertEquals("94", list.get(1).get("idx"));
-		assertEquals("93", list.get(2).get("idx"));
+		assertEquals("95", list.get(0).asString("idx"));
+		assertEquals("94", list.get(1).asString("idx"));
+		assertEquals("93", list.get(2).asString("idx"));
 
 		cen.close();
 	}
@@ -69,9 +69,9 @@ public class TestSearcherPaging extends TestCase {
 
 		response.debugPrint();
 
-		assertEquals("9", list.get(0).get("idx"));
-		assertEquals("2", list.get(1).get("idx"));
-		assertEquals("10", list.get(2).get("idx"));
+		assertEquals("9", list.get(0).asString("idx"));
+		assertEquals("2", list.get(1).asString("idx"));
+		assertEquals("10", list.get(2).asString("idx"));
 
 		cen.close();
 

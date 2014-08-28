@@ -1,5 +1,7 @@
 package net.ion.nsearcher.central;
 
+import org.apache.lucene.analysis.cjk.CJKAnalyzer;
+
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
@@ -23,4 +25,5 @@ public class TestIndexConfig extends ISTestCase{
 		
 		cen.close(); 
 	}
+
 }

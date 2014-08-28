@@ -30,7 +30,6 @@ public class TestMultiSearcherFilter extends TestCase {
 	
 	public void testAddFilter() throws Exception {
 		Searcher searcher = c1.newSearcher(c2) ;
-		
 		searcher.andFilter(new TermFilter("prefix", "hero")).search("").debugPrint();
 
 		Debug.line();
@@ -51,6 +50,15 @@ public class TestMultiSearcherFilter extends TestCase {
 		
 		SearchResponse response = searcher.search("");
 		response.debugPrint(); 
+	}
+	
+	public void testResetFilter() throws Exception {
+		Searcher before = c1.newSearcher(c2) ;
+		assertEquals(5, before.andFilter(new TermFilter("prefix", "hero")).search("").size()) ;
+		
+		
+		Searcher after = c1.newSearcher(c2) ;
+		after.search("").debugPrint();
 	}
 	
 }

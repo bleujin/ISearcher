@@ -12,7 +12,7 @@ public class TestSearcher extends ISTestCase {
 	private Searcher searcher;
 	private Central central = null ; 
 	public void setUp() throws Exception {
-		central = writeDocument() ;
+		central = sampleTestDocument() ;
 		searcher = central.newSearcher() ;
 	}
 

@@ -1,13 +1,8 @@
 package net.ion.nsearcher.config;
 
-import java.util.Date;
-import java.util.Locale;
-
 import junit.framework.TestCase;
-import net.ion.framework.util.DateFormatUtil;
-import net.ion.framework.util.DateUtil;
+import net.ion.framework.util.Debug;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
-import net.ion.nsearcher.common.IndexField;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.index.IndexJob;
@@ -15,10 +10,8 @@ import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.search.Searcher;
 
-import org.apache.commons.validator.GenericValidator;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field.Index;
-import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.Field;
 
 public class TestFieldIndexingStrategy extends TestCase {
 
@@ -35,8 +28,9 @@ public class TestFieldIndexingStrategy extends TestCase {
 		}) ;
 		
 		Searcher searcher = central.newSearcher();
-		assertEquals(1, searcher.createRequest("num:[+40 TO +100]").find().size()) ;
 		assertEquals(1, searcher.createRequest("num:50").find().size()) ;
+		
+		assertEquals(1, searcher.createRequest("num:[+40 TO +100]").find().size()) ;
 	}
 	
 	public void testMyStrategy() throws Exception {
@@ -65,7 +59,7 @@ public class TestFieldIndexingStrategy extends TestCase {
 //			lastResult = GenericValidator.isDate("2001.11.11", "yyyy/mm/dd", false) ;
 //			System.out.println(d != null) ;
 		}
-		System.out.print(lastResult) ;
+		Debug.debug(lastResult) ;
 	}
 	
 	
@@ -75,49 +69,9 @@ public class TestFieldIndexingStrategy extends TestCase {
 class TestStrategy extends FieldIndexingStrategy {
 
 	@Override
-	public void date(Document doc, MyField field, String name, int yyyymmdd, int hh24miss) {
-		FieldIndexingStrategy.DEFAULT.date(doc, field, name, yyyymmdd, hh24miss) ;
+	public void save(Document doc, MyField myField, Field ifield) {
+		FieldIndexingStrategy.DEFAULT.save(doc, myField, ifield);
 	}
 
-	@Override
-	public void keyword(Document doc, MyField field, String name, String value) {
-		FieldIndexingStrategy.DEFAULT.keyword(doc, field, name, value) ;
-	}
-
-	@Override
-	public void manual(Document doc, String name, String value, Store store, Index index) {
-		FieldIndexingStrategy.DEFAULT.manual(doc, name, value, store, index) ;
-	}
-
-	@Override
-	public void noStoreText(Document doc, MyField field, String name, String value) {
-		FieldIndexingStrategy.DEFAULT.noStoreText(doc, field, name, value) ;
-	}
-
-	@Override
-	public void number(Document doc, MyField field, String name, long number) {
-		FieldIndexingStrategy.DEFAULT.number(doc, field, name, number) ;
-	}
-
-	@Override
-	public void number(Document doc, MyField field, String name, double number) {
-		FieldIndexingStrategy.DEFAULT.number(doc, field, name, number) ;
-	}
-
-	@Override
-	public void text(Document doc, MyField field, String name, String value) {
-		FieldIndexingStrategy.DEFAULT.text(doc, field, name, value) ;
-	}
-
-	@Override
-	public void unknown(Document doc, MyField field, String name, Object obj) {
-		FieldIndexingStrategy.DEFAULT.unknown(doc, field, name, obj) ;
-	}
-
-	@Override
-	public void unknown(Document doc, MyField field, String name, String value) {
-		FieldIndexingStrategy.DEFAULT.unknown(doc, field, name, value) ;
-	}
-	
 
 };

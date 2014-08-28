@@ -15,7 +15,7 @@ public class TestRollback extends ISTestCase{
 	
 	public void testCollectorShutdown() throws Exception {
 		
-		Central central = writeDocument() ; // write 24
+		Central central = sampleTestDocument() ; // write 24
 		
 		assertEquals(24, central.newReader().numDoc());
 		
@@ -42,7 +42,7 @@ public class TestRollback extends ISTestCase{
 	
 	
 	public void testRollback() throws Exception {
-		Central central = writeDocument() ;
+		Central central = sampleTestDocument() ;
 
 		Searcher searcher = central.newSearcher() ;
 		
@@ -82,7 +82,7 @@ public class TestRollback extends ISTestCase{
 	}
 	
 	public void testReader() throws Exception {
-		Central central = writeDocument() ;
+		Central central = sampleTestDocument() ;
 		Searcher searcher = central.newSearcher() ;
 		searcher.search("bleujin") ;
 		

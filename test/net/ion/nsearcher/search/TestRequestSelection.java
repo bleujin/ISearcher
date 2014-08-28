@@ -13,7 +13,7 @@ public class TestRequestSelection extends ISTestCase {
 	private Central cen = null ; 
 	public void setUp() throws Exception {
 		super.setUp() ;
-		cen = writeDocument() ;
+		cen = sampleTestDocument() ;
 	}
 	
 	public void testSelection() throws Exception {
@@ -23,7 +23,7 @@ public class TestRequestSelection extends ISTestCase {
 		
 		List<ReadDocument> docs = response.getDocument();
 		for (ReadDocument doc : docs) {
-			Debug.debug(doc.get("name"), doc.get("int"), doc) ;
+			Debug.debug(doc.asString("name"), doc.asString("int"), doc) ;
 		}
 		
 	}

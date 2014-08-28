@@ -32,14 +32,14 @@ public class LuceneFunctionalityTest extends ISTestCase {
 	}
 
 	public void testDupField() throws Exception {
-		Central cen = writeDocument();
+		Central cen = sampleTestDocument();
 
 		Searcher newSearcher = cen.newSearcher() ;
 		SearchResponse result = newSearcher.createRequest("int:3").offset(5).find() ;
 
 		List<ReadDocument> docs = result.getDocument();
 		for (ReadDocument doc : docs) {
-			Debug.debug(doc.get("name"), doc.get("subject"), doc.getFields().size(), result.size());
+			Debug.debug(doc.asString("name"), doc.asString("subject"), doc.getFields().size(), result.size());
 		}
 	}
 	
@@ -53,7 +53,7 @@ public class LuceneFunctionalityTest extends ISTestCase {
 	}
 	
 	public void testWeight() throws Exception {
-		Central c = writeDocument();
+		Central c = sampleTestDocument();
 		
 		Searcher s = c.newSearcher() ;
 	}

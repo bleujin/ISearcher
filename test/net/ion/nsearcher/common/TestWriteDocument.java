@@ -24,7 +24,7 @@ public class TestWriteDocument extends TestCase {
 	 	this.wdoc = indexer.index(new IndexJob<WriteDocument>() {
 			@Override
 			public WriteDocument handle(IndexSession isession) throws Exception {
-				return isession.newDocument().unknown("Name", "bleujin").unknown("age", 20);
+				return isession.newDocument().unknown("name", "bleujin").unknown("age", 20);
 			}
 		}) ;
 	}
@@ -38,7 +38,6 @@ public class TestWriteDocument extends TestCase {
 	
 	public void testNameCase() throws Exception {
 		assertEquals("bleujin", wdoc.get("name"));
-		assertEquals("bleujin", wdoc.myField("NAME").stringValue());
 	}
 	
 	
@@ -49,12 +48,11 @@ public class TestWriteDocument extends TestCase {
 				return ReadDocument.loadDocument(wdoc.toLuceneDoc());
 			}
 		}) ;
-		assertEquals("bleujin", rdoc.get("name")) ;
-		assertEquals("bleujin", rdoc.get("Name")) ;
+		assertEquals("bleujin", rdoc.asString("name")) ;
 	}
 	
 	public void testGetField() throws Exception {
-		MyField field = wdoc.myField("NAME");
+		MyField field = wdoc.myField("name");
 		assertEquals("bleujin", field.stringValue()) ;
 	}
 	
@@ -62,12 +60,11 @@ public class TestWriteDocument extends TestCase {
 		wdoc.unknown("name", "hero") ;
 		
 		assertEquals(2, wdoc.getFields("name").size()) ;
-		assertEquals(2, wdoc.getFields("NAME").size()) ;
 		assertEquals(0, wdoc.getFields("noname").size()) ;
 		
 	 	assertEquals(3, wdoc.getFields().size()) ;
 	 	
-	 	assertEquals("bleujin", wdoc.myField("Name").stringValue()) ;
+	 	assertEquals("bleujin", wdoc.myField("name").stringValue()) ;
 	 	
 	 	Central cen = CentralConfig.newRam().build();
 	 	Indexer indexer = cen.newIndexer();
@@ -88,7 +85,7 @@ public class TestWriteDocument extends TestCase {
 	
 
 	public void testAddField() throws Exception {
-		final MyField field = MyField.keyword("NAME", "hero");
+		final MyField field = MyField.keyword("name", "hero");
 		assertEquals("name", field.name()) ;
 
 		wdoc.add(field) ;
@@ -112,9 +109,10 @@ public class TestWriteDocument extends TestCase {
 		Searcher searcher = cen.newSearcher();
 		ReadDocument rd = searcher.createRequest("").findOne() ;
 
-		for(String keyword : IKeywordField.KEYWORD_MANDATORY_FIELD) {
-			assertEquals(true, rd.reserved(keyword) != null) ;
-		}
+		
+		assertEquals(true, rd.reserved(IKeywordField.DocKey) != null) ;
+		assertEquals(true, rd.reserved(IKeywordField.BodyHash) == null) ;
+		assertEquals(true, rd.reserved(IKeywordField.TIMESTAMP) == null) ;
 	}
 	
 	public void testId() throws Exception {

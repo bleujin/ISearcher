@@ -1,16 +1,17 @@
 package net.ion.nsearcher.common;
 
+import static net.ion.nsearcher.common.IKeywordField.BodyHash;
+import static net.ion.nsearcher.common.IKeywordField.DocKey;
 import static net.ion.nsearcher.common.IKeywordField.ISALL_FIELD;
-import static net.ion.nsearcher.common.IKeywordField.ISBody;
 import static net.ion.nsearcher.common.IKeywordField.ISCollectorName;
 import static net.ion.nsearcher.common.IKeywordField.ISEventName;
 import static net.ion.nsearcher.common.IKeywordField.ISEventType;
-import static net.ion.nsearcher.common.IKeywordField.ISKey;
 import static net.ion.nsearcher.common.IKeywordField.KEYWORD_FIELD;
 import static net.ion.nsearcher.common.IKeywordField.TIMESTAMP;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,7 +26,6 @@ import net.ion.nsearcher.index.event.CollectorEvent;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -74,18 +74,18 @@ public class WriteDocument extends AbDocument {
 			field.indexField(strategy, doc);
 
 //			if (isession.handleBody() && (!field.isManual())) bodyBuilder.append(field.stringValue() + " ");
-			if (isession.handleBody() && (!field.isIgnoreBody())) bodyBuilder.append(field.stringValue() + " ");
+			if (isession.handleBody() && (!field.ignoreBody())) bodyBuilder.append(field.stringValue() + " ");
 		}
 
-		MyField.manual(ISKey, idValue(), Store.YES, Index.NOT_ANALYZED).indexField(strategy, doc);
+		MyField.keyword(DocKey, idValue(), Store.YES).indexField(strategy, doc);
 		final String bodyString = bodyBuilder.toString();
-		MyField.manual(ISBody, String.valueOf(HashFunction.hashGeneral(bodyString)), Store.YES, Index.NOT_ANALYZED).indexField(strategy, doc);
-		MyField.manual(TIMESTAMP, String.valueOf(System.currentTimeMillis()), Store.YES, Index.NOT_ANALYZED).indexField(strategy, doc);
+		MyField.number(BodyHash, HashFunction.hashGeneral(bodyString), Store.NO).indexField(strategy, doc);
+		MyField.number(TIMESTAMP, System.currentTimeMillis(), Store.NO).indexField(strategy, doc);
 
 		
 		
 		// @TODO : compress, Store.No
-		if (isession.handleBody()) MyField.manual(ISALL_FIELD, bodyString, Store.NO, Index.ANALYZED).indexField(strategy, doc);
+		if (isession.handleBody()) MyField.text(ISALL_FIELD, bodyString, Store.NO).indexField(strategy, doc);
 
 		return doc;
 	}
@@ -129,7 +129,7 @@ public class WriteDocument extends AbDocument {
 	}
 
 	public WriteDocument event(CollectorEvent event) throws IOException {
-		add(MyField.manual(ISBody, String.valueOf(event.getEventBody()), Store.YES, Index.NOT_ANALYZED));
+		add(MyField.number(BodyHash, event.getEventBody()));
 		add(MyField.text(ISCollectorName, event.getCollectorName()));
 		add(MyField.text(ISEventType, event.getEventType().toString()));
 		return this;
@@ -180,8 +180,8 @@ public class WriteDocument extends AbDocument {
 		return this;
 	}
 
-	public WriteDocument date(String fieldName, int yyyymmdd, int hh24miss) {
-		add(MyField.date(fieldName, yyyymmdd, hh24miss));
+	public WriteDocument date(String fieldName, Date date) {
+		add(MyField.date(fieldName, date));
 		return this;
 	}
 

@@ -14,7 +14,7 @@ public class TestPostProcessor extends ISTestCase{
 
 	private Searcher searcher;
 	public void setUp() throws Exception {
-		searcher =  writeDocument().newSearcher() ;
+		searcher =  sampleTestDocument().newSearcher() ;
 	}
 
 	public void tearDown() throws Exception {

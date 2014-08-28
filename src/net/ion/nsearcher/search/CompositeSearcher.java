@@ -1,6 +1,7 @@
 package net.ion.nsearcher.search;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -8,6 +9,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import net.ion.framework.util.Debug;
 import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.StringUtil;
@@ -41,8 +43,8 @@ import org.apache.lucene.search.TopDocs;
 public class CompositeSearcher implements Searcher {
 
 	private SearchConfig sconfig;
-	private Set<PostProcessor> postListeners = new HashSet<PostProcessor>();
-	private Set<PreProcessor> preListeners = new HashSet<PreProcessor>();
+	private List<PostProcessor> postListeners = new ArrayList<PostProcessor>();
+	private List<PreProcessor> preListeners = new ArrayList<PreProcessor>();
 	private MultiSearcher searcher;
 
 
@@ -76,7 +78,10 @@ public class CompositeSearcher implements Searcher {
 	public SearchRequest createRequest(Query query) {
 		return new SearchRequest(this, query);
 	}
-
+	
+	public SearchRequest createRequest(Term term) {
+		return new SearchRequest(this, new TermQuery(term)) ;
+	}
 
 	public SearchRequest createRequest(String query, Analyzer analyzer) throws ParseException {
 		if (StringUtil.isBlank(query)){
@@ -133,12 +138,14 @@ public class CompositeSearcher implements Searcher {
 		return search(createRequest(query));
 	}
 
-	public final void addPostListener(final PostProcessor processor) {
+	public final Searcher addPostListener(final PostProcessor processor) {
 		postListeners.add(processor) ;
+		return this ;
 	}
 	
-	public final void addPreListener(final PreProcessor processor) {
+	public final Searcher addPreListener(final PreProcessor processor) {
 		preListeners.add(processor) ;
+		return this ;
 	}
 
 	private Set<Filter> myFilters = new HashSet<Filter>();
@@ -148,7 +155,7 @@ public class CompositeSearcher implements Searcher {
 		return this ;
 	}
 	public SearchRequest createRequestByKey(String key) {
-		return this.createRequest(new TermQuery(new Term(IKeywordField.ISKey, key))) ;
+		return this.createRequest(new TermQuery(new Term(IKeywordField.DocKey, key))) ;
 	}
 
 	public SearchRequest createRequestByTerm(String tid, String value) {

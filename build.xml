@@ -11,7 +11,7 @@
 	<property name="manifes.main.class" value="" />
 	<property name="manifes.classpath" value="./" />
 	<property name="version.number" value="4"/>
-	<property name="build.number" value="4"/>
+	<property name="build.number" value="5"/>
 
 
 	<target name="publish">

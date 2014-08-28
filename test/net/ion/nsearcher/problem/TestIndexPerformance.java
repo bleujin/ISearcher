@@ -7,8 +7,6 @@ import java.io.FileReader;
 import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.FileUtil;
-import net.ion.nsearcher.common.ManualIndexingStrategy;
-import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;

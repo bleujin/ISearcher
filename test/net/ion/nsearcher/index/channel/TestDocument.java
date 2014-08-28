@@ -24,7 +24,7 @@ public class TestDocument extends ISTestCase{
 
 	
 	public void testCaseSensitive() throws Exception {
-		Central central = writeDocument() ;
+		Central central = sampleTestDocument() ;
 		Searcher searcher  = central.newSearcher() ;
 		searcher.addPostListener(new StdOutProcessor()) ;
 		
@@ -34,7 +34,7 @@ public class TestDocument extends ISTestCase{
 	
 	
 	public void testToLuceneDoc() throws Exception {
-		Central central = writeDocument() ;
+		Central central = sampleTestDocument() ;
 		Searcher searcher  = central.newSearcher() ;
 		searcher.addPostListener(new StdOutProcessor()) ;
 		SearchResponse result = searcher.search("int:3");
@@ -47,7 +47,7 @@ public class TestDocument extends ISTestCase{
 	
 	
 	public void testUnderBarDoc() throws Exception {
-		Central central = writeDocument() ;
+		Central central = sampleTestDocument() ;
 		Searcher searcher  = central.newSearcher() ;
 		searcher.addPostListener(new StdOutProcessor()) ;
 		SearchResponse result = searcher.search("ud1:sky");

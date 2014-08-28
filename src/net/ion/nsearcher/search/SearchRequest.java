@@ -160,7 +160,7 @@ public class SearchRequest {
 	}
 
 	public String toString() {
-		return "QUERY:" + query + ",Filter:" + getFilter() + ",SORT:" + sort() + ", skip:" + skip() + ", offset:" + offset();
+		return toXML().toString() ;
 	}
 
 	public SearchRequest resetClone(int maxValue) {

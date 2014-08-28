@@ -10,7 +10,7 @@ import net.ion.crawler.filter.ServerFilter;
 import net.ion.crawler.link.Link;
 import net.ion.crawler.model.MaxDepthModel;
 import net.ion.crawler.parser.httpclient.SimpleHttpClientParser;
-import net.ion.crawler.util.StringUtil;
+import net.ion.framework.util.StringUtil;
 
 public class CrawlerCmd {
     
@@ -60,7 +60,7 @@ public class CrawlerCmd {
             }
         }
 
-        if (!StringUtil.hasLength(uri)) {
+        if (!hasLength(uri)) {
             System.err.println(USAGE);
             System.exit(1);
         }
@@ -93,5 +93,8 @@ public class CrawlerCmd {
         }
 
     }
-
+    
+    public static boolean hasLength(String s) {
+        return (s != null) && (s.length() > 0);
+    }
 }

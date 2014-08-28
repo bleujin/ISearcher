@@ -15,7 +15,7 @@ import org.apache.lucene.index.IndexReader;
 public class TestReader extends ISTestCase {
 
 	public void testCommit() throws Exception {
-		Central central = writeDocument();
+		Central central = sampleTestDocument();
 
 		InfoReader reader = central.newReader();
 		reader.info(new InfoHandler<Void>() {

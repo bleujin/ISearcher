@@ -20,7 +20,7 @@ import org.apache.lucene.search.Filter;
 public class TestFilter extends ISTestCase {
 
 	public void testTermFilterAtRequest() throws Exception {
-		Central center = writeDocument();
+		Central center = sampleTestDocument();
 
 		// no filter
 		Searcher newSearcher = center.newSearcher();
@@ -46,7 +46,7 @@ public class TestFilter extends ISTestCase {
 	}
 
 	public void testTermFilterAtSearcher() throws Exception {
-		Central center = writeDocument();
+		Central center = sampleTestDocument();
 
 		// no filter
 		Searcher newSearcher = center.newSearcher();

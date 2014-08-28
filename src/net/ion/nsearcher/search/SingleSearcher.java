@@ -20,6 +20,9 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
+import org.apache.lucene.search.SortField.Type;
 import org.apache.lucene.search.TopDocs;
 
 public class SingleSearcher implements Closeable, ISearchable {
@@ -50,6 +53,7 @@ public class SingleSearcher implements Closeable, ISearchable {
 		try {
 			locked = rlock.tryLock(); 
 			long startTime = System.currentTimeMillis();
+			
 			TopDocs docs = isearcher.search(sreq.query(), filters, sreq.limit(), sreq.sort());
 			return SearchResponse.create(this, sreq, docs, startTime);
 		} finally {

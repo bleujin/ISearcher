@@ -3,6 +3,7 @@ package net.ion.nsearcher.impl;
 import java.io.IOException;
 import java.util.Date;
 
+import net.ion.framework.util.DateUtil;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.WriteDocument;
@@ -13,6 +14,7 @@ import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.search.Searcher;
 
+import org.apache.lucene.index.Term;
 import org.apache.lucene.search.NumericRangeFilter;
 
 public class TestField extends ISTestCase{
@@ -36,8 +38,25 @@ public class TestField extends ISTestCase{
 		cen.close() ;
 	}
 	
+	public void testDate() throws Exception {
+		Central cen = CentralConfig.newRam().build() ;
+		Indexer indexer = cen.newIndexer();
+		indexer.index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				isession.newDocument("datetest").add(MyField.date("date", 20100725, 123435)).update();
+//				isession.newDocument("datetest").date("date", DateUtil.stringToDate("20100725-123435")).update();
+				return null;
+			}
+		}) ;
+		
+		cen.newSearcher().search("date:20100725").debugPrint();
+		
+		cen.newSearcher().createRequest(new Term("date", "20100725")).find().debugPrint();
+	}
+	
 	public void testUnknownNumber() throws Exception {
-		Central cen = writeDocument() ;
+		Central cen = sampleTestDocument() ;
 		
 		Indexer indexer = cen.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {
@@ -56,7 +75,7 @@ public class TestField extends ISTestCase{
 	}
 
 	public void testUnknownDate() throws Exception {
-		Central cen = writeDocument() ;
+		Central cen = sampleTestDocument() ;
 		
 		Indexer indexer = cen.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {

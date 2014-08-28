@@ -32,7 +32,7 @@ public class TestQueryParser extends ISTestCase{
 	
 	
 	public void testTermRequest() throws Exception {
-		cen = writeDocument() ;
+		cen = sampleTestDocument() ;
 		String qstring = "id:/m/1234";
 		SearchRequest request = cen.newSearcher().createRequestByTerm("id", "/m/1234") ;
 

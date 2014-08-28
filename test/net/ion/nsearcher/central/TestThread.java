@@ -19,7 +19,7 @@ public class TestThread extends ISTestCase{
 	
 
 	public void testThread() throws Exception {
-		Central central = writeDocument() ;
+		Central central = sampleTestDocument() ;
 		
 		StdOutProcessor confirmProcessor = new StdOutProcessor();
 
@@ -71,7 +71,7 @@ public class TestThread extends ISTestCase{
 	}
 	
 	public void testWriteMulti() throws Exception {
-		Central central = writeDocument() ;
+		Central central = sampleTestDocument() ;
 		StdOutProcessor confirmProcessor = new StdOutProcessor();
 
 		// first indexing..

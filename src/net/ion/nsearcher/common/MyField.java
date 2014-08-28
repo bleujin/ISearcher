@@ -1,246 +1,225 @@
 package net.ion.nsearcher.common;
 
+import java.util.Date;
+
+import net.ion.framework.util.DateUtil;
+import net.ion.framework.util.NumberUtil;
 import net.ion.framework.util.ObjectUtil;
+import net.ion.framework.util.StringUtil;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.DoubleField;
+import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.FieldType;
+import org.apache.lucene.document.FloatField;
+import org.apache.lucene.document.LongField;
+import org.apache.lucene.document.StoredField;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
+import org.apache.lucene.util.BytesRef;
 
-public abstract class MyField {
+public class MyField {
 
+	public enum MyFieldType {
+		Keyword, Number, Date, Text, Unknown, Byte
+	}
+	
 	public final static String SORT_POSTFIX = "_for_sort";
 	
-	private float boost = 0.5f;
-	private boolean ignoreBody; 
+	private boolean ignoreBody;
 
-	public abstract void indexField(FieldIndexingStrategy strategy, Document doc) ;
-	public abstract String name() ;
-	public abstract String stringValue() ;
+	private final Field ifield;
+	private MyFieldType mtype; 
 
-	public static MyField keyword(String name, String value) {
-		return new KeywordField(name, value) ;
-	}
-
-	public static MyField number(String name, long value) {
-		return new LongField(name, value) ;
+	public MyField(Field ifield, MyFieldType mtype){
+		this.ifield = ifield ;
+		this.mtype = mtype ;
 	}
 	
-	public static MyField number(String name, double value) {
-		return new DoubleField(name, value);
+	public String name() {
+		return ifield.name() ;
 	}
-
-	public static MyField date(String name, int yyyymmdd, int hh24miss){ 
-		return new DateField(name, yyyymmdd, hh24miss);
-	}
-
-	public static MyField unknown(String name, Object value) {
-		return new UnknownField(name, value);
-	}
-
-	public static MyField unknown(String name, String value) {
-		return new UnknownStringField(name, value);
-	}
-
-
-	public static MyField manual(String name, String value, Store store, Index index){
-		return new ManualField(name, value, store, index) ;
-	}
-
-	public static MyField text(String name, String value) {
-		return new TextField(name, value);
+	public String stringValue() {
+		return ifield.stringValue() ;
 	}
 	
-	public static MyField noStoreText(String name, String value) {
-		return new NoStoreTextField(name, value);
-	}
-	public MyField setBoost(float boost) {
-		this.boost = boost ;
+	public MyField boost(float boost){
+		ifield.setBoost(boost);
 		return this ;
 	}
 	
-	public float boost(){
-		return this.boost;
+	public FieldType fieldType(){
+		return ifield.fieldType() ;
+	}
+	
+	public MyFieldType myFieldtype(){
+		return mtype ;
 	}
 
-	public boolean isIgnoreBody(){
+	public Field indexField(FieldIndexingStrategy strategy, Document doc) {
+		strategy.save(doc, this, ifield) ;
+		return ifield ;
+	}
+
+	public float boost(){
+		return ifield.boost();
+	}
+
+	public boolean ignoreBody(){
 		return ignoreBody ;
 	}
-	public MyField ignoreBody() {
-		this.ignoreBody = true ;
+	
+	public MyField ignoreBody(boolean ignore) {
+		this.ignoreBody = ignore ;
 		return this;
 	}
-}
-
-class KeywordField extends MyField {
-	private String name ;
-	private String value ;
 	
-	KeywordField(String name, String value){
-		this.name = name.toLowerCase() ;
-		this.value = value ;
-	}
-	public void indexField(FieldIndexingStrategy strategy, Document doc) {
-		strategy.keyword(doc, this, name, value) ; 
-	}
-	public String name() {
-		return name;
-	}
-	public String stringValue() {
-		return ObjectUtil.toString(value) ;
-	}
-}
 
-class LongField extends MyField {
-	private String name ;
-	private long value ;
 	
-	LongField(String name, long value){
-		this.name = name.toLowerCase() ;
-		this.value = value ;
-	}
-	public void indexField(FieldIndexingStrategy strategy, Document doc) {
-		strategy.number(doc, this, name, value); 
-	}
-	public String name() {
-		return name;
-	}
-	public String stringValue() {
-		return ObjectUtil.toString(value) ;
-	}
-}
-
-class DoubleField extends MyField {
-	private String name ;
-	private double value ;
-	DoubleField(String name, double value){
-		this.name = name.toLowerCase() ;
-		this.value = value ;
-	}
-	public void indexField(FieldIndexingStrategy strategy, Document doc) {
-		strategy.number(doc, this, name, value); 
-	}
-	public String name() {
-		return name;
-	}
-	public String stringValue() {
-		return ObjectUtil.toString(value) ;
-	}
-}
-
-class DateField extends MyField {
-	private String name ;
-	private int yyyymmdd ;
-	private int hh24miss ;
-	DateField(String name, int yyyymmdd, int hh24miss){
-		this.name = name.toLowerCase() ;
-		this.yyyymmdd = yyyymmdd ;
-		this.hh24miss = hh24miss ;
-	}
-	public void indexField(FieldIndexingStrategy strategy, Document doc) {
-		strategy.date(doc, this, name, yyyymmdd, hh24miss); 
-	}
-	public String name() {
-		return name;
-	}
-	public String stringValue() {
-		return ObjectUtil.toString(yyyymmdd + "-" + hh24miss) ;
-	}
-}
-
-class UnknownField extends MyField {
-	private String name ;
-	private Object value ;
-	UnknownField(String name, Object value){
-		this.name = name.toLowerCase() ;
-		this.value = value ;
-	}
-	public void indexField(FieldIndexingStrategy strategy, Document doc) {
-		strategy.unknown(doc, this, name, value); 
-	}
-	public String name() {
-		return name;
-	}
-	public String stringValue() {
-		return ObjectUtil.toString(value) ;
-	}
-}
-
-class UnknownStringField extends MyField {
-	private String name ;
-	private String value ;
-	UnknownStringField(String name, String value){
-		this.name = name.toLowerCase() ;
-		this.value = value ;
-	}
-	public void indexField(FieldIndexingStrategy strategy, Document doc) {
-		strategy.unknown(doc, this, name, value); 
-	}
-	public String name() {
-		return name;
-	}
-	public String stringValue() {
-//		return null ;
-//		return value ;
-		return ObjectUtil.toString(value) ;
-	}
-}
-
-class ManualField extends MyField {
-	private String name ;
-	private String value ;
-	private Store store;
-	private Index index;
-	ManualField(String name, String value, Store store, Index index){
-		this.name = name ; // no lower
-		this.value = value ;
-		this.store = store ;
-		this.index = index ;
-	}
-	public void indexField(FieldIndexingStrategy strategy, Document doc) {
-		strategy.manual(doc, name, value, store, index); 
-	}
-	public String name() {
-		return name;
-	}
-	public String stringValue() {
-		return ObjectUtil.toString(value) ;
+	
+	public static MyField keyword(String name, String value) {
+		return new MyField(new StringField(name, value, Store.YES), MyFieldType.Keyword) ;
 	}
 
-}
-
-class TextField extends MyField {
-	private String name ;
-	private String value ;
-	TextField(String name, String value){
-		this.name = name.toLowerCase() ;
-		this.value = value ;
-	}
-	public void indexField(FieldIndexingStrategy strategy, Document doc) {
-		strategy.text(doc, this, name, value);
+	public static MyField number(String name, long value) {
+		return new MyField(new LongField(name, value, Store.YES), MyFieldType.Number) ;
 	}
 	
-	public String name() {
-		return name;
+	public static MyField number(String name, double value) {
+		return new MyField(new DoubleField(name, value, Store.YES), MyFieldType.Number);
 	}
-	public String stringValue() {
-		return ObjectUtil.toString(value) ;
+
+	public static MyField number(String name, float value) {
+		return new MyField(new FloatField(name, value, Store.YES), MyFieldType.Number);
 	}
+
+	public static MyField number(String name, int value) {
+		return new MyField(new LongField(name, value, Store.YES), MyFieldType.Number);
+	}
+
+	public static MyField date(String name, Date date){ 
+		return new MyField(new StringField(name, DateUtil.dateToString(date, "yyyyMMdd HHmmss"), Store.YES), MyFieldType.Date) ;
+	}
+
+	public static MyField date(String name, int yyyymmdd, int hh24miss){
+		String ymd = String.valueOf(yyyymmdd) ;
+		String hms = String.valueOf(hh24miss) ;
+		Date date = new Date(NumberUtil.toInt(StringUtil.substring(ymd, 0, 4)) - 1900, 
+				NumberUtil.toInt(StringUtil.substring(ymd, 4, 6))-1, 
+				NumberUtil.toInt(StringUtil.substring(ymd, 6, 8)), 
+				NumberUtil.toInt(StringUtil.substring(hms, 0, 2)), 
+				NumberUtil.toInt(StringUtil.substring(hms, 2, 4)), 
+				NumberUtil.toInt(StringUtil.substring(hms, 4, 6))) ;
+		return date(name, date) ;
+	}
+
+	public static MyField text(String name, String value) {
+		return new MyField(new TextField(name, value, Store.NO), MyFieldType.Text);
+	}
+
+
+	
+	public static MyField keyword(String name, String value, Store store) {
+		return new MyField(new StringField(name, value, store), MyFieldType.Keyword) ;
+	}
+
+	public static MyField number(String name, long value, Store store) {
+		return new MyField(new LongField(name, value, store), MyFieldType.Number) ;
+	}
+	
+	public static MyField number(String name, double value, Store store) {
+		return new MyField(new DoubleField(name, value, store), MyFieldType.Number);
+	}
+
+	public static MyField number(String name, float value, Store store) {
+		return new MyField(new FloatField(name, value, store), MyFieldType.Number);
+	}
+
+	public static MyField number(String name, int value, Store store) {
+		return new MyField(new LongField(name, value, store), MyFieldType.Number);
+	}
+
+	public static MyField date(String name, Date date, Store store){ 
+		return new MyField(new StringField(name, DateUtil.dateToString(date, "yyyyMMdd HHmmss"), store), MyFieldType.Date) ;
+	}
+
+	public static MyField text(String name, String value, Store store) {
+		return new MyField(new TextField(name, value, store), MyFieldType.Text);
+	}
+
+	
+	
+	
+	public static MyField unknown(String name, Long value) {
+		return number(name, value) ;
+	}
+	public static MyField unknown(String name, Double value) {
+		return number(name, value) ;
+	}
+	public static MyField unknown(String name, Float value) {
+		return number(name, value) ;
+	}
+	public static MyField unknown(String name, Integer value) {
+		return number(name, value) ;
+	}
+	public static MyField unknown(String name, Date value) {
+		return date(name, value) ;
+	}
+
+	public static MyField unknown(String name, Object value) {
+		if (value == null){
+			return keyword(name, "") ;
+		}
+		if (value.getClass().equals(Long.class)){
+			return number(name, (Long)value) ;
+		} else if (value.getClass().equals(Double.class)){
+			return number(name, (Double)value) ;
+		} else if(value.getClass().equals(Float.class)){
+			return number(name, (Float)value) ;
+		} else if(value.getClass().equals(Integer.class)){
+			return number(name, (Integer)value) ;
+		} else if(value.getClass().equals(Date.class)){
+			return date(name, (Date)value) ;
+		} else if (CharSequence.class.isInstance(value)) {
+			return new MyField(new TextField(name, value.toString(), Store.NO), MyFieldType.Unknown);
+		} else {
+			return text(name, ObjectUtil.toString(value)) ;
+		}
+	}
+
+	public static MyField manual(String name, Field ifield){
+		return new MyField(ifield, MyFieldType.Unknown) ;
+	}
+
+	public static MyField noIndex(String name, String value) {
+		return new MyField(new StoredField(name, value), MyFieldType.Text);
+	}
+
+	public static MyField noIndex(String name, long value) {
+		return new MyField(new StoredField(name, value), MyFieldType.Number);
+	}
+
+	public static MyField noIndex(String name, int value) {
+		return new MyField(new StoredField(name, value), MyFieldType.Number);
+	}
+
+	public static MyField noIndex(String name, double value) {
+		return new MyField(new StoredField(name, value), MyFieldType.Number);
+	}
+
+	public static MyField noIndex(String name, float value) {
+		return new MyField(new StoredField(name, value), MyFieldType.Number);
+	}
+
+	public static MyField noIndex(String name, byte[] value) {
+		return new MyField(new StoredField(name, value), MyFieldType.Byte);
+	}
+
+	public static MyField noIndex(String name, BytesRef value) {
+		return new MyField(new StoredField(name, value), MyFieldType.Byte);
+	}
+	
+
 }
 
-class NoStoreTextField extends MyField {
-	private String name ;
-	private String value ;
-	NoStoreTextField(String name, String value){
-		this.name = name.toLowerCase() ;
-		this.value = value ;
-	}
-	public void indexField(FieldIndexingStrategy strategy, Document doc) {
-		strategy.noStoreText(doc, this, name, value); 
-	}
-	public String name() {
-		return name;
-	}
-	public String stringValue() {
-		return ObjectUtil.toString(value) ;
-	}
-}

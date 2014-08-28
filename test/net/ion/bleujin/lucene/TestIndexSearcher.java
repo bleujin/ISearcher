@@ -1,26 +1,22 @@
 package net.ion.bleujin.lucene;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.util.List;
 
+import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
-import net.ion.nsearcher.common.FieldIndexingStrategy.FieldType;
 import net.ion.nsearcher.search.filter.MatchAllDocsFilter;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.IndexableField;
-import org.apache.lucene.index.IndexableFieldType;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
@@ -32,10 +28,7 @@ import org.apache.lucene.search.SortField.Type;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.Version;
-
-import junit.framework.TestCase;
 
 public class TestIndexSearcher extends TestCase  {
 

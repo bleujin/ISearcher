@@ -15,7 +15,7 @@ public class TestSearchFilter extends ISTestCase{
 	private Central cen = null ; 
 	public void setUp() throws Exception {
 		super.setUp() ;
-		cen = writeDocument() ;
+		cen = sampleTestDocument() ;
 	}
 	
 	public void testSearchFilter() throws Exception {
@@ -71,15 +71,22 @@ public class TestSearchFilter extends ISTestCase{
 		
 		assertEquals(1, searcher.search("test").size()) ;
 	}
+
+	// 20100725-232010
+	public void testDateFilterWith() throws Exception {
+		Searcher searcher = cen.newSearcher() ;
+		searcher.search("date:20100725").debugPrint() ;
+	}
 	
 	// 20100725-232010
 	public void testDateFilter() throws Exception {
 		Searcher searcher = cen.newSearcher() ;
 		Filter filter = new TermFilter("date", "20100725") ;
 
+		searcher.search("name:date").debugPrint() ;
+
 		searcher.andFilter(filter) ;
 		
-		searcher.search("name:date").debugPrint() ;
 		assertEquals(1, searcher.search("name:date").size()) ;
 		
 		

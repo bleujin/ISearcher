@@ -54,14 +54,14 @@ public class TestMyDocument extends TestCase {
 				Document doc = writedoc.toLuceneDoc() ;
 				assertEquals(9, doc.getFields().size()) ; // 1 + 2 + 3 + 2 + 1
 				
-				assertEquals(writedoc.idValue(), doc.get(IKeywordField.ISKey)) ;
+				assertEquals(writedoc.idValue(), doc.get(IKeywordField.DocKey)) ;
 				
 				ReadDocument loadDoc = ReadDocument.loadDocument(doc) ;
 				assertEquals("bleujin", loadDoc.idValue()) ;
 				
 				assertEquals(doc.get(IKeywordField.ISALL_FIELD), loadDoc.reserved(IKeywordField.ISALL_FIELD)) ;
 				
-				assertEquals(doc.get(IKeywordField.ISBody), loadDoc.bodyValue()) ;
+				assertEquals(doc.get(IKeywordField.BodyHash), loadDoc.bodyValue()) ;
 				return null;
 			}
 		}) ;
@@ -82,7 +82,7 @@ public class TestMyDocument extends TestCase {
 				ReadDocument loadDoc = ReadDocument.loadDocument(doc) ;
 
 				for (MyField field : writeDoc.getFields()) {
-					assertEquals(field.stringValue(), loadDoc.get(field.name())) ;
+					assertEquals(field.stringValue(), loadDoc.asString(field.name())) ;
 				}
 
 				for (IndexableField field : loadDoc.getFields()) {

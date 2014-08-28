@@ -36,12 +36,12 @@ public class OutTestPolicy extends AbstractWritePolicy implements IKeywordField 
 		String idValue = doc.idValue();
 		if (hashData.containsKey(idValue)) {
 			String oldValue = hashData.get(idValue).getBodyValue();
-			String newValue = doc.get(ICollectorEvent.ISBody);
+			String newValue = doc.get(ICollectorEvent.BodyHash);
 
 			Debug.debug("UPDATE", idValue, "Modified:" + StringUtil.equals(oldValue, newValue));
 			return Action.Update;
 		} else {
-			Debug.debug("INSERT", idValue, doc.get(ISKey), hashData.size());
+			Debug.debug("INSERT", idValue, doc.get(DocKey), hashData.size());
 			return Action.Insert;
 		}
 
