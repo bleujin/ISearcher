@@ -1,30 +1,33 @@
 package net.ion.nsearcher.rest;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import net.ion.framework.rest.IMapListRepresentationHandler;
-import net.ion.framework.rest.IRequest;
-import net.ion.framework.rest.IResponse;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import net.ion.framework.parse.gson.JsonObject;
 import net.ion.framework.util.MapUtil;
+import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.reader.InfoReader;
 import net.ion.nsearcher.reader.InfoReader.InfoHandler;
-import net.ion.radon.core.annotation.DefaultValue;
-import net.ion.radon.core.annotation.PathParam;
+import net.ion.radon.core.ContextParam;
 
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.store.Directory;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
 
-public class InfoLet extends SearchResource{
+@Path("/")
+public class InfoLet {
 
-	@Get
-	public Representation info(@DefaultValue("html") @PathParam("format") String format) throws Exception {
-		InfoReader reader = getInfoReader() ;
+	@Path("/info.{format}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public JsonObject info(@ContextParam("CENTRAL") Central central ,@DefaultValue("html") @PathParam("format") String format) throws Exception {
+		InfoReader reader = central.newReader() ;
 		
 		Map<String, Object> infoMap = reader.info(new InfoHandler<Map<String, Object>>() {
 			@Override
@@ -42,13 +45,7 @@ public class InfoLet extends SearchResource{
 			}
 		}) ;
 		
-		Class clz = Class.forName("net.ion.framework.rest." + format.toUpperCase() + "Formater");
-		IMapListRepresentationHandler af = (IMapListRepresentationHandler) clz.newInstance();
-		
-		List<Map<String, ? extends Object>> result = new ArrayList<Map<String, ? extends Object>>() ;
-		result.add(infoMap) ;
-		return af.toRepresentation(IRequest.EMPTY_REQUEST, result, IResponse.EMPTY_RESPONSE) ;
-		
+		return JsonObject.fromObject(infoMap) ;
 	}
 	
 	

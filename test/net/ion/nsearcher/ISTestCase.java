@@ -1,12 +1,8 @@
 package net.ion.nsearcher;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -14,10 +10,6 @@ import junit.framework.TestCase;
 import net.htmlparser.jericho.Config;
 import net.htmlparser.jericho.Logger;
 import net.htmlparser.jericho.LoggerProvider;
-import net.ion.crawler.core.ICrawler;
-import net.ion.crawler.event.LinkGraphParserEventListener;
-import net.ion.crawler.link.Link;
-import net.ion.crawler.link.LinkGraph;
 import net.ion.framework.db.DBController;
 import net.ion.framework.db.manager.DBManager;
 import net.ion.framework.db.manager.OracleDBManager;
@@ -82,33 +74,6 @@ public class ISTestCase extends TestCase{
 		return dbm;
 	}
 
-	protected void reportPathCheckFile(ICrawler crawler, LinkGraphParserEventListener graph, PrintStream out) throws FileNotFoundException {
-        out.println("Origin = " + graph.getOrigin());
-        // statistics
-        Collection<Link> visitedLinks = crawler.getModel().getVisitedURIs(); 
-        out.println("Links visited  =" + visitedLinks.size());
-        out.println("Links unvisited=" + crawler.getModel().getToVisitURIs().size());
-        out.println("Links in graph =" + graph.getLinks().size());
-        
-        // show link graph of the visited links
-        Iterator<Link> list = visitedLinks.iterator();
-        while (list.hasNext()) {
-            Link link = (Link) list.next();
-            out.println(link.getURI());
-
-            LinkGraph linkGraph = graph.getLink(link);
-            
-            for (Link inLink : linkGraph.inLinks()) {
-                out.println("-> in:  " + inLink);
-            }
-
-            for (Link outLink : linkGraph.outLinks()) {
-                out.println("-> out: " + outLink);
-            }
-            out.flush() ;
-        }
-        out.close() ;
-	}
 	protected Central sampleTestDocument() throws CorruptIndexException, LockObtainFailedException, IOException, IndexException, InterruptedException, ExecutionException {
 		return writeDocument(createDefaultAnalyzer()) ;
 	}

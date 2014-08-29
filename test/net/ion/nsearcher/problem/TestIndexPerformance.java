@@ -12,7 +12,7 @@ import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
-import net.ion.radon.impl.util.CsvReader;
+import net.ion.radon.util.csv.CsvReader;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;

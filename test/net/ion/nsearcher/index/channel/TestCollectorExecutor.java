@@ -1,6 +1,5 @@
 package net.ion.nsearcher.index.channel;
 
-import net.ion.crawler.listener.CountListener;
 import net.ion.framework.db.DBController;
 import net.ion.framework.db.IDBController;
 import net.ion.framework.db.manager.DBManager;
@@ -43,36 +42,6 @@ public class TestCollectorExecutor extends ISTestCase{
 
 	}
 	
-	
-	
-	public void testDatabase() throws Exception {
-		
-		IUserCommand cmd = dc.createUserCommand("select * from emp_sample where rownum <= 10") ;
-		DatabaseCollector col = new DatabaseCollector(cmd, "empNo") ;
-
-		CountListener counter = new CountListener();
-		col.addListener(counter) ;
-		col.collect() ;
-		
-		assertEquals(10, counter.getCount()) ;
-
-		dc.destroySelf() ;
-	}
-	
-	public void testJoindQuery() throws Exception {
-
-		
-		IUserCommand cmd = dc.createUserCommand("select x1.deptNo, dname, loc, empNo, ename, job, sal from dept_sample x1, emp_sample x2 where x1.deptNo = x2.deptNo order by x1.deptNo") ;
-		DatabaseCollector col = new DatabaseCollector(cmd, new String[]{"deptNo"}, new String[]{"deptNo", "dname", "loc"}) ;
-
-		CountListener counter = new CountListener();
-		col.addListener(counter) ;
-		col.collect() ;
-
-		dc.destroySelf() ;
-		assertEquals(3, counter.getCount()) ;
-	}
-
 	
 	public void testJoindQueryEvent() throws Exception {
 

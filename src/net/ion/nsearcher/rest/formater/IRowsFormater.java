@@ -3,8 +3,8 @@ package net.ion.nsearcher.rest.formater;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.restlet.representation.Representation;
+import javax.ws.rs.core.StreamingOutput;
 
 public interface IRowsFormater {
-	public Representation getRepresentation(ResultSet rows) throws SQLException ;
+	public StreamingOutput outputStreaming(ResultSet rows) throws SQLException ;
 }

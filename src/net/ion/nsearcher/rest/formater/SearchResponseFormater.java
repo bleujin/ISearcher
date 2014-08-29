@@ -2,11 +2,12 @@ package net.ion.nsearcher.rest.formater;
 
 import java.io.IOException;
 
+import javax.ws.rs.core.StreamingOutput;
+
 import net.ion.nsearcher.search.SearchResponse;
 
 import org.apache.lucene.index.CorruptIndexException;
-import org.restlet.representation.Representation;
 
 public interface SearchResponseFormater {
-	Representation toRepresentation(SearchResponse iresult) throws CorruptIndexException, IOException ;
+	StreamingOutput outputStreaming(SearchResponse iresult) throws CorruptIndexException, IOException ;
 }

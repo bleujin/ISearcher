@@ -7,7 +7,7 @@ import java.io.FileReader;
 import junit.framework.TestCase;
 import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
-import net.ion.radon.impl.util.CsvReader;
+import net.ion.radon.util.csv.CsvReader;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.kr.AnalyzerUtil;

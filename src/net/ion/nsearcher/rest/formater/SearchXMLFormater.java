@@ -1,49 +1,43 @@
 package net.ion.nsearcher.rest.formater;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
-import net.ion.framework.rest.RopeRepresentation;
-import net.ion.framework.rope.Rope;
-import net.ion.framework.rope.RopeWriter;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.StreamingOutput;
+
 import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SearchResponse;
+import net.ion.nsearcher.util.MyWriter;
 
 import org.apache.ecs.xml.XML;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexableField;
-import org.restlet.data.CharacterSet;
-import org.restlet.data.MediaType;
-import org.restlet.representation.Representation;
 
-public class SearchXMLFormater extends AbstractDocumentFormater implements SearchResponseFormater {
+public class SearchXMLFormater implements SearchResponseFormater {
 	public final static String XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 
-	public Representation toRepresentation(SearchResponse iresponse) throws IOException {
+	public StreamingOutput outputStreaming(final SearchResponse iresponse) throws IOException {
+		return new StreamingOutput(){
 
-		SearchRequest irequest = iresponse.request();
-		RopeWriter rw = toXMLString(irequest, iresponse);
+			@Override
+			public void write(OutputStream output) throws IOException, WebApplicationException {
+				MyWriter writer = new MyWriter(output, "UTF-8") ;
 
-		Representation result = new RopeRepresentation(rw.getRope(), MediaType.APPLICATION_XML);
-		result.setCharacterSet(CharacterSet.UTF_8);
-		return result;
-	}
+				SearchRequest irequest = iresponse.request();
+				XML result = new XML("result");
 
-	private RopeWriter toXMLString(SearchRequest irequest, SearchResponse iresponse) throws CorruptIndexException, IOException {
+				result.addElement(irequest.toXML());
+				result.addElement(iresponse.toXML());
+				XML nodes = new XML("nodes");
+				appendChild(nodes, iresponse.getDocument());
+				result.addElement(nodes);
 
-		XML result = new XML("result");
-
-		result.addElement(irequest.toXML());
-		result.addElement(iresponse.toXML());
-		XML nodes = new XML("nodes");
-		appendChild(nodes, iresponse.getDocument());
-		result.addElement(nodes);
-
-		RopeWriter rw = new RopeWriter();
-		rw.write(XML_HEADER);
-		result.output(rw);
-		return rw;
+				writer.write(XML_HEADER);
+				result.output(writer);
+			}
+		} ;
 	}
 
 	private void appendChild(XML nodes, List<ReadDocument> docs) throws IOException {
@@ -65,23 +59,4 @@ public class SearchXMLFormater extends AbstractDocumentFormater implements Searc
 
 	}
 
-	public Rope toRope(List<ReadDocument> docs) throws IOException {
-		XML result = new XML("result");
-
-		XML nodes = new XML("nodes");
-		result.addElement(new XML("request"));
-		result.addElement(new XML("response"));
-		appendChild(nodes, docs);
-		result.addElement("nodes", nodes);
-
-		RopeWriter rw = new RopeWriter();
-		rw.write(XML_HEADER);
-		result.output(rw);
-		return rw.getRope();
-
-	}
-
-	public MediaType getMediaType() {
-		return MediaType.APPLICATION_XML;
-	}
 }

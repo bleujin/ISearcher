@@ -1,18 +1,19 @@
 package net.ion.nsearcher.rest.formater;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.StreamingOutput;
 
 import net.ion.framework.db.DBController;
 import net.ion.framework.db.Rows;
 import net.ion.framework.rest.XMLHandler;
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
-
-import org.restlet.data.CharacterSet;
-import org.restlet.data.MediaType;
-import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
+import net.ion.nsearcher.util.MyWriter;
 
 public class FormaterTest extends ISTestCase{
 
@@ -23,9 +24,9 @@ public class FormaterTest extends ISTestCase{
 		
 		Rows rows = dc.createUserCommand("select * from user_tables").execQuery() ;
 		
-		Representation r =  xf.getRepresentation(rows) ;
+		StreamingOutput r =  xf.outputStreaming(rows) ;
 		
-		Debug.debug(r.getText()) ;
+		Debug.debug(r) ;
 		
 		dc.destroySelf() ;
 	}
@@ -37,16 +38,20 @@ class TestRowsFormater implements IRowsFormater {
 		this.handler = handler ;
 	}
 	
-	public Representation getRepresentation(ResultSet rows) throws SQLException{
+	public StreamingOutput outputStreaming(final ResultSet rows) throws SQLException{
 		
-		StringBuffer buffer = new StringBuffer() ;
-		buffer.append(SearchXMLFormater.XML_HEADER) ;
-
-		buffer.append(handler.toXML(rows).toString()) ;
-		
-		Representation result = new StringRepresentation(buffer, MediaType.APPLICATION_XML);
-		result.setCharacterSet(CharacterSet.UTF_8) ;
-		return result;
+		return new StreamingOutput() {
+			@Override
+			public void write(OutputStream output) throws IOException, WebApplicationException {
+				try {
+					MyWriter writer = new MyWriter(output) ;
+					writer.append(SearchXMLFormater.XML_HEADER) ;
+					writer.write(handler.toXML(rows).toString()) ;
+				} catch (SQLException e) {
+					throw new IOException(e) ;
+				}
+			}
+		};
 	}
 	
 }

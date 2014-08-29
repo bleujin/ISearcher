@@ -2,7 +2,6 @@ package net.ion.nsearcher.index;
 
 import java.io.File;
 
-import net.ion.crawler.listener.CountListener;
 import net.ion.framework.db.DBController;
 import net.ion.framework.db.manager.DBManager;
 import net.ion.framework.db.manager.OracleDBManager;
@@ -31,7 +30,6 @@ public class TestPerformance extends ISTestCase{
 		// 194951 unit
 		IUserCommand cmd = dc.createUserCommand("select * from ics5_pia.article_tblc") ;
 		DatabaseCollector dbc = new DatabaseCollector(cmd, "artid") ;
-		dbc.addListener(new CountListener()) ;
 		dbc.addListener(ilistener) ;
 		
 		// start
