@@ -174,6 +174,14 @@ public class MyField {
 			return new MyField(new TextField(name, value.toString(), Store.NO), MyFieldType.Unknown);
 	}
 
+	public static MyField manual(String name, String value, Store store, boolean analyze, MyFieldType fieldType){
+		if (StringUtil.isAlphanumericUnderbar(value)){
+			return keyword(name, value) ;
+		} else
+			return new MyField( analyze ? (new TextField(name, value.toString(), store)) : (new StringField(name, value.toString(), store)), fieldType);
+	}
+
+
 	public static MyField unknown(String name, Object value) {
 		if (value == null){
 			return keyword(name, "") ;

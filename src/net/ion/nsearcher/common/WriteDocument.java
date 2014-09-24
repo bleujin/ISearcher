@@ -21,11 +21,13 @@ import net.ion.framework.parse.gson.JsonObject;
 import net.ion.framework.parse.gson.JsonUtil;
 import net.ion.framework.util.ObjectId;
 import net.ion.framework.util.StringUtil;
+import net.ion.nsearcher.common.MyField.MyFieldType;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.event.CollectorEvent;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.document.Field.Store;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -140,6 +142,14 @@ public class WriteDocument extends AbDocument {
 	public WriteDocument add(Map<String, ? extends Object> values) {
 		return add(JsonObject.fromObject(values));
 	}
+
+	public WriteDocument unknown(Map<String, String> values) {
+		for (Entry<String, String> entry : values.entrySet()) {
+			this.add(new MyField(new TextField(entry.getKey(), entry.getValue(), Store.NO), MyFieldType.Unknown)) ;
+		}
+		return this ;
+	}
+
 
 	public WriteDocument add(JsonObject jso) {
 		recursiveField(this, "", jso);
