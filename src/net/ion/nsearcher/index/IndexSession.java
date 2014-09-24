@@ -1,12 +1,9 @@
 package net.ion.nsearcher.index;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.locks.Lock;
 
 import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.MapUtil;
-import net.ion.framework.util.ObjectId;
 import net.ion.nsearcher.common.AbDocument.Action;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.SearchConstant;
@@ -20,6 +17,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryparser.surround.parser.QueryParser;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.store.Directory;
 
@@ -193,6 +191,7 @@ public class IndexSession {
 		return Action.DeleteAll;
 	}
 
+
 	// public Map loadHashMap() {
 	// Map<String, HashBean> map = new HashMap<String, HashBean>();
 	//
@@ -235,5 +234,6 @@ public class IndexSession {
 		// begin(this.owner) ;
 		return this;
 	}
+
 
 }

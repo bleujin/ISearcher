@@ -14,6 +14,7 @@ public class TestAllIndexer {
 		ts.addTestSuite(TestDocument.class) ;
 		ts.addTestSuite(TestWriteDocument.class) ;
 		ts.addTestSuite(TestReadDocument.class) ;
+		ts.addTestSuite(TestDocumentField.class);
 		
 		ts.addTestSuite(TestIndexer.class) ;
 		ts.addTestSuite(TestIndexAnalyzer.class);

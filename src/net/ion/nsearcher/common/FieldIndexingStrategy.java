@@ -37,7 +37,7 @@ public abstract class FieldIndexingStrategy {
 				doc.add(new StringField(fieldName, ifield.stringValue(), Store.NO));
 			}
 			if (myField.myFieldtype() == MyFieldType.Unknown && NumberUtil.isNumber(ifield.stringValue())){
-				doc.add(new LongField(fieldName, Long.parseLong(ifield.stringValue()), Store.NO));
+				doc.add(new DoubleField(fieldName, Double.parseDouble(ifield.stringValue()), Store.NO));
 			}
 			if (myField.myFieldtype() == MyFieldType.Date){
 				// new Date().getTime();
@@ -101,11 +101,23 @@ public abstract class FieldIndexingStrategy {
 			if (myField.myFieldtype() == MyFieldType.Unknown && NumberUtil.isNumber(ifield.stringValue())){
 				doc.add(new LongField(fieldName, Long.parseLong(ifield.stringValue()), Store.NO));
 			}
+			if (myField.myFieldtype() == MyFieldType.Date){
+				// new Date().getTime();
+				Date date = DateUtil.stringToDate(ifield.stringValue(), "yyyyMMdd HHmmss") ;
+				doc.add(new StringField(fieldName, StringUtil.substringBefore(ifield.stringValue(), " "), Store.NO)) ;
+				doc.add(new StringField(fieldName, ifield.stringValue(), Store.NO)) ;
+				doc.add(new LongField(fieldName, Long.parseLong(DateUtil.dateToString(date, "yyyyMMdd")), Store.NO)) ;
+			}
 
 			doc.add(ifield);
 		}
 	};
 	
 	public abstract void save(Document doc, MyField myField, Field ifield)  ;
+
+	public static String makeSortFieldName(String fieldName) {
+		return fieldName;
+		// return (fieldName + MyField.SORT_POSTFIX);
+	}
 
 }

@@ -166,6 +166,13 @@ public class MyField {
 	public static MyField unknown(String name, Date value) {
 		return date(name, value) ;
 	}
+	
+	public static MyField unknown(String name, String value){
+		if (StringUtil.isAlphanumericUnderbar(value)){
+			return keyword(name, value) ;
+		} else
+			return new MyField(new TextField(name, value.toString(), Store.NO), MyFieldType.Unknown);
+	}
 
 	public static MyField unknown(String name, Object value) {
 		if (value == null){
@@ -182,7 +189,7 @@ public class MyField {
 		} else if(value.getClass().equals(Date.class)){
 			return date(name, (Date)value) ;
 		} else if (CharSequence.class.isInstance(value)) {
-			return new MyField(new TextField(name, value.toString(), Store.NO), MyFieldType.Unknown);
+			return unknown(name, value.toString()) ;
 		} else {
 			return text(name, ObjectUtil.toString(value)) ;
 		}

@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import net.ion.framework.util.ArrayUtil;
-import net.ion.framework.util.DateUtil;
-import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.NumberUtil;
 import net.ion.framework.util.SetUtil;
@@ -17,7 +15,6 @@ import net.ion.framework.util.StringUtil;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
-import org.apache.lucene.index.IndexableFieldType;
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
@@ -53,6 +50,11 @@ public class ReadDocument extends AbDocument {
 		if (field == null) return null ;
 		return field.stringValue() ;
 	}
+
+	public String asString(String name, String defaultString) {
+		return StringUtil.defaultIfEmpty(asString(name), defaultString) ;
+	}
+
 
 	public long asLong(String name, long dftValue) {
 		return NumberUtil.toLong(getField(name).stringValue(), dftValue);

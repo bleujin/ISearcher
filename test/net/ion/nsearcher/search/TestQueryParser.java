@@ -17,11 +17,12 @@ import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 import junit.framework.TestCase;
 
-public class TestQueryParser extends ISTestCase{
+public class TestQueryParser extends TestCase{
 
 	private Central cen = null ; 
 	public void setUp() throws Exception {
 		super.setUp() ;
+		cen = CentralConfig.newRam().build() ;
 	}
 
 	@Override
@@ -32,11 +33,31 @@ public class TestQueryParser extends ISTestCase{
 	
 	
 	public void testTermRequest() throws Exception {
-		cen = sampleTestDocument() ;
+		cen.newIndexer().index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				return isession.newDocument().keyword("id", "/m/1234").insertVoid() ;
+			}
+		}) ;
+		
 		String qstring = "id:/m/1234";
 		SearchRequest request = cen.newSearcher().createRequestByTerm("id", "/m/1234") ;
-
 		assertEquals(qstring, request.query().toString());
+	}
+	
+	public void testBlankTerm() throws Exception {
+		cen.newIndexer().index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				isession.newDocument().insert() ;
+				isession.newDocument("has").keyword("id", "").insert() ;
+				return null ;
+			}
+		}) ;
+		
+		cen.newSearcher().createRequest("*:* AND -id:[* TO *]").find().debugPrint();
+		
+		
 	}
 	
 		

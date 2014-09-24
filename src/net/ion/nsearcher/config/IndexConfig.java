@@ -71,6 +71,7 @@ public class IndexConfig {
 
 	public IndexConfig indexAnalyzer(Analyzer analyzer) {
 		this.analyzer = analyzer ;
+		if (this.analMap.size() > 0) this.wrapperAnalyzer = new PerFieldAnalyzerWrapper(this.analyzer, this.analMap) ;
 		return this ;
 	}
 
@@ -162,6 +163,15 @@ public class IndexConfig {
 		this.wrapperAnalyzer = new PerFieldAnalyzerWrapper(this.analyzer, this.analMap) ;
 		return this;
 	}
+
+	public IndexConfig removeFieldAnalyzer(String fieldName) {
+		if (! analMap.containsKey(fieldName)) return this ;
+		
+		analMap.remove(fieldName) ;
+		this.wrapperAnalyzer = new PerFieldAnalyzerWrapper(this.analyzer, this.analMap) ;
+		return this;
+	}
+
 
 	public ExecutorService indexExecutor() {
 		return es;

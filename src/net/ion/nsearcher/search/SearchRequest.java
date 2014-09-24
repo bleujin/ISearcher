@@ -97,6 +97,16 @@ public class SearchRequest {
 		return this ;
 	}
 
+	public SearchRequest ascendingNum(String field) {
+		sortExpression.add(field + " _number");
+		return this ;
+	}
+
+	public SearchRequest descendingNum(String field) {
+		sortExpression.add(field + " _number desc");
+		return this ;
+	}
+
 
 
 	public SearchRequest setParam(String key, Object value) {

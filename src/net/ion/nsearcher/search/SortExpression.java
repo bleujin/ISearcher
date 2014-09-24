@@ -54,7 +54,7 @@ public class SortExpression {
 					sortFieldType =  getSortFieldType(sps[1]);
 					isRerverse = "desc".equals(sps[2]) ;
 				}
-				result.add(new SortField(fieldName, sortFieldType, isRerverse)) ;
+				result.add(new SortField(FieldIndexingStrategy.makeSortFieldName(fieldName), sortFieldType, isRerverse)) ;
 			}
 		}
 		

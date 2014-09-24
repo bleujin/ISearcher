@@ -68,7 +68,7 @@ class QueryParserWithNumericRange extends ExtendableQueryParser {
 
 	@Override
 	public Query getRangeQuery(String field, String part1, String part2, boolean startInclusive, boolean endInclusive) throws ParseException {
-		if (isNumeric(part1) && isNumeric(part2)) {
+		if (part1 != null && part2 != null && isNumeric(part1) && isNumeric(part2)) {
 			return NumericRangeQuery.newLongRange(field, toLong(part1), toLong(part2), startInclusive, endInclusive);
 		} else {
 			return super.getRangeQuery(field, part1, part2, startInclusive, endInclusive);
