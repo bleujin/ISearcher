@@ -1,11 +1,14 @@
 package net.ion.nsearcher.config;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 import net.ion.framework.util.Debug;
+import net.ion.framework.util.MapUtil;
 import net.ion.framework.util.StringUtil;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.queryparser.complexPhrase.ComplexPhraseQueryParser;
@@ -20,12 +23,15 @@ public class SearchConfig {
 	private Analyzer queryAnalyzer;
 	private final String defaultSearchFieldName;
 	private ExecutorService es;
-
+	private final Map<String, Analyzer> analMap = MapUtil.newMap() ;
+	private PerFieldAnalyzerWrapper wrapperAnalyzer;
+	
 	SearchConfig(ExecutorService es, Version version, Analyzer queryAnalyzer, String defaultSearchFieldName) {
 		this.es = es ;
 		this.version = version;
 		this.queryAnalyzer = queryAnalyzer;
 		this.defaultSearchFieldName = defaultSearchFieldName;
+		this.wrapperAnalyzer = new PerFieldAnalyzerWrapper(queryAnalyzer) ;
 	}
 
 	public final static SearchConfig create(ExecutorService es, Version version, Analyzer queryAnalyzer, String defaultSearchFieldName){
@@ -33,7 +39,7 @@ public class SearchConfig {
 	}
 	
 	public Analyzer queryAnalyzer() {
-		return queryAnalyzer;
+		return analMap.size() == 0 ? this.queryAnalyzer : this.wrapperAnalyzer ;
 	}
 	
 	public ExecutorService searchExecutor(){
@@ -42,8 +48,24 @@ public class SearchConfig {
 
 	public SearchConfig queryAnalyzer(Analyzer queryAnalyzer) {
 		this.queryAnalyzer = queryAnalyzer;
+		if (this.analMap.size() > 0) this.wrapperAnalyzer = new PerFieldAnalyzerWrapper(this.queryAnalyzer, this.analMap) ;
 		return this;
 	}
+	
+	public SearchConfig fieldAnalyzer(String fieldName, Analyzer analyzer) {
+		analMap.put(fieldName, analyzer) ;
+		this.wrapperAnalyzer = new PerFieldAnalyzerWrapper(this.queryAnalyzer, this.analMap) ;
+		return this;
+	}
+
+	public SearchConfig removeFieldAnalyzer(String fieldName) {
+		if (! analMap.containsKey(fieldName)) return this ;
+		
+		analMap.remove(fieldName) ;
+		this.wrapperAnalyzer = new PerFieldAnalyzerWrapper(this.queryAnalyzer, this.analMap) ;
+		return this;
+	}
+	
 
 	public String defaultSearchFieldName() {
 		return defaultSearchFieldName;

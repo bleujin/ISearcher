@@ -46,7 +46,7 @@ import junit.framework.TestCase;
 
 public class TestPerFieldAnalyzer extends TestCase {
 
-	public void testCreate() throws Exception {
+	public void testWhenIndex() throws Exception {
 		Map<String, Analyzer> mapAnal = MapUtil.newMap();
 		mapAnal.put("id", new KeywordAnalyzer());
 		mapAnal.put("name", new CJKAnalyzer(SearchConstant.LuceneVersion));
@@ -71,6 +71,35 @@ public class TestPerFieldAnalyzer extends TestCase {
 		central.newSearcher().createRequest("name:태극기").find().debugPrint(); // found
 	}
 
+
+	public void testWhenSelect() throws Exception {
+		Map<String, Analyzer> mapAnal = MapUtil.newMap();
+		mapAnal.put("id", new KeywordAnalyzer());
+		mapAnal.put("name", new CJKAnalyzer(SearchConstant.LuceneVersion));
+		Analyzer sanlyzer = new PerFieldAnalyzerWrapper(new MyKoreanAnalyzer(), mapAnal);
+
+		Central central = CentralConfig.newRam()
+					.indexConfigBuilder().indexAnalyzer(new CJKAnalyzer(SearchConstant.LuceneVersion)).parent()
+					.searchConfigBuilder().queryAnalyzer(sanlyzer).build();
+
+		central.newIndexer().index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				isession.newDocument("perfield").add(MyField.text("id", "태극기", Store.YES)).add(MyField.text("name", "태극기", Store.YES)).update();
+				return null;
+			}
+		});
+
+		ReadDocument rdoc = central.newSearcher().createRequest("").findOne();
+		assertEquals(0, central.newSearcher().createRequest("id:태극기").find().size()) ;
+		assertEquals(1, central.newSearcher().createRequest("name:태극기").find().size()) ;
+	}
+
+	
+
+	
+	
+	
 	public void testLucene() throws Exception {
 		RAMDirectory dir = new RAMDirectory();
 		
