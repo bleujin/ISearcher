@@ -11,18 +11,23 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 import net.ion.framework.util.Debug;
+import net.ion.nsearcher.common.IKeywordField;
 import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.SearchConfig;
 import net.ion.nsearcher.reader.InfoReader;
 
+import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.SortField.Type;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 
 public class SingleSearcher implements Closeable, ISearchable {
@@ -61,6 +66,16 @@ public class SingleSearcher implements Closeable, ISearchable {
 		}
 	}
 
+	public Document findById(String id) throws IOException{
+		TopDocs tdocs = isearcher.search(new TermQuery(new Term(IKeywordField.DocKey, id)), 1);
+		ScoreDoc[] sdocs = tdocs.scoreDocs ;
+		for(ScoreDoc doc : sdocs){
+			return dreader.document(doc.doc) ;
+		}
+		return null ;
+	}
+	
+	
 	public int totalCount(SearchRequest sreq, Filter filters) {
 		try {
 			// reloadReader() ;

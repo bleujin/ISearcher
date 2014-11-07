@@ -49,6 +49,23 @@ public class TestIndexSession extends TestCase{
 	}
 	
 	
+	public void testBeforeCommit() throws Exception {
+		final Central cs = CentralConfig.newRam().build() ;
+		
+		cs.newIndexer().index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				isession.newDocument("bleujin").keyword("name", "bleujin").number("age", 20).update() ;
+				
+				Debug.line(isession.newDocument("bleujin").fields()) ;
+				return null;
+			}
+		}) ;
+		cs.close();
+	}
+	
+	
+	
 }
 
 

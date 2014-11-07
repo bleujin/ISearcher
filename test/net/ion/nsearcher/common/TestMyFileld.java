@@ -1,5 +1,6 @@
 package net.ion.nsearcher.common;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ public class TestMyFileld extends ISTestCase{
 		cen.close() ;
 	}
 
-	private WriteDocument createSampleDoc(IndexSession isession) {
+	private WriteDocument createSampleDoc(IndexSession isession) throws IOException {
 		Map<String, Object> address = MapUtil.chainKeyMap().put("city", "seoul").put("bun", 20).toMap() ;
 		List<String> names = ListUtil.toList("jin", "hero") ;
 		Map<String, Object> values = MapUtil.chainKeyMap().put("name", "bleujin").put("address", address).put("names", names) .toMap() ;

@@ -8,6 +8,7 @@ import net.ion.nsearcher.common.AbDocument.Action;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.common.WriteDocument;
+import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SingleSearcher;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -66,8 +67,11 @@ public class IndexSession {
 	}
 	
 	
+	Document findById(String id) throws IOException{
+		return searcher.findById(id) ;
+	}
 	
-	public WriteDocument newDocument(String docId){
+	public WriteDocument newDocument(String docId) {
 		return new WriteDocument(this, docId) ;
 	}
 	
