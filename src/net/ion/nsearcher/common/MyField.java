@@ -22,7 +22,7 @@ import org.apache.lucene.util.BytesRef;
 public class MyField {
 
 	public enum MyFieldType {
-		Keyword, Number, Date, Text, Unknown, Byte
+		Keyword, Number, Double, Date, Text, Unknown, Byte
 	}
 	
 	public final static String SORT_POSTFIX = "_for_sort";
@@ -45,7 +45,7 @@ public class MyField {
 	}
 	
 	public MyField boost(float boost){
-		ifield.setBoost(boost);
+		if(ifield.fieldType().indexed() && (!ifield.fieldType().omitNorms())) ifield.setBoost(boost);
 		return this ;
 	}
 	
@@ -87,11 +87,11 @@ public class MyField {
 	}
 	
 	public static MyField number(String name, double value) {
-		return new MyField(new DoubleField(name, value, Store.YES), MyFieldType.Number);
+		return new MyField(new DoubleField(name, value, Store.YES), MyFieldType.Double);
 	}
 
 	public static MyField number(String name, float value) {
-		return new MyField(new FloatField(name, value, Store.YES), MyFieldType.Number);
+		return new MyField(new DoubleField(name, 1.0D * value, Store.YES), MyFieldType.Double);
 	}
 
 	public static MyField number(String name, int value) {
@@ -168,10 +168,12 @@ public class MyField {
 	}
 	
 	public static MyField unknown(String name, String value){
-		if (StringUtil.isAlphanumericUnderbar(value)){
+		if (StringUtil.isNotBlank(value) && StringUtil.isNumeric(value)) {
+			return number(name, Long.parseLong(value)) ;
+		} else if (StringUtil.isAlphanumericUnderbar(value)){
 			return keyword(name, value) ;
 		} else
-			return new MyField(new TextField(name, value.toString(), Store.NO), MyFieldType.Unknown);
+			return new MyField(new TextField(name, value, Store.YES), MyFieldType.Unknown);
 	}
 
 	public static MyField manual(String name, String value, Store store, boolean analyze, MyFieldType fieldType){

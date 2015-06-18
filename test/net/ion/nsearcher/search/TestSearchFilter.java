@@ -1,5 +1,6 @@
 package net.ion.nsearcher.search;
 
+import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.search.filter.RangeFilterUtil;
@@ -55,7 +56,8 @@ public class TestSearchFilter extends ISTestCase{
 		Searcher searcher = cen.newSearcher() ;
 		//Filter filter = TermRangeFilter.("long", 256, 0L, 1000L, true, true) ;
 		
-		searcher.andFilter(NumericRangeFilter.newLongRange("long", 4, 0L, 10000L, true, true)) ;
+		searcher.andFilter(NumericRangeFilter.newLongRange("long", 10L, 10000L, true, true)) ;
+//		searcher.andFilter("long:[+99 TO +10000]") ;
 		
 		assertEquals(1, searcher.createRequest("test").ascending("long").find().size()) ;
 	}

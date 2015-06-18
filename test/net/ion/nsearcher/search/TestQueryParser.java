@@ -60,5 +60,18 @@ public class TestQueryParser extends TestCase{
 		
 	}
 	
+	public void testRange() throws Exception {
+		cen.newIndexer().index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				for (int i = 0; i < 10; i++) {
+					isession.newDocument(i * 3 + "").unknown("num", ""+ i * 3).insert() ;
+				}
+				return null ;
+			}
+		}) ;
+		
+		cen.newSearcher().createRequest("num:[+2 TO +12]").find().debugPrint(); 
+	}
 		
 }

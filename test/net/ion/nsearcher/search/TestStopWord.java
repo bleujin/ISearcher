@@ -6,7 +6,6 @@ import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.SetUtil;
-import net.ion.nsearcher.common.AbDocument;
 import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
@@ -16,8 +15,8 @@ import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
-import org.apache.lucene.analysis.kr.KoreanAnalyzer;
+import org.apache.lucene.analysis.ko.DStandardAnalyzer;
+import org.apache.lucene.analysis.ko.KoreanAnalyzer;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;

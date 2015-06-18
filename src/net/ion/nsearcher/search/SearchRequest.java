@@ -1,6 +1,7 @@
 package net.ion.nsearcher.search;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,10 +17,13 @@ import net.ion.nsearcher.common.ReadDocument;
 import org.apache.ecs.xml.XML;
 import org.apache.lucene.document.DocumentStoredFieldVisitor;
 import org.apache.lucene.index.StoredFieldVisitor;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
+import org.apache.lucene.search.SortField.Type;
 
 public class SearchRequest {
 
@@ -33,11 +37,19 @@ public class SearchRequest {
 	private final Searcher searcher ;
 	private Set<String> columns = SetUtil.newSet() ;
 	private Set<String> lazyColumns = SetUtil.newSet() ;
+	private String userDefine = "";
 	
 	SearchRequest(Searcher searcher, Query query){
 		this.searcher = searcher ;
 		this.query = query ;
 	}
+
+	SearchRequest(Searcher searcher, Query query, String userDefine){
+		this.searcher = searcher ;
+		this.query = query ;
+		this.userDefine = userDefine ;
+	}
+
 	
 	public SearchRequest skip(int skip){
 		this.skip = skip ;
@@ -51,7 +63,19 @@ public class SearchRequest {
 	public Query query() {
 		return query;
 	}
-
+	
+	public String userDefine(){
+		return StringUtil.coalesce(userDefine, query.toString()) ;
+	}
+	
+	public Term[] queryTerms() throws IOException{
+		query.rewrite(searcher.indexReader()) ;
+		HashSet<Term> terms = new HashSet<Term>() ;
+		query.extractTerms(terms);
+		
+		return terms.toArray(new Term[0]);
+	}
+	
 	public SearchRequest page(Page page){
 		this.skip(page.getStartLoc()).offset(page.getListNum()) ;
 		return this ;
@@ -72,6 +96,7 @@ public class SearchRequest {
 
 	public Sort sort() {
 		if (sortExpression.size() == 0) return Sort.RELEVANCE ;
+//		return new Sort(new SortField("val", Type.STRING)) ;
 		return new Sort(SortExpression.parse(StringUtil.join(sortExpression, ","))) ;	
 	}
 

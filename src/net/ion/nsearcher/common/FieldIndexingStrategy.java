@@ -5,6 +5,7 @@ import java.io.Reader;
 import java.util.Date;
 
 import net.ion.framework.util.DateUtil;
+import net.ion.framework.util.Debug;
 import net.ion.framework.util.NumberUtil;
 import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.common.MyField.MyFieldType;
@@ -35,6 +36,7 @@ public abstract class FieldIndexingStrategy {
 			
 			if (myField.myFieldtype() == MyFieldType.Number){
 				doc.add(new StringField(fieldName, ifield.stringValue(), Store.NO));
+				doc.add(new LongField(fieldName, Long.parseLong(ifield.stringValue()), Store.NO));
 			}
 			if (myField.myFieldtype() == MyFieldType.Unknown && NumberUtil.isNumber(ifield.stringValue())){
 				doc.add(new DoubleField(fieldName, Double.parseDouble(ifield.stringValue()), Store.NO));
@@ -48,11 +50,6 @@ public abstract class FieldIndexingStrategy {
 			}
 			
 			doc.add(new IndexableField() {
-				@Override
-				public TokenStream tokenStream(Analyzer analyzer) throws IOException {
-					return ifield.tokenStream(analyzer);
-				}
-				
 				@Override
 				public String stringValue() {
 					return ifield.stringValue();
@@ -86,6 +83,14 @@ public abstract class FieldIndexingStrategy {
 				@Override
 				public BytesRef binaryValue() {
 					return ifield.binaryValue();
+				}
+
+//				public TokenStream tokenStream(Analyzer analyzer) throws IOException {
+//					return ifield.tokenStream(analyzer);
+//				}
+
+				public TokenStream tokenStream(Analyzer analyzer, TokenStream stream) throws IOException {
+					return ifield.tokenStream(analyzer, stream);
 				}
 			});
 		}

@@ -17,11 +17,13 @@ import net.ion.nsearcher.search.processor.PostProcessor;
 import net.ion.nsearcher.search.processor.PreProcessor;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.QueryWrapperFilter;
 import org.apache.lucene.search.TermQuery;
 
 public class SearcherImpl implements Searcher{
@@ -55,10 +57,10 @@ public class SearcherImpl implements Searcher{
 
 	public SearchRequest createRequest(String query, Analyzer analyzer) throws ParseException {
 		if (StringUtil.isBlank(query)){
-			return new SearchRequest(this, new MatchAllDocsQuery()) ;
+			return new SearchRequest(this, new MatchAllDocsQuery(), query) ;
 		}
 		
-		final SearchRequest result = new SearchRequest(this, searcher.searchConfig().parseQuery(analyzer, query));
+		final SearchRequest result = new SearchRequest(this, searcher.searchConfig().parseQuery(analyzer, query), query);
 		return result;
 	}
 	
@@ -125,6 +127,11 @@ public class SearcherImpl implements Searcher{
 		
 		return this ;
 	}
+	
+	public Searcher queryFilter(String query) throws ParseException{
+		if (StringUtil.isBlank(query)) return this;
+		return andFilter(new QueryWrapperFilter(sconfig.parseQuery(query))) ;
+	}
 
 	// only test
 	public void forceClose() {
@@ -143,5 +150,7 @@ public class SearcherImpl implements Searcher{
 		return sconfig.queryAnalyzer() ;
 	}
 
-
+	public IndexReader indexReader() throws IOException{
+		return searcher.indexReader() ;
+	}
 }

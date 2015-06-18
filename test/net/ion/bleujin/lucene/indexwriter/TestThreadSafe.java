@@ -10,7 +10,7 @@ import net.ion.framework.util.Debug;
 import net.ion.nsearcher.common.SearchConstant;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
+import org.apache.lucene.analysis.ko.DStandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;

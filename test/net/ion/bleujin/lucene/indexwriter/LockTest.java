@@ -7,8 +7,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
 
-import org.apache.lucene.analysis.kr.KoreanAnalyzer;
-import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.analysis.ko.KoreanAnalyzer;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;

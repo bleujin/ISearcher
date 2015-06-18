@@ -12,12 +12,12 @@ import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.ObjectId;
 import net.ion.nsearcher.ISTestCase;
 
-import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
+import org.apache.lucene.analysis.ko.DStandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.IntField;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;

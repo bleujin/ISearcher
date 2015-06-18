@@ -2,13 +2,11 @@ package net.ion.nsearcher.index;
 
 import java.io.IOException;
 
-import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.MapUtil;
 import net.ion.nsearcher.common.AbDocument.Action;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.common.WriteDocument;
-import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SingleSearcher;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -18,7 +16,6 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.surround.parser.QueryParser;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.store.Directory;
 
@@ -34,29 +31,25 @@ public class IndexSession {
 	public final static String VERSION = "version" ;
 	public final static String LASTMODIFIED = "lastmodified" ;
 	
-	IndexSession(SingleSearcher searcher, Analyzer analyzer) {
+	IndexSession(SingleSearcher searcher, Analyzer analyzer, IndexWriter iwriter) {
 		this.searcher = searcher;
 		this.wconfig = searcher.central().indexConfig().newIndexWriterConfig(analyzer);
 		this.fieldIndexingStrategy = searcher.central().indexConfig().getFieldIndexingStrategy();
+		this.writer = iwriter ;
 	}
 
-	static IndexSession create(SingleSearcher searcher, Analyzer analyzer) {
-		return new IndexSession(searcher, analyzer);
+	static IndexSession create(SingleSearcher searcher, Analyzer analyzer, IndexWriter iwriter) {
+		return new IndexSession(searcher, analyzer, iwriter);
 	}
 
 	public void begin(String owner) throws IOException {
 		this.owner = owner;
-		this.writer = null;
-		this.writer = new IndexWriter(searcher.central().dir(), wconfig);
 		
 	}
 	
 
 	// finally 
 	public IndexSession end() {
-		IOUtil.close(writer);
-		this.writer = null ;
-		
 		release();
 
 		return this;
@@ -140,10 +133,11 @@ public class IndexSession {
 			return;
 		if (writer != null) {
 //			writer.prepareCommit(); 
-
+			writer.forceMerge(10000, true);
+			writer.prepareCommit();
+			
 			final String lastmodified = String.valueOf(System.currentTimeMillis());
 			writer.setCommitData(MapUtil.<String>chainKeyMap().put(VERSION, SearchConstant.LuceneVersion.toString()).put(LASTMODIFIED, lastmodified).toMap()) ;
-			
 			writer.commit();
 		}
 	}
@@ -174,7 +168,7 @@ public class IndexSession {
 		return Action.Delete;
 	}
 
-	public Action deleteDocument(String idValue) throws IOException {
+	public Action deleteById(String idValue) throws IOException {
 		writer.deleteDocuments(new Term(SearchConstant.DocKey, idValue));
 		return Action.Delete;
 	}

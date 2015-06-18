@@ -4,31 +4,24 @@ import java.io.StringReader;
 
 import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
-import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
+import net.ion.nsearcher.common.MyField;
+import net.ion.nsearcher.config.Central;
+import net.ion.nsearcher.config.CentralConfig;
+import net.ion.nsearcher.index.IndexJob;
+import net.ion.nsearcher.index.IndexSession;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
-import org.apache.lucene.analysis.debug.standard.DCJKAnalyzer;
-import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
-import org.apache.lucene.analysis.kr.KoreanAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
-import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
-
-import com.sun.xml.internal.ws.util.pipe.StandalonePipeAssembler;
 
 public class TestIndexing extends TestCase {
 
@@ -75,6 +68,20 @@ public class TestIndexing extends TestCase {
 	
 	private TextField text(String name, String value){
 		return new TextField(name, new StringReader(value)) ;
+	}
+	
+	
+	public void testField() throws Exception {
+		Central central = CentralConfig.newRam().build() ;
+		central.newIndexer().index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				isession.newDocument("bleujin").add(MyField.noIndex("content", "helloworld")).update() ;
+				return null;
+			}
+		}) ;
+
+		Debug.line(central.newSearcher().createRequest("").findOne().getField("content")) ;
 	}
 	
 }

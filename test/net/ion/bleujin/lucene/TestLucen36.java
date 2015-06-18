@@ -18,18 +18,17 @@ import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.SearchResponse;
 import net.ion.nsearcher.search.Searcher;
-import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 import net.ion.nsearcher.search.processor.PostProcessor;
 
-import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
+import org.apache.lucene.analysis.ko.MyKoreanAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.IntField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexCommit;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -105,7 +104,7 @@ public class TestLucen36 extends TestCase {
 								
 								 { // delete
 									 
-									 Query delQuery = new QueryParser(Version.LUCENE_36, "mindex", new DStandardAnalyzer(Version.LUCENE_36)).parse("mindex:[3 TO 4]");
+									 Query delQuery = new QueryParser(Version.LUCENE_36, "mindex", new StandardAnalyzer(Version.LUCENE_36)).parse("mindex:[3 TO 4]");
 									 // Query delQuery = new TermQuery(new Term("mindex", "3")) ;
 									 isession.deleteQuery(delQuery) ;
 								 }

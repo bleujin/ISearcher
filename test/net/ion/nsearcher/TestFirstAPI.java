@@ -15,7 +15,7 @@ import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.search.Searcher;
 
-import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
 public class TestFirstAPI extends TestCase {
 
@@ -39,7 +39,7 @@ public class TestFirstAPI extends TestCase {
 
 	public void testCreateIndexer() throws Exception {
 		Indexer indexer = cen.newIndexer() ;
-		indexer.index(new DStandardAnalyzer(SearchConstant.LuceneVersion), new IndexJob<Void>(){
+		indexer.index(new StandardAnalyzer(SearchConstant.LuceneVersion), new IndexJob<Void>(){
 			public Void handle(IndexSession isession) throws IOException {
 				for (int i : ListUtil.rangeNum(10)) {
 					WriteDocument doc = isession.newDocument(new ObjectId().toString()).add(JsonObject.create().put("name", "bleujin").put("age", i));

@@ -3,7 +3,7 @@ package net.ion.nsearcher.problem;
 import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
 
-import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
+import org.apache.lucene.analysis.ko.DStandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;

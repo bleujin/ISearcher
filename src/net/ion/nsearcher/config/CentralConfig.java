@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import net.ion.nsearcher.common.SearchConstant;
 
-import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -59,7 +59,7 @@ public abstract class CentralConfig {
 		Directory dir = buildDir() ;
 		String[] files = dir.listAll();
 		if (files == null || files.length == 0) {
-			IndexWriterConfig wconfig = new IndexWriterConfig(SearchConstant.LuceneVersion, new DStandardAnalyzer(SearchConstant.LuceneVersion));
+			IndexWriterConfig wconfig = new IndexWriterConfig(SearchConstant.LuceneVersion, new StandardAnalyzer(SearchConstant.LuceneVersion));
 			IndexWriter iwriter = new IndexWriter(dir, wconfig);
 			iwriter.close() ;
 		}

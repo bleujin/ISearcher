@@ -9,6 +9,7 @@ import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.lucene.search.FieldCache;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.SortField.Type;
 
@@ -33,7 +34,7 @@ public class SortExpression {
 		for(String field : fields){
 			if (StringUtil.isBlank(field)) continue ;
 			
-			String[] sps = StringUtil.split(field) ;
+			String[] sps = StringUtil.split(field, " =") ;
 
 			String fieldName = sps[0] ; // mandatory
 			Type sortFieldType = SortField.Type.STRING ;
@@ -54,6 +55,7 @@ public class SortExpression {
 					sortFieldType =  getSortFieldType(sps[1]);
 					isRerverse = "desc".equals(sps[2]) ;
 				}
+				
 				result.add(new SortField(FieldIndexingStrategy.makeSortFieldName(fieldName), sortFieldType, isRerverse)) ;
 			}
 		}

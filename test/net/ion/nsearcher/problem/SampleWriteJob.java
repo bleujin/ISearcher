@@ -43,7 +43,7 @@ public class SampleWriteJob implements IndexJob<Void> {
 //			isession.testDocument(doc) ;
 			
 			line = reader.readLine() ;
-			if (max != 0 && (max % 20000) == 0) {
+			if (max != 0 && (max % 10000) == 0) {
 				System.out.print('.') ;
 				isession.continueUnit() ;
 			} 

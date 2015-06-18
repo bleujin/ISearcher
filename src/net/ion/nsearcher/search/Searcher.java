@@ -7,6 +7,7 @@ import net.ion.nsearcher.search.processor.PostProcessor;
 import net.ion.nsearcher.search.processor.PreProcessor;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.Filter;
@@ -36,11 +37,14 @@ public interface Searcher {
 
 	public Searcher andFilter(Filter filter) ;
 
+	public Searcher queryFilter(String query) throws ParseException;
+
 	public SearchRequest createRequestByKey(String key) ;
 
 	public SearchRequest createRequestByTerm(String tid, String value) ;
 
 	public Analyzer queryAnalyzer() ;
 
+	public IndexReader indexReader() throws IOException ;
 
 }

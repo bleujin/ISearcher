@@ -5,6 +5,8 @@ import java.util.concurrent.ExecutorService;
 
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.MapUtil;
+import net.ion.framework.util.NumberUtil;
+import net.ion.framework.util.ObjectUtil;
 import net.ion.framework.util.StringUtil;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -25,6 +27,7 @@ public class SearchConfig {
 	private ExecutorService es;
 	private final Map<String, Analyzer> analMap = MapUtil.newMap() ;
 	private PerFieldAnalyzerWrapper wrapperAnalyzer;
+	private Map<String, Object> attrs = MapUtil.newMap() ;
 	
 	SearchConfig(ExecutorService es, Version version, Analyzer queryAnalyzer, String defaultSearchFieldName) {
 		this.es = es ;
@@ -78,6 +81,23 @@ public class SearchConfig {
 	public Query parseQuery(Analyzer analyzer, String query) throws ParseException {
 		QueryParserWithNumericRange parser = new QueryParserWithNumericRange(version, defaultSearchFieldName(), analyzer);
 		return parser.parse(query);
+	}
+
+	public SearchConfig attr(String name, int value) {
+		attrs.put(name, value) ;
+		return this ;
+	}
+	public SearchConfig attr(String name, String value) {
+		attrs.put(name, value) ;
+		return this ;
+	}
+	
+	public String attrAsString(String name, String dftValue){
+		return StringUtil.coalesce(StringUtil.toString(attrs.get(name)), dftValue) ; 
+	}
+	
+	public int attrAsInt(String name, int dftValue){
+		return NumberUtil.toInt(StringUtil.toString(attrs.get(name)), dftValue) ;
 	}
 
 }

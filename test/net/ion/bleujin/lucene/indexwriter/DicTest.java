@@ -4,7 +4,7 @@ package net.ion.bleujin.lucene.indexwriter;
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
 
-import org.apache.lucene.analysis.kr.AnalyzerUtil;
+import org.apache.lucene.analysis.ko.AnalyzerUtil;
 
 public class DicTest extends ISTestCase{
 

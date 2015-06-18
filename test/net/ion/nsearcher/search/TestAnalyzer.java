@@ -10,13 +10,13 @@ import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
-import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 import net.ion.nsearcher.search.processor.StdOutProcessor;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.kr.morph.WordEntry;
-import org.apache.lucene.analysis.kr.utils.DictionaryUtil;
+import org.apache.lucene.analysis.ko.MyKoreanAnalyzer;
+import org.apache.lucene.analysis.ko.morph.WordEntry;
+import org.apache.lucene.analysis.ko.utils.DictionaryUtil;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.util.CharArraySet;
@@ -27,7 +27,7 @@ public class TestAnalyzer extends TestCase {
 	public void testTokenStream() throws Exception {
 
 		String think = "사람이 존재하는 이유는 생각하기 때문인가";
-		Debug.debug(DictionaryUtil.existJosa("은"), DictionaryUtil.existEomi(think), DictionaryUtil.getCNoun(think)) ;
+		Debug.debug(DictionaryUtil.existJosa("은"), DictionaryUtil.existEomi(think), DictionaryUtil.getAllNoun(think)) ;
 		Debug.debug(DictionaryUtil.getAdverb(think), DictionaryUtil.getWord("사람"), DictionaryUtil.getVerb(think)) ;
 		WordEntry word = DictionaryUtil.getWord("사람");
 		Debug.debug(word, (word == null ? "" : word.getWord())) ;

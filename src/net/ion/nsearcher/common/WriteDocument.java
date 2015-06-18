@@ -42,6 +42,7 @@ public class WriteDocument extends AbDocument {
 	private ArrayListMultimap<String, MyField> fields = ArrayListMultimap.create() ;
 	private IndexSession isession;
 	private boolean newDoc = false;
+	private float boost = 1.0f ;
 	
 	public WriteDocument(IndexSession indexSession, String docId) {
 		this.isession = indexSession ;
@@ -63,6 +64,11 @@ public class WriteDocument extends AbDocument {
 		return newDoc ;
 	}
 	
+	public WriteDocument boost(float boost){
+		this.boost = boost ;
+		return this ;
+	}
+	
 	public Document toLuceneDoc() {
 		
 		FieldIndexingStrategy strategy = isession.fieldIndexingStrategy(); 
@@ -74,6 +80,7 @@ public class WriteDocument extends AbDocument {
 			if (field == null || isReservedField(field.name()))
 				continue;
 			
+			if (field.fieldType().indexed() && (! field.fieldType().omitNorms())) field.boost(boost * field.boost()) ;
 			field.indexField(strategy, doc);
 
 //			if (isession.handleBody() && (!field.isManual())) bodyBuilder.append(field.stringValue() + " ");

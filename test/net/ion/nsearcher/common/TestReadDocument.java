@@ -5,12 +5,15 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import net.ion.framework.util.ArrayUtil;
+import net.ion.framework.util.Debug;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
+import net.ion.nsearcher.search.Searcher;
 
+import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
 
 public class TestReadDocument extends TestCase {
@@ -78,6 +81,25 @@ public class TestReadDocument extends TestCase {
 	}
 	
 	
+	
+	public void testTerm() throws Exception {
+		cen.newIndexer().index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				isession.newDocument("bleujin").keyword("id", "bleujin").text("explain", "hello world bleujin").insert() ;
+				return null;
+			}
+		}) ;
+		Searcher searcher = cen.newSearcher() ;
+		
+		ReadDocument rdoc = searcher.createRequest("").findOne();
+		
+		
+		
+		Document doc = rdoc.toLuceneDoc() ;
+		Debug.line(doc);
+		
+	}
 	
 	
 }

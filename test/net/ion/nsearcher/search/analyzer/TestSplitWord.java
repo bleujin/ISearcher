@@ -8,6 +8,8 @@ import java.nio.CharBuffer;
 import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
 
+import org.apache.lucene.analysis.ko.MyKoreanAnalyzer.WordGroup;
+
 public class TestSplitWord extends TestCase {
 
 	public void testMakeWord() throws Exception {

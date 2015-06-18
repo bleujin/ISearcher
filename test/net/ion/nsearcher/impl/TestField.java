@@ -16,6 +16,7 @@ import net.ion.nsearcher.search.Searcher;
 
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.NumericRangeFilter;
+import org.apache.lucene.search.QueryWrapperFilter;
 
 public class TestField extends ISTestCase{
 
@@ -55,6 +56,25 @@ public class TestField extends ISTestCase{
 		cen.newSearcher().createRequest(new Term("date", "20100725")).find().debugPrint();
 	}
 	
+	public void testNumberType() throws Exception {
+		Central cen = sampleTestDocument() ;
+		
+		Indexer indexer = cen.newIndexer() ;
+		indexer.index(new IndexJob<Void>() {
+			public Void handle(IndexSession isession) throws IOException {
+				WriteDocument doc = isession.newDocument() ;
+				doc.add(MyField.keyword("name", "test"));
+				doc.add(MyField.number("intkey", 123));
+				isession.updateDocument(doc) ;
+				return null ;
+			}
+		}) ;
+
+		Searcher searcher = cen.newSearcher() ;
+		assertEquals(1, searcher.search("intkey:[+99 TO +200]").totalCount()) ;
+		
+	}
+	
 	public void testUnknownNumber() throws Exception {
 		Central cen = sampleTestDocument() ;
 		
@@ -70,7 +90,8 @@ public class TestField extends ISTestCase{
 		}) ;
 
 		Searcher searcher = cen.newSearcher() ;
-		searcher.andFilter(NumericRangeFilter.newLongRange("intkey", 8, 0L, 10000L, true, true)) ;
+//		searcher.andFilter("intkey:[+99 TO +1000]") ;
+ 		searcher.andFilter(NumericRangeFilter.newLongRange("intkey", 8, 1L, 1000L, true, true)) ;
 		assertEquals(1, searcher.createRequest("test").find().size()) ;
 	}
 

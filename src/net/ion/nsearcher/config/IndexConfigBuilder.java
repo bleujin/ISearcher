@@ -6,29 +6,22 @@ import java.util.concurrent.ExecutorService;
 import net.ion.framework.util.ObjectUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.SearchConstant;
-import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.cjk.CJKAnalyzer;
-import org.apache.lucene.analysis.core.KeywordAnalyzer;
-import org.apache.lucene.analysis.debug.standard.DCJKAnalyzer;
-import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexDeletionPolicy;
+import org.apache.lucene.index.IndexWriter.IndexReaderWarmer;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.MergePolicy;
 import org.apache.lucene.index.MergeScheduler;
-import org.apache.lucene.index.IndexWriter.IndexReaderWarmer;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.util.Version;
-
-import com.sun.xml.internal.ws.util.pipe.StandalonePipeAssembler;
 
 public class IndexConfigBuilder {
 
 	private CentralConfig centralConfig ;
-	private IndexWriterConfig clone = new IndexWriterConfig(SearchConstant.LuceneVersion, new DStandardAnalyzer(SearchConstant.LuceneVersion)) ;
+	private IndexWriterConfig clone = new IndexWriterConfig(SearchConstant.LuceneVersion, new StandardAnalyzer(SearchConstant.LuceneVersion)) ;
 	private Analyzer analyzer ;
 	private FieldIndexingStrategy fieldIndexingStrategy = FieldIndexingStrategy.DEFAULT ;
 	private ExecutorService es;

@@ -63,4 +63,22 @@ public class TestMyFileld extends ISTestCase{
 		assertEquals(1, searcher.search("address.city:seoul").size()) ;
 		assertEquals(1, searcher.search("20").size()) ;
 	}
+	
+	
+	public void testKeyword() throws Exception {
+		Central c = CentralConfig.newRam().build() ;
+		Indexer indexer = c.newIndexer() ;
+		
+		indexer.index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				isession.newDocument().keyword("name", "0708").insert() ;
+				return null;
+			}
+		}) ;
+		
+		
+		c.newSearcher().search("name:0708").debugPrint(); 
+		c.close(); 
+	}
 }

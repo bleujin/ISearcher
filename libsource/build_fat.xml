@@ -21,6 +21,38 @@
 	<property name="baseDir" value="." />
 	<property name="targetDir" value="../lib" />
 	
+			
+	<target name="search4104">
+    	<delete file="${targetDir}/search4104_fat.jar"></delete>
+        <fatjar.build output="${targetDir}/search4104_fat.jar">
+            <fatjar.manifest/>
+        	<fatjar.jarsource file="${basedir}\search4104\lucene-core-4.10.4.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\search4104\lucene-queries-4.10.4.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search4104\lucene-queryparser-4.10.4.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search4104\lucene-codecs-4.10.4.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search4104\lucene-facet-4.10.4.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search4104\lucene-sandbox-4.10.4.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search4104\lucene-analyzers-common-4.10.4.jar" relpath=""/>  
+            <fatjar.jarsource file="${basedir}\search4104\arirang-analyzer-4.6-140808.jar" relpath=""/>
+        	
+        </fatjar.build>
+    </target>
+    	
+	<target name="search4102">
+    	<delete file="${targetDir}/search4102_fat.jar"></delete>
+        <fatjar.build output="${targetDir}/search4102_fat.jar">
+            <fatjar.manifest/>
+        	<fatjar.jarsource file="${basedir}\search4102\lucene-core-4.10.2.jar" relpath=""/> 
+        	<fatjar.jarsource file="${basedir}\search4102\lucene-queries-4.10.2.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search4102\lucene-queryparser-4.10.2.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search4102\lucene-codecs-4.10.2.jar" relpath=""/>  
+        	<fatjar.jarsource file="${basedir}\search4102\lucene-facet-4.10.2.jar" relpath=""/>  
+            <fatjar.jarsource file="${basedir}\search4102\lucene-analyzers-common-4.10.2.jar" relpath=""/>  
+            <fatjar.jarsource file="${basedir}\search4102\arirang-analyzer-4.6-140808.jar" relpath=""/>
+        	
+        </fatjar.build>
+    </target>
+    
 	<target name="search440">
     	<delete file="${targetDir}/search440_fat.jar"></delete>
         <fatjar.build output="${targetDir}/search440_fat.jar">

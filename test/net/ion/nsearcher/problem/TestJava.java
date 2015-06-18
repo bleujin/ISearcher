@@ -6,11 +6,11 @@ import java.io.FileReader;
 
 import junit.framework.TestCase;
 import net.ion.nsearcher.common.SearchConstant;
-import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 import net.ion.radon.util.csv.CsvReader;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.kr.AnalyzerUtil;
+import org.apache.lucene.analysis.ko.AnalyzerUtil;
+import org.apache.lucene.analysis.ko.MyKoreanAnalyzer;
 
 public class TestJava extends TestCase {
 

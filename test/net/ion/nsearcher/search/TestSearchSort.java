@@ -5,6 +5,7 @@ import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
+import net.ion.nsearcher.index.Indexer;
 
 public class TestSearchSort extends TestCase{
 
@@ -61,7 +62,10 @@ public class TestSearchSort extends TestCase{
 		assertEquals(20, result.getDocument().get(0).asLong("num", 0));
 		assertEquals(19, result.getDocument().get(1).asLong("num", 0));
 		assertEquals(18, result.getDocument().get(2).asLong("num", 0));
-		
 	}
+	
+	
+	
+	
 	
 }

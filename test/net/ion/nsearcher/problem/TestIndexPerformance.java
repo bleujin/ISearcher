@@ -11,13 +11,13 @@ import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.Indexer;
-import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 import net.ion.radon.util.csv.CsvReader;
 
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.FSDirectory;
@@ -67,14 +67,14 @@ public class TestIndexPerformance extends TestCase {
 		
 		Indexer indexer = central.newIndexer();
 
-		indexer.index(new SampleWriteJob(20000)) ;
+		indexer.index(new SampleWriteJob(300000)) ;
 		Debug.line(System.currentTimeMillis() - start) ;
 	}
 	
 	//29 sec(keyword, analyzed) / 18sec(keyword, not analyzed) / 28sec (text, analyzed)
 	public void testUseLucene() throws Exception {
 		long start = System.currentTimeMillis() ;
-		IndexWriterConfig wconfig = new IndexWriterConfig(SearchConstant.LuceneVersion, new MyKoreanAnalyzer(SearchConstant.LuceneVersion));
+		IndexWriterConfig wconfig = new IndexWriterConfig(SearchConstant.LuceneVersion, new StandardAnalyzer(SearchConstant.LuceneVersion));
 		IndexWriter iwriter = new IndexWriter(dir, wconfig);
 		File file = new File("C:/temp/freebase-datadump-tsv/data/medicine/drug_label_section.tsv") ;
 		
@@ -82,19 +82,20 @@ public class TestIndexPerformance extends TestCase {
 		reader.setFieldDelimiter('\t') ;
 		String[] headers = reader.readLine();
 		String[] line = reader.readLine() ;
-		int max = 20000 ;
+		int max = 300000 ;
 		while(line != null && line.length > 0 && max-- > 0 ){
 			Document doc = new Document() ; 
 			for (int ii = 0, last = headers.length; ii < last ; ii++) {
 				if (line.length > ii) {
-					doc.add(new Field(headers[ii], line[ii], Store.YES, Index.ANALYZED)) ;
+//					doc.add(new StringField(headers[ii], line[ii], Store.YES)) ;
+					doc.add(new TextField(headers[ii], line[ii], Store.YES)) ;
 				}
 			}
 			
 			iwriter.addDocument(doc) ;
 //			iwriter.updateDocument(new Term(RandomUtil.nextRandomString(10), RandomUtil.nextRandomString(10)), doc) ;
 			line = reader.readLine() ;
-			if ((max % 20000) == 0) {
+			if ((max % 10000) == 0) {
 				System.out.print('.') ;
 				iwriter.commit() ;
 			} 

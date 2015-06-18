@@ -1,6 +1,7 @@
 package net.ion.nsearcher.index;
 
 import junit.framework.TestCase;
+import net.ion.framework.util.Debug;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.IKeywordField;
 import net.ion.nsearcher.common.MyField;
@@ -8,10 +9,12 @@ import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
+import net.ion.nsearcher.search.SearchRequest;
 import net.ion.nsearcher.search.Searcher;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.index.Term;
 
 public class TestDocument extends TestCase {
 
@@ -51,7 +54,7 @@ public class TestDocument extends TestCase {
 				isession.fieldIndexingStrategy(FieldIndexingStrategy.DEFAULT);
 				WriteDocument mdoc = isession.newDocument("bleujin").text("test", "he programmer").number("age", 20);
 				assertEquals("bleujin", mdoc.idValue());
-				assertEquals(9, mdoc.toLuceneDoc().getFields().size()); // 1 + 2 + 3 + 2
+				assertEquals(12, mdoc.toLuceneDoc().getFields().size()); // 1 + 2 + 3 + 2   + 3
 				mdoc.insert();
 				return null;
 			}
@@ -72,7 +75,7 @@ public class TestDocument extends TestCase {
 				WriteDocument writedoc = isession.newDocument("bleujin").text("test", "he programmer").number("age", 20);
 
 				Document doc = writedoc.toLuceneDoc();
-				assertEquals(9, doc.getFields().size()); // 1 + 2 + 3 + 2 + 1
+				assertEquals(12, doc.getFields().size()); // 1 + 2 + 3 + 2 + 1
 
 				assertEquals(writedoc.idValue(), doc.get(IKeywordField.DocKey));
 
@@ -126,4 +129,18 @@ public class TestDocument extends TestCase {
 		}
 	}
 
+	
+	public void testSlash() throws Exception {
+		Document doc = indexer.index(new IndexJob<Document>() {
+			public Document handle(IndexSession isession) throws Exception {
+				final WriteDocument writeDoc = isession.newDocument("bleujin").keyword("@path", "_emp").keyword("@path", "/ion");
+				isession.insertDocument(writeDoc);
+				return writeDoc.toLuceneDoc();
+			}
+		});
+		
+		SearchRequest request = cen.newSearcher().createRequest(new Term("@path", "/ion"));
+		request.find().debugPrint();
+	}
+	
 }

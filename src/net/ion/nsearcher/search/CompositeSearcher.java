@@ -37,6 +37,7 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.QueryWrapperFilter;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 
@@ -85,10 +86,10 @@ public class CompositeSearcher implements Searcher {
 
 	public SearchRequest createRequest(String query, Analyzer analyzer) throws ParseException {
 		if (StringUtil.isBlank(query)){
-			return new SearchRequest(this, new MatchAllDocsQuery()) ;
+			return new SearchRequest(this, new MatchAllDocsQuery(), query) ;
 		}
 		
-		final SearchRequest result = new SearchRequest(this, sconfig.parseQuery(analyzer, query));
+		final SearchRequest result = new SearchRequest(this, sconfig.parseQuery(analyzer, query), query);
 		return result;
 	}
 	
@@ -150,10 +151,19 @@ public class CompositeSearcher implements Searcher {
 
 	private Set<Filter> myFilters = new HashSet<Filter>();
 	public Searcher andFilter(Filter filter) {
+		if (filter == null) return this;
 		myFilters.add(filter) ;
 		
 		return this ;
 	}
+	
+	public Searcher queryFilter(String query) throws ParseException{
+		if (StringUtil.isBlank(query)) return this;
+		return andFilter(new QueryWrapperFilter(sconfig.parseQuery(query))) ;
+	}
+
+	
+	
 	public SearchRequest createRequestByKey(String key) {
 		return this.createRequest(new TermQuery(new Term(IKeywordField.DocKey, key))) ;
 	}
@@ -167,6 +177,9 @@ public class CompositeSearcher implements Searcher {
 	}
 
 
+	public IndexReader indexReader() throws IOException{
+		return searcher.indexReader() ;
+	}
 
 }
 
@@ -234,5 +247,8 @@ class MultiSearcher implements ISearchable{
 		throw new UnsupportedOperationException("this is composite searcher : ") ;
 	}
 
+	public IndexReader indexReader() throws IOException{
+		return multiIndexReader() ;
+	}
 
 }

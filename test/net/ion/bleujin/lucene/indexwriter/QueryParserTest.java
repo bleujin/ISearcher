@@ -3,7 +3,7 @@ package net.ion.bleujin.lucene.indexwriter;
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.ISTestCase;
 
-import org.apache.lucene.analysis.kr.KoreanAnalyzer;
+import org.apache.lucene.analysis.ko.KoreanAnalyzer;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.util.Version;
 

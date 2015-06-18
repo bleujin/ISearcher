@@ -31,13 +31,13 @@ import net.ion.nsearcher.index.channel.MemoryChannel;
 import net.ion.nsearcher.index.event.ICollectorEvent;
 import net.ion.nsearcher.index.policy.ExceptionPolicy;
 import net.ion.nsearcher.index.policy.MergePolicy;
-import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.http.impl.cookie.DateUtils;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.debug.standard.DCJKAnalyzer;
-import org.apache.lucene.analysis.debug.standard.DStandardAnalyzer;
+import org.apache.lucene.analysis.cjk.CJKAnalyzer;
+import org.apache.lucene.analysis.ko.MyKoreanAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -101,12 +101,12 @@ public class ISTestCase extends TestCase{
 	
 	public static IndexWriterConfig testWriterConfig(){
 		Version version = Version.LUCENE_CURRENT ;
-		return new IndexWriterConfig(version, new DStandardAnalyzer(version)) ;
+		return new IndexWriterConfig(version, new StandardAnalyzer(version)) ;
 	}
 
 	public static IndexWriter testWriter(Directory dir, Analyzer analyzer) throws IOException{
 		Version version = Version.LUCENE_CURRENT ;
-		return new IndexWriter(dir, new IndexWriterConfig(version, new DStandardAnalyzer(version))) ;
+		return new IndexWriter(dir, new IndexWriterConfig(version, new StandardAnalyzer(version))) ;
 	}
 	
 
@@ -188,7 +188,7 @@ public class ISTestCase extends TestCase{
 
 	public Analyzer createDefaultAnalyzer() {
 		// return new KoreanAnalyzer();
-		return new DCJKAnalyzer(SearchConstant.LuceneVersion);
+		return new CJKAnalyzer(SearchConstant.LuceneVersion);
 	}
 	
 	public Analyzer createKoreanAnalyzer() throws IOException {

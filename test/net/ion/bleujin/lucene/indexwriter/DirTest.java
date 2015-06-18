@@ -13,7 +13,7 @@ import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
 
-import org.apache.lucene.analysis.debug.standard.DCJKAnalyzer;
+import org.apache.lucene.analysis.ko.DCJKAnalyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.MultiReader;
 import org.apache.lucene.queryparser.classic.QueryParser;
