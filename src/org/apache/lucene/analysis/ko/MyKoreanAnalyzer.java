@@ -5,20 +5,12 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.CharBuffer;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
 
 import net.ion.framework.util.IOUtil;
 
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.StopFilter;
-import org.apache.lucene.analysis.ko.HanjaMappingFilter;
-import org.apache.lucene.analysis.ko.KoreanFilter;
-import org.apache.lucene.analysis.ko.KoreanTokenizer;
-import org.apache.lucene.analysis.ko.PunctuationDelimitFilter;
-import org.apache.lucene.analysis.ko.WordSegmentFilter;
 import org.apache.lucene.analysis.standard.ClassicFilter;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.util.StopwordAnalyzerBase;

@@ -24,22 +24,26 @@ public class SearchResponse {
 	private final long endTime;
 	private Future<Void> postFuture ;
 	private List<Integer> docs ;
-	private TopDocs tdocs;
-	private SearchResponse(ISearchable searcher, SearchRequest sreq, List<Integer> docs, TopDocs tdocs, long startTime) {
+	private int totalCount ;
+	private SearchResponse(ISearchable searcher, SearchRequest sreq, List<Integer> docs, int totalCount, long startTime) {
 		this.searcher = searcher ;
 		this.sreq = sreq ;
 		this.startTime = startTime;
 		this.endTime = System.currentTimeMillis();
 		this.docs = docs ;
-		this.tdocs = tdocs ;
+		this.totalCount = totalCount ;
 	}
 
+	public static SearchResponse create(ISearchable searcher, SearchRequest sreq, List<Integer> docs, int totalCount, long startTime) throws IOException {
+		return new SearchResponse(searcher, sreq, makeDocument(sreq, docs), totalCount, startTime) ;
+	}
+	
 	public static SearchResponse create(ISearchable searcher, SearchRequest sreq, TopDocs docs, long startTime) throws IOException {
-		return new SearchResponse(searcher, sreq, makeDocument(searcher, sreq, docs), docs, startTime);
+		return new SearchResponse(searcher, sreq, makeDocument(sreq, docs), docs.totalHits, startTime);
 	}
 
 	public int totalCount() {
-		return tdocs.totalHits ;
+		return totalCount ;
 		// 전체 total은 searcherImpl이 구함. 
 //		return searcher.totalCount(sreq, sreq.getFilter()) ;
 	}
@@ -87,7 +91,16 @@ public class SearchResponse {
 		return eachDoc(EachDocHandler.TOLIST) ;
 	}
 
-	private static List<Integer> makeDocument(ISearchable searcher, SearchRequest sreq, TopDocs docs) {
+	private static List<Integer> makeDocument(SearchRequest sreq, List<Integer> docs) {
+		List<Integer> result = ListUtil.newList() ;
+
+		for (int i = sreq.skip(); i < Math.min(sreq.limit(), docs.size()); i++) {
+			result.add(docs.get(i));
+		}
+		return result;
+	}
+	
+	private static List<Integer> makeDocument(SearchRequest sreq, TopDocs docs) {
 		ScoreDoc[] sdocs = docs.scoreDocs;
 		List<Integer> result = ListUtil.newList() ;
 

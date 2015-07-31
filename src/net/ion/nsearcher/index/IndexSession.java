@@ -5,6 +5,7 @@ import java.io.IOException;
 import net.ion.framework.util.MapUtil;
 import net.ion.nsearcher.common.AbDocument.Action;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
+import net.ion.nsearcher.common.MyField;
 import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.search.SingleSearcher;
@@ -16,6 +17,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.store.Directory;
 
@@ -71,6 +73,14 @@ public class IndexSession {
 	public WriteDocument newDocument(){
 		return new WriteDocument(this) ;
 	}
+	
+	
+	public WriteDocument loadDocument(String docId) throws IOException, ParseException {
+		Document findDoc = searcher.central().newSearcher().createRequestByKey(docId).findOne().toLuceneDoc() ;
+		WriteDocument result = new WriteDocument(this, docId, findDoc);
+		return result;
+	}
+
 	
 	public FieldIndexingStrategy fieldIndexingStrategy() {
 		return fieldIndexingStrategy;

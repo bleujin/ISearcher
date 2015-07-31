@@ -143,4 +143,29 @@ public class TestDocument extends TestCase {
 		request.find().debugPrint();
 	}
 	
+	
+	public void testLoadDocument() throws Exception {
+		Document doc = indexer.index(new IndexJob<Document>() {
+			public Document handle(IndexSession isession) throws Exception {
+				final WriteDocument writeDoc = isession.newDocument("bleujin").keyword("@path", "_emp").keyword("@path", "/ion").stext("explain", "hello bleujin");
+				isession.insertDocument(writeDoc);
+				return writeDoc.toLuceneDoc();
+			}
+		});
+		
+//		cen.newSearcher().createRequestByKey("bleujin").find().debugPrint(); 
+		
+		indexer.index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				isession.loadDocument("bleujin").number("age", 20).update() ;
+				return null;
+			}
+		}) ;
+		
+		ReadDocument rdoc = cen.newSearcher().createRequest("").findOne() ;
+		assertEquals("hello bleujin", rdoc.asString("explain"));
+		assertEquals(true, cen.newSearcher().createRequestByTerm("explain", "bleujin").findOne() != null) ;
+	}
+	
 }

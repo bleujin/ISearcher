@@ -26,12 +26,34 @@ public class TestSort extends TestCase{
 				return null;
 			}
 		}) ;
-		
-		
+
 		Sort sort = central.newSearcher().createRequest("").sort("val=desc").sort() ;
 		SortField sfield = sort.getSort()[0];
 		assertEquals(true, sfield.getType() == Type.STRING) ;
 		assertEquals(true, sfield.getReverse()) ;
 		assertEquals("val", sfield.getField()) ;
 	}
+	
+	public void testDescending() throws Exception {
+		Central central = CentralConfig.newRam().build() ;
+		
+		Sort sort = central.newSearcher().createRequest("").descending("val").sort() ;
+		SortField sfield = sort.getSort()[0];
+		assertEquals(true, sfield.getType() == Type.STRING) ;
+		assertEquals(true, sfield.getReverse()) ;
+		assertEquals("val", sfield.getField()) ;
+
+	}
+
+	public void testAscending() throws Exception {
+		Central central = CentralConfig.newRam().build() ;
+		
+		Sort sort = central.newSearcher().createRequest("").ascending("val").sort() ;
+		SortField sfield = sort.getSort()[0];
+		assertEquals(true, sfield.getType() == Type.STRING) ;
+		assertEquals(false, sfield.getReverse()) ;
+		assertEquals("val", sfield.getField()) ;
+
+	}
+
 }

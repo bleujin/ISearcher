@@ -43,19 +43,27 @@ public class WriteDocument extends AbDocument {
 	private IndexSession isession;
 	private boolean newDoc = false;
 	private float boost = 1.0f ;
+	private Document doc;
 	
 	public WriteDocument(IndexSession indexSession, String docId) {
 		this.isession = indexSession ;
 		this.docId = docId;
+		this.doc = new Document();
+	}
+
+	public WriteDocument(IndexSession indexSession, String docId, Document doc) {
+		this.isession = indexSession ;
+		this.docId = docId;
+		this.doc = (doc == null) ? new Document() : doc;
 	}
 
 	public WriteDocument(IndexSession indexSession) {
 		this.isession = indexSession ;
 		this.docId = new ObjectId().toString();
 		this.newDoc = true ;
+		this.doc = new Document();
 	}
 
-	
 	public String idValue() {
 		return docId;
 	}
@@ -72,7 +80,6 @@ public class WriteDocument extends AbDocument {
 	public Document toLuceneDoc() {
 		
 		FieldIndexingStrategy strategy = isession.fieldIndexingStrategy(); 
-		Document doc = new Document();
 		StringBuilder bodyBuilder = new StringBuilder(512);
 		bodyBuilder.append(docId + " ") ;
 		
@@ -194,6 +201,12 @@ public class WriteDocument extends AbDocument {
 		add(MyField.text(fieldName, value));
 		return this;
 	}
+	
+	public WriteDocument stext(String fieldName, String value) {
+		add(MyField.manual(fieldName, value, Store.YES, true, MyFieldType.Text));
+		return this;
+	}
+
 
 	public WriteDocument number(String fieldName, long value) {
 		add(MyField.number(fieldName, value));
@@ -255,5 +268,6 @@ public class WriteDocument extends AbDocument {
 		insert() ;
 		return null ;
 	}
+
 
 }

@@ -38,7 +38,7 @@
 
 	<target name="copy" depends="publish">
 		<echo>Copy to ICS6</echo>
-		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../../workspace/ICS6/ics/WEB-INF/lib/" />
+		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../ICS6_WORK/ics/WEB-INF/lib/" />
 		<echo>Copy to ICS6Extend</echo>
 		<copy file="publish/isearcher_${version.number}.${build.number}.jar" todir="../../workspace/ICS6Extend/lib/common/" />
 		<echo>Copy to AradonExtend</echo>

@@ -38,6 +38,7 @@ public class SearchRequest {
 	private Set<String> columns = SetUtil.newSet() ;
 	private Set<String> lazyColumns = SetUtil.newSet() ;
 	private String userDefine = "";
+	private DocCollector collector = DocCollector.BLANK;
 	
 	SearchRequest(Searcher searcher, Query query){
 		this.searcher = searcher ;
@@ -227,6 +228,15 @@ public class SearchRequest {
 	
 	public StoredFieldVisitor selector(){
 		return columns.size() == 0 ? null : new DocumentStoredFieldVisitor(columns) ;
+	}
+
+	public SearchRequest collect(DocCollector collector) {
+		this.collector = collector ;
+		return this;
+	}
+	
+	public DocCollector collector(){
+		return collector ;
 	}
 
 
