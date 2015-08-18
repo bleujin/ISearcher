@@ -17,6 +17,7 @@ import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.util.BytesRef;
 
 public class MyField {
@@ -37,6 +38,8 @@ public class MyField {
 		this.mtype = mtype ;
 	}
 	
+
+
 	public String name() {
 		return ifield.name() ;
 	}
@@ -177,10 +180,12 @@ public class MyField {
 	}
 
 	public static MyField manual(String name, String value, Store store, boolean analyze, MyFieldType fieldType){
+		if (StringUtil.isBlank(value)) return new MyField(new StringField(name, "", store), fieldType) ;
+		
 		if (StringUtil.isAlphanumericUnderbar(value)){
 			return keyword(name, value) ;
 		} else
-			return new MyField( analyze ? (new TextField(name, value.toString(), store)) : (new StringField(name, value.toString(), store)), fieldType);
+			return new MyField( analyze ? (new TextField(name, value, store)) : (new StringField(name, value, store)), fieldType);
 	}
 
 
@@ -236,6 +241,7 @@ public class MyField {
 	public static MyField noIndex(String name, BytesRef value) {
 		return new MyField(new StoredField(name, value), MyFieldType.Byte);
 	}
+
 	
 
 }

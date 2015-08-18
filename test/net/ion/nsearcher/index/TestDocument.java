@@ -168,4 +168,75 @@ public class TestDocument extends TestCase {
 		assertEquals(true, cen.newSearcher().createRequestByTerm("explain", "bleujin").findOne() != null) ;
 	}
 	
+	public void testEmptyUpdate() throws Exception {
+		indexer.index(new IndexJob<Void>() {
+			public Void handle(IndexSession isession) throws Exception {
+				return isession.loadDocument("bleujin", true).keyword("name", "bleujin").stext("explain", "hello bleujin").updateVoid();
+			}
+		});
+		
+		indexer.index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument wdoc = isession.loadDocument("bleujin", true);
+				wdoc.update() ;
+				wdoc.update() ;
+				return null;
+			}
+		}) ;
+		
+		cen.newSearcher().createRequestByTerm("name", "bleujin").find().debugPrint();
+		
+	}
+	
+	
+	public void testMergeUpdate() throws Exception {
+		indexer.index(new IndexJob<Void>() {
+			public Void handle(IndexSession isession) throws Exception {
+				return isession.newDocument("bleujin").keyword("name", "bleujin").stext("greeting", "hello world").updateVoid();
+			}
+		});
+		indexer.index(new IndexJob<Void>() {
+			public Void handle(IndexSession isession) throws Exception {
+				return isession.loadDocument("bleujin").keyword("name", "hero").updateVoid();
+			}
+		});
+		
+		assertEquals(1, cen.newSearcher().createRequestByTerm("name", "bleujin").find().size()) ; 
+		assertEquals(1, cen.newSearcher().createRequestByTerm("name", "hero").find().size())  ;
+		assertEquals(1, cen.newSearcher().createRequestByTerm("greeting", "world").find().size())  ;
+	}
+	
+	public void testReplaceDocument() throws Exception {
+		indexer.index(new IndexJob<Void>() {
+			public Void handle(IndexSession isession) throws Exception {
+				return isession.newDocument("bleujin").keyword("name", "bleujin").stext("greeting", "hello world").updateVoid();
+			}
+		});
+		indexer.index(new IndexJob<Void>() {
+			public Void handle(IndexSession isession) throws Exception {
+				return isession.loadDocument("bleujin", true).keyword("name", "hero").updateVoid();
+			}
+		});
+		
+		assertEquals(1, cen.newSearcher().createRequestByTerm("name", "hero").find().size()) ;
+		assertEquals(0, cen.newSearcher().createRequestByTerm("name", "bleujin").find().size()) ;
+		assertEquals(1, cen.newSearcher().createRequestByTerm("greeting", "world").find().size())  ;
+
+		indexer.index(new IndexJob<Void>() {
+			public Void handle(IndexSession isession) throws Exception {
+				WriteDocument wdoc = isession.loadDocument("bleujin", true);
+				wdoc.keyword("name", "hero") ;
+				wdoc.keyword("name", "jin") ;
+				return wdoc.updateVoid();
+			}
+		});
+		
+		// but only remove old
+		assertEquals(1, cen.newSearcher().createRequestByTerm("name", "jin").find().size()) ;
+		assertEquals(1, cen.newSearcher().createRequestByTerm("name", "hero").find().size()) ;
+	
+	}
+	
+	
 }

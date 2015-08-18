@@ -5,7 +5,7 @@ import java.io.IOException;
 import net.ion.framework.util.MapUtil;
 import net.ion.nsearcher.common.AbDocument.Action;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
-import net.ion.nsearcher.common.MyField;
+import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.common.WriteDocument;
 import net.ion.nsearcher.search.SingleSearcher;
@@ -16,6 +16,7 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.Query;
@@ -74,11 +75,23 @@ public class IndexSession {
 		return new WriteDocument(this) ;
 	}
 	
+	public WriteDocument loadDocument(String docId, boolean replaceValue, String... numfieldnames) throws IOException, ParseException {
+		ReadDocument rdoc = searcher.central().newSearcher().createRequestByKey(docId).findOne();
+		Document findDoc = (rdoc == null) ? new Document() : rdoc.toLuceneDoc() ;
+		
+		WriteDocument result = new WriteDocument(this, docId, findDoc, replaceValue);
+		for (String nfield : numfieldnames) {
+			IndexableField field = findDoc.getField(nfield) ;
+			if (field == null) continue ;
+			result.number(nfield, field.numericValue().longValue()) ;
+		}
+		
+		
+		return result;
+	}
 	
 	public WriteDocument loadDocument(String docId) throws IOException, ParseException {
-		Document findDoc = searcher.central().newSearcher().createRequestByKey(docId).findOne().toLuceneDoc() ;
-		WriteDocument result = new WriteDocument(this, docId, findDoc);
-		return result;
+		return loadDocument(docId, false) ;
 	}
 
 	

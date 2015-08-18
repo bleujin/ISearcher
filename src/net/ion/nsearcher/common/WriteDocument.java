@@ -19,7 +19,6 @@ import java.util.Map.Entry;
 import net.ion.framework.parse.gson.JsonElement;
 import net.ion.framework.parse.gson.JsonObject;
 import net.ion.framework.parse.gson.JsonUtil;
-import net.ion.framework.util.Debug;
 import net.ion.framework.util.ObjectId;
 import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.common.MyField.MyFieldType;
@@ -28,8 +27,9 @@ import net.ion.nsearcher.index.event.CollectorEvent;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.TextField;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.IndexableField;
 
 import com.google.common.collect.ArrayListMultimap;
 
@@ -44,24 +44,25 @@ public class WriteDocument extends AbDocument {
 	private boolean newDoc = false;
 	private float boost = 1.0f ;
 	private Document doc;
+	private boolean replaceField;
 	
 	public WriteDocument(IndexSession indexSession, String docId) {
-		this.isession = indexSession ;
-		this.docId = docId;
-		this.doc = new Document();
+		this(indexSession, docId, new Document(), false) ;
 	}
-
 	public WriteDocument(IndexSession indexSession, String docId, Document doc) {
+		this(indexSession, docId, doc, false) ;
+	}
+	
+	public WriteDocument(IndexSession indexSession, String docId, Document doc, boolean replaceField) {
 		this.isession = indexSession ;
 		this.docId = docId;
 		this.doc = (doc == null) ? new Document() : doc;
+		
+		this.replaceField = replaceField;
 	}
 
 	public WriteDocument(IndexSession indexSession) {
-		this.isession = indexSession ;
-		this.docId = new ObjectId().toString();
-		this.newDoc = true ;
-		this.doc = new Document();
+		this(indexSession, new ObjectId().toString(), new Document(), true) ;
 	}
 
 	public String idValue() {
@@ -82,7 +83,11 @@ public class WriteDocument extends AbDocument {
 		FieldIndexingStrategy strategy = isession.fieldIndexingStrategy(); 
 		StringBuilder bodyBuilder = new StringBuilder(512);
 		bodyBuilder.append(docId + " ") ;
-		
+
+		for(IndexableField field : doc.getFields()){
+			bodyBuilder.append(field.stringValue() + " ") ;
+		}
+
 		for (MyField field : fields.values()) {
 			if (field == null || isReservedField(field.name()))
 				continue;
@@ -104,6 +109,7 @@ public class WriteDocument extends AbDocument {
 		// @TODO : compress, Store.No
 		if (isession.handleBody()) MyField.text(ISALL_FIELD, bodyString, Store.NO).indexField(strategy, doc);
 
+		
 		return doc;
 	}
 	
@@ -229,6 +235,10 @@ public class WriteDocument extends AbDocument {
 	}
 
 	public WriteDocument add(MyField field) {
+		if (replaceField) {
+//			fields.removeAll(field.name()) ;
+			doc.removeField(field.name());
+		}
 		fields.put(field.name(), field);
 		return this;
 	}

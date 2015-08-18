@@ -8,6 +8,7 @@ import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.search.filter.FilterUtil;
+import net.ion.nsearcher.search.filter.TermFilter;
 
 public class TestSearchRequest extends TestCase {
 
@@ -48,6 +49,16 @@ public class TestSearchRequest extends TestCase {
 		assertEquals(2, searcher.createRequest("").find().size());
 		
 		assertEquals(4, central.newSearcher().createRequest("").find().size()) ;
+	}
+	
+	public void testSearchFilterApplied() throws Exception {
+//		central.newSearcher().andFilter(new TermFilter("name", "bleujin")).createRequest("").find().debugPrint();
+		central.newSearcher().andFilter(new TermFilter("name", "bleujin")).createRequest("")
+			.setFilter(FilterUtil.newBuilder().term("age", "30").gte("age", 40).andBuild()).find().debugPrint();
+	}
+	
+	public void testSort() throws Exception {
+		central.newSearcher().createRequest("").ascendingNum("age").find().debugPrint("age");
 	}
 	
 }
