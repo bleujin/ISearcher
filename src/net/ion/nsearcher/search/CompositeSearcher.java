@@ -14,11 +14,13 @@ import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.StringUtil;
 import net.ion.framework.util.WithinThreadExecutor;
+import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.IKeywordField;
 import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
+import net.ion.nsearcher.config.IndexConfig;
 import net.ion.nsearcher.config.SearchConfig;
 import net.ion.nsearcher.config.SearchConfigBuilder;
 import net.ion.nsearcher.reader.InfoReader;
@@ -30,6 +32,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.MultiReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -47,25 +50,34 @@ public class CompositeSearcher implements Searcher {
 	private List<PostProcessor> postListeners = new ArrayList<PostProcessor>();
 	private List<PreProcessor> preListeners = new ArrayList<PreProcessor>();
 	private MultiSearcher searcher;
+	private IndexConfig iconfig;
 
 
-	public CompositeSearcher(MultiSearcher searcher, SearchConfig sconfig) {
+	public CompositeSearcher(MultiSearcher searcher, SearchConfig sconfig, IndexConfig iconfig) {
 		this.searcher = searcher ;
 		this.sconfig = sconfig ;
+		this.iconfig = iconfig ;
 	}
 
-	public static Searcher create(SearchConfig sconfig, List<Central> others) throws IOException {
-		return new CompositeSearcher(new MultiSearcher(sconfig.searchExecutor(), others), sconfig);
+	public static Searcher create(SearchConfig sconfig, IndexConfig iconfig, List<Central> others) throws IOException {
+		return new CompositeSearcher(new MultiSearcher(sconfig.searchExecutor(), others), sconfig, iconfig);
 	}
 
 	public static Searcher createBlank() throws CorruptIndexException, IOException {
 		WithinThreadExecutor bes = new WithinThreadExecutor();
-		SearchConfig nconfig = SearchConfig.create(bes, SearchConstant.LuceneVersion, new StandardAnalyzer(SearchConstant.LuceneVersion), SearchConstant.ISALL_FIELD) ;
-		return new CompositeSearcher(new MultiSearcher(bes, ListUtil.EMPTY), nconfig) ;
+		StandardAnalyzer dftAnalyzer = new StandardAnalyzer(SearchConstant.LuceneVersion);
+		SearchConfig nconfig = SearchConfig.create(bes, SearchConstant.LuceneVersion, dftAnalyzer, SearchConstant.ISALL_FIELD) ;
+		IndexWriterConfig iwconfig = new IndexWriterConfig(SearchConstant.LuceneVersion, dftAnalyzer) ;
+		IndexConfig iconfig = IndexConfig.create(SearchConstant.LuceneVersion, bes, dftAnalyzer, iwconfig, FieldIndexingStrategy.DEFAULT) ;
+		return new CompositeSearcher(new MultiSearcher(bes, ListUtil.EMPTY), nconfig, iconfig) ;
 	}
 
 	public SearchConfig config(){
 		return sconfig ;
+	}
+	
+	public IndexConfig indexConfig(){
+		return iconfig ;
 	}
 	
 	public int readerCount(){
@@ -89,7 +101,7 @@ public class CompositeSearcher implements Searcher {
 			return new SearchRequest(this, new MatchAllDocsQuery(), query) ;
 		}
 		
-		final SearchRequest result = new SearchRequest(this, sconfig.parseQuery(analyzer, query), query);
+		final SearchRequest result = new SearchRequest(this, sconfig.parseQuery(iconfig, analyzer, query), query);
 		return result;
 	}
 	
@@ -159,7 +171,7 @@ public class CompositeSearcher implements Searcher {
 	
 	public Searcher queryFilter(String query) throws ParseException{
 		if (StringUtil.isBlank(query)) return this;
-		return andFilter(new QueryWrapperFilter(sconfig.parseQuery(query))) ;
+		return andFilter(new QueryWrapperFilter(sconfig.parseQuery(iconfig, query))) ;
 	}
 
 	

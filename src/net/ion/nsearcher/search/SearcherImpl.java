@@ -11,6 +11,7 @@ import java.util.concurrent.Future;
 import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.common.IKeywordField;
+import net.ion.nsearcher.config.IndexConfig;
 import net.ion.nsearcher.config.SearchConfig;
 import net.ion.nsearcher.search.filter.FilterUtil;
 import net.ion.nsearcher.search.processor.PostProcessor;
@@ -32,14 +33,20 @@ public class SearcherImpl implements Searcher{
 	private List<PreProcessor> preListeners = new ArrayList<PreProcessor>();
 	private SingleSearcher searcher ;
 	private SearchConfig sconfig;
+	private IndexConfig iconfig;
 	
-	public SearcherImpl(SingleSearcher searcher, SearchConfig sconfig) {
+	public SearcherImpl(SingleSearcher searcher, SearchConfig sconfig, IndexConfig iconfig) {
 		this.searcher = searcher ;
 		this.sconfig = sconfig ;
+		this.iconfig = iconfig ;
 	}
 	
 	public SearchConfig config(){
 		return sconfig ;
+	}
+	
+	public IndexConfig indexConfig(){
+		return iconfig ;
 	}
 	
 	public SearchRequest createRequest(String query) throws ParseException {
@@ -60,7 +67,8 @@ public class SearcherImpl implements Searcher{
 			return new SearchRequest(this, new MatchAllDocsQuery(), query) ;
 		}
 		
-		final SearchRequest result = new SearchRequest(this, searcher.searchConfig().parseQuery(analyzer, query), query);
+		final SearchRequest result = new SearchRequest(this, searcher.searchConfig().parseQuery(iconfig, analyzer, query), query);
+		
 		return result;
 	}
 	
@@ -130,7 +138,7 @@ public class SearcherImpl implements Searcher{
 	
 	public Searcher queryFilter(String query) throws ParseException{
 		if (StringUtil.isBlank(query)) return this;
-		return andFilter(new QueryWrapperFilter(sconfig.parseQuery(query))) ;
+		return andFilter(new QueryWrapperFilter(sconfig.parseQuery(iconfig, query))) ;
 	}
 
 	// only test

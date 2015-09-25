@@ -47,7 +47,7 @@ public class Central implements Closeable{
 	}
 
 	public Searcher newSearcher() throws IOException {
-		return new SearcherImpl(singleSearcher, sconfig); 
+		return new SearcherImpl(singleSearcher, sconfig, iconfig); 
 	}
 	
 	public Searcher newSearcher(Central another, Central... other) throws IOException {
@@ -58,7 +58,7 @@ public class Central implements Closeable{
 		all.addAll(ListUtil.toList(other)) ;
 		
 		SearchConfig nconfig = SearchConfig.create(this.searchConfig().searchExecutor(), SearchConstant.LuceneVersion, new StandardAnalyzer(SearchConstant.LuceneVersion), SearchConstant.ISALL_FIELD) ;
-		return CompositeSearcher.create(nconfig, all) ;
+		return CompositeSearcher.create(another.sconfig, another.iconfig, all) ;
 	}
 
 	

@@ -5,6 +5,7 @@ import java.util.List;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.RandomUtil;
 import net.ion.nsearcher.ISTestCase;
+import net.ion.nsearcher.common.IndexFieldType;
 import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
@@ -48,7 +49,7 @@ public class TestSortExpression extends ISTestCase{
 
 	
 	public void testTwoField() throws Exception {
-		SortField[] sfs = new SortExpression().parse("name desc, address asc") ;
+		SortField[] sfs = new SortExpression().parse("name desc" ,"address asc") ;
 		assertEquals(2, sfs.length) ;
 		assertEquals(true, sfs[0].getReverse()) ;
 		assertEquals(SortField.Type.STRING, sfs[0].getType()) ;
@@ -59,7 +60,7 @@ public class TestSortExpression extends ISTestCase{
 	}
 	
 	public void testKeyField() throws Exception {
-		SortField[] sfs = new SortExpression().parse("name desc, _score") ;
+		SortField[] sfs = new SortExpression().parse("name desc", "_score") ;
 		assertEquals(2, sfs.length) ;
 		assertEquals(true, sfs[0].getReverse()) ;
 		assertEquals(SortField.Type.STRING, sfs[0].getType()) ;

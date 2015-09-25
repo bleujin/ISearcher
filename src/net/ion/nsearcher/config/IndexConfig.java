@@ -8,6 +8,7 @@ import java.util.concurrent.ThreadFactory;
 import net.ion.framework.util.MapUtil;
 import net.ion.framework.util.ObjectUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
+import net.ion.nsearcher.common.IndexFieldType;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
@@ -43,6 +44,7 @@ public class IndexConfig {
 	private PerFieldAnalyzerWrapper wrapperAnalyzer ;
 	private FieldIndexingStrategy fieldIndexingStrategy;
 	private ExecutorService es;
+	private IndexFieldType indexFieldType = IndexFieldType.DEFAULT;
 	
 	IndexConfig(Version version, ExecutorService es, Analyzer analyzer, IndexWriterConfig clone, FieldIndexingStrategy fiStrategy) {
 		this.version = version ;
@@ -68,6 +70,12 @@ public class IndexConfig {
 		this.fieldIndexingStrategy = fiStrategy ;
 		this.wrapperAnalyzer = new PerFieldAnalyzerWrapper(analyzer) ;
 	}
+	
+	public static IndexConfig create(Version version, ExecutorService es, Analyzer analyzer, IndexWriterConfig clone, FieldIndexingStrategy fiStrategy) {
+		return new IndexConfig(version, es, analyzer, clone, fiStrategy);
+	}
+
+
 
 	public IndexConfig indexAnalyzer(Analyzer analyzer) {
 		this.analyzer = analyzer ;
@@ -175,6 +183,15 @@ public class IndexConfig {
 
 	public ExecutorService indexExecutor() {
 		return es;
+	}
+
+	public IndexFieldType indexFieldType() {
+		return indexFieldType;
+	}
+	
+	public IndexConfig indexFieldType(IndexFieldType indexFieldType){
+		this.indexFieldType = indexFieldType ;
+		return this ;
 	}
 
 	

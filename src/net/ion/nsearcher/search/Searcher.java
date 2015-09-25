@@ -2,6 +2,7 @@ package net.ion.nsearcher.search;
 
 import java.io.IOException;
 
+import net.ion.nsearcher.config.IndexConfig;
 import net.ion.nsearcher.config.SearchConfig;
 import net.ion.nsearcher.search.processor.PostProcessor;
 import net.ion.nsearcher.search.processor.PreProcessor;
@@ -46,5 +47,7 @@ public interface Searcher {
 	public Analyzer queryAnalyzer() ;
 
 	public IndexReader indexReader() throws IOException ;
+
+	public IndexConfig indexConfig();
 
 }

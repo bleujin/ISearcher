@@ -5,6 +5,7 @@ import java.io.IOException;
 import net.ion.framework.util.MapUtil;
 import net.ion.nsearcher.common.AbDocument.Action;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
+import net.ion.nsearcher.common.IndexFieldType;
 import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.common.SearchConstant;
 import net.ion.nsearcher.common.WriteDocument;
@@ -33,12 +34,14 @@ public class IndexSession {
 
 	public final static String VERSION = "version" ;
 	public final static String LASTMODIFIED = "lastmodified" ;
-	
+	private final IndexFieldType indexFieldType ;
+
 	IndexSession(SingleSearcher searcher, Analyzer analyzer, IndexWriter iwriter) {
 		this.searcher = searcher;
 		this.wconfig = searcher.central().indexConfig().newIndexWriterConfig(analyzer);
 		this.fieldIndexingStrategy = searcher.central().indexConfig().getFieldIndexingStrategy();
 		this.writer = iwriter ;
+		this.indexFieldType = searcher.central().indexConfig().indexFieldType() ;
 	}
 
 	static IndexSession create(SingleSearcher searcher, Analyzer analyzer, IndexWriter iwriter) {
@@ -254,6 +257,10 @@ public class IndexSession {
 		commit();
 		// begin(this.owner) ;
 		return this;
+	}
+
+	public IndexFieldType indexFieldType() {
+		return this.indexFieldType ;
 	}
 
 

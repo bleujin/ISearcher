@@ -45,6 +45,7 @@ public class WriteDocument extends AbDocument {
 	private float boost = 1.0f ;
 	private Document doc;
 	private boolean replaceField;
+	private IndexFieldType indexFieldType;
 	
 	public WriteDocument(IndexSession indexSession, String docId) {
 		this(indexSession, docId, new Document(), false) ;
@@ -59,6 +60,7 @@ public class WriteDocument extends AbDocument {
 		this.doc = (doc == null) ? new Document() : doc;
 		
 		this.replaceField = replaceField;
+		this.indexFieldType = indexSession.indexFieldType() ;
 	}
 
 	public WriteDocument(IndexSession indexSession) {
@@ -240,6 +242,7 @@ public class WriteDocument extends AbDocument {
 			doc.removeField(field.name());
 		}
 		fields.put(field.name(), field);
+		indexFieldType.decideField(field) ;
 		return this;
 	}
 

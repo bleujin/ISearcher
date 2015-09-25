@@ -12,6 +12,7 @@ import net.ion.framework.util.CaseInsensitiveHashMap;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.SetUtil;
 import net.ion.framework.util.StringUtil;
+import net.ion.nsearcher.common.IndexFieldType;
 import net.ion.nsearcher.common.ReadDocument;
 
 import org.apache.ecs.xml.XML;
@@ -22,8 +23,6 @@ import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.SortField;
-import org.apache.lucene.search.SortField.Type;
 
 public class SearchRequest {
 
@@ -39,15 +38,18 @@ public class SearchRequest {
 	private Set<String> lazyColumns = SetUtil.newSet() ;
 	private String userDefine = "";
 	private DocCollector collector = DocCollector.BLANK;
+	private IndexFieldType indexFieldType;
 	
 	SearchRequest(Searcher searcher, Query query){
 		this.searcher = searcher ;
 		this.query = query ;
+		this.indexFieldType = searcher.indexConfig().indexFieldType() ;
 	}
 
 	SearchRequest(Searcher searcher, Query query, String userDefine){
 		this.searcher = searcher ;
 		this.query = query ;
+		this.indexFieldType = searcher.indexConfig().indexFieldType() ;
 		this.userDefine = userDefine ;
 	}
 
@@ -98,7 +100,7 @@ public class SearchRequest {
 	public Sort sort() {
 		if (sortExpression.size() == 0) return Sort.RELEVANCE ;
 //		return new Sort(new SortField("val", Type.STRING)) ;
-		return new Sort(SortExpression.parse(StringUtil.join(sortExpression, ","))) ;	
+		return new Sort(SortExpression.parse(indexFieldType, sortExpression.toArray(new String[0]))) ;	
 	}
 
 	public int limit() {

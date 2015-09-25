@@ -61,6 +61,25 @@ public class TestNumericSort extends TestCase {
 	}
 
 	
+	public void testRangeSearch() throws Exception {
+		cen.newIndexer().index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				for (int i = 0; i < 15; i++) {
+					isession.newDocument("/index/" + i).keyword("str", "" + i).number("index", i).insert();
+				}
+				return null;
+			}
+		});
+		
+		cen.newSearcher().createRequest("index:[+1 TO +10]").find().debugPrint(); 
+		
+		
+		
+		
+	}
+	
+	
 	
 	public void testLucene() throws Exception {
 		RAMDirectory dir = new RAMDirectory() ;
