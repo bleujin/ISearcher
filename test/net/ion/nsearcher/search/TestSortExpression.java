@@ -18,14 +18,14 @@ public class TestSortExpression extends ISTestCase{
 	
 	public void testEmpty() throws Exception {
 		
-		SortField[] sfs = new SortExpression().parse("") ;
+		SortField[] sfs = new SortExpression().parseTest("") ;
 		
 		assertEquals(1, sfs.length) ;
 		assertEquals(true, sfs[0] == SortField.FIELD_SCORE) ;
 	}
 	
 	public void testOneField() throws Exception {
-		SortField[] sfs = new SortExpression().parse("name _number desc") ;
+		SortField[] sfs = new SortExpression().parseTest("name _number desc") ;
 		assertEquals(1, sfs.length) ;
 		assertEquals(true, sfs[0].getReverse()) ;
 		assertEquals(SortField.Type.DOUBLE, sfs[0].getType()) ;
@@ -33,14 +33,14 @@ public class TestSortExpression extends ISTestCase{
 
 	
 	public void testOneField2() throws Exception {
-		SortField[] sfs = new SortExpression().parse("name _number") ;
+		SortField[] sfs = new SortExpression().parseTest("name _number") ;
 		assertEquals(1, sfs.length) ;
 		assertEquals(false, sfs[0].getReverse()) ;
 		assertEquals(SortField.Type.DOUBLE, sfs[0].getType()) ;
 	}
 
 	public void testOneField3() throws Exception {
-		SortField[] sfs = new SortExpression().parse("name asc") ;
+		SortField[] sfs = new SortExpression().parseTest("name asc") ;
 		assertEquals(1, sfs.length) ;
 		assertEquals(false, sfs[0].getReverse()) ;
 		assertEquals(SortField.Type.STRING, sfs[0].getType()) ;
@@ -49,7 +49,7 @@ public class TestSortExpression extends ISTestCase{
 
 	
 	public void testTwoField() throws Exception {
-		SortField[] sfs = new SortExpression().parse("name desc" ,"address asc") ;
+		SortField[] sfs = new SortExpression().parseTest("name desc" ,"address asc") ;
 		assertEquals(2, sfs.length) ;
 		assertEquals(true, sfs[0].getReverse()) ;
 		assertEquals(SortField.Type.STRING, sfs[0].getType()) ;
@@ -60,7 +60,7 @@ public class TestSortExpression extends ISTestCase{
 	}
 	
 	public void testKeyField() throws Exception {
-		SortField[] sfs = new SortExpression().parse("name desc", "_score") ;
+		SortField[] sfs = new SortExpression().parseTest("name desc", "_score") ;
 		assertEquals(2, sfs.length) ;
 		assertEquals(true, sfs[0].getReverse()) ;
 		assertEquals(SortField.Type.STRING, sfs[0].getType()) ;

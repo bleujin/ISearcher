@@ -1,14 +1,18 @@
 package net.ion.nsearcher.config;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 import net.ion.framework.util.MapUtil;
 import net.ion.framework.util.ObjectUtil;
+import net.ion.framework.util.SetUtil;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
 import net.ion.nsearcher.common.IndexFieldType;
+import net.ion.nsearcher.common.MyField;
+import net.ion.nsearcher.common.MyField.MyFieldType;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
@@ -44,7 +48,19 @@ public class IndexConfig {
 	private PerFieldAnalyzerWrapper wrapperAnalyzer ;
 	private FieldIndexingStrategy fieldIndexingStrategy;
 	private ExecutorService es;
-	private IndexFieldType indexFieldType = IndexFieldType.DEFAULT;
+	private IndexFieldType indexFieldType = new IndexFieldType() {
+
+		private Set<String> numericField = SetUtil.newSyncSet();
+		public void decideField(MyField field) {
+			if (field.myFieldtype() == MyFieldType.Number || field.myFieldtype() == MyFieldType.Double) {
+				numericField.add(field.name());
+			}
+		}
+
+		public boolean isNumericField(String field) {
+			return numericField.contains(field);
+		}
+	};
 	
 	IndexConfig(Version version, ExecutorService es, Analyzer analyzer, IndexWriterConfig clone, FieldIndexingStrategy fiStrategy) {
 		this.version = version ;

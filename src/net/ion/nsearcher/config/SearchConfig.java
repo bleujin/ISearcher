@@ -138,6 +138,6 @@ class QueryParserWithNumericRange extends ExtendableQueryParser {
 	}
 
 	protected Query getFieldQuery(String field, String queryText, boolean quoted) throws ParseException {
-		return super.getFieldQuery(StringUtil.lowerCase(field), queryText, quoted) ;
+		return super.getFieldQuery(field, queryText, quoted) ;
 	}
 }

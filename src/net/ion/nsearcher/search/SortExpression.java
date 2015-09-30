@@ -26,7 +26,7 @@ public class SortExpression {
 		.toMap() ;
 	
 	public static SortField[] parse(IndexFieldType ift, String... fields) {
-		if (fields == null || fields.length == 0) return new SortField[]{SortField.FIELD_SCORE} ;
+		if (fields == null || fields.length == 0 || (fields.length == 1 && StringUtil.isBlank(fields[0]))) return new SortField[]{SortField.FIELD_SCORE} ;
 		
 		
 		List<SortField> result = new ArrayList<SortField>() ; 
@@ -77,7 +77,7 @@ public class SortExpression {
 		return sreq;
 	}
 
-	public SortField[] parse(String... fields) {
+	public SortField[] parseTest(String... fields) {
 		return parse(IndexFieldType.DEFAULT, fields);
 	}
 	

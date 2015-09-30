@@ -126,4 +126,20 @@ public class TestField extends ISTestCase{
 //		Debug.line(hh24miss);
 	}
 
+	
+	public void testSText() throws Exception {
+		Central cen = CentralConfig.newRam().build() ;
+		Indexer indexer = cen.newIndexer();
+		
+		indexer.index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				isession.newDocument("bleujin").keyword("name", "bleujin").stext("explain", "jakarta apache bleujin hi").insert() ;
+				return null;
+			}
+		}) ;
+		
+		cen.newSearcher().createRequest("explain:\"jakarta apache\"").find().debugPrint();
+	}
+	
 }

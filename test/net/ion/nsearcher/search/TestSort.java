@@ -29,9 +29,10 @@ public class TestSort extends TestCase{
 
 		Sort sort = central.newSearcher().createRequest("").sort("val=desc").sort() ;
 		SortField sfield = sort.getSort()[0];
-		assertEquals(true, sfield.getType() == Type.STRING) ;
+		assertEquals(true, sfield.getType() == Type.LONG) ;
 		assertEquals(true, sfield.getReverse()) ;
 		assertEquals("val", sfield.getField()) ;
+		
 	}
 	
 	public void testDescending() throws Exception {
