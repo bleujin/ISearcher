@@ -134,10 +134,11 @@ public class TestField extends ISTestCase{
 		indexer.index(new IndexJob<Void>() {
 			@Override
 			public Void handle(IndexSession isession) throws Exception {
-				isession.newDocument("bleujin").keyword("name", "bleujin").stext("explain", "jakarta apache bleujin hi").insert() ;
+				isession.newDocument("bleujin").keyword("name", "bleujin").stext("explain", "jakarta").update() ;
 				return null;
 			}
 		}) ;
+
 		
 		cen.newSearcher().createRequest("explain:\"jakarta apache\"").find().debugPrint();
 	}

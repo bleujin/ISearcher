@@ -206,12 +206,14 @@ public class WriteDocument extends AbDocument {
 	}
 
 	public WriteDocument text(String fieldName, String value) {
+		if (StringUtil.isBlank(value)) return this ;
 		add(MyField.text(fieldName, value));
 		return this;
 	}
 	
 	public WriteDocument stext(String fieldName, String value) {
-		add(MyField.manual(fieldName, value, Store.YES, true, MyFieldType.Text));
+		if (StringUtil.isBlank(value)) return this ;
+		add(MyField.text(fieldName, value, Store.YES));
 		return this;
 	}
 
