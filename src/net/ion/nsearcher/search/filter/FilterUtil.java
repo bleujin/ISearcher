@@ -4,12 +4,16 @@ import java.util.Collection;
 import java.util.Set;
 
 import net.ion.framework.util.SetUtil;
+import net.ion.nsearcher.config.SearchConfig;
+import net.ion.nsearcher.search.Searcher;
 
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queries.FilterClause;
 import org.apache.lucene.queries.TermsFilter;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.NumericRangeFilter;
+import org.apache.lucene.search.QueryWrapperFilter;
 import org.apache.lucene.search.TermRangeFilter;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.util.BytesRef;
@@ -26,7 +30,7 @@ public class FilterUtil {
 		return and(new Filter[] { filter1, filter2 });
 	}
 
-	public final static Filter and(Filter[] filters) {
+	public final static Filter and(Filter... filters) {
 		if (filters == null || filters.length == 0) return null ;
 
 		BooleanFilter result = new BooleanFilter();
@@ -41,7 +45,7 @@ public class FilterUtil {
 	}
 
 
-	public final static Filter or(Filter[] filters) {
+	public final static Filter or(Filter... filters) {
 		if (filters == null || filters.length == 0) return null ;
 
 		BooleanFilter result = new BooleanFilter();
@@ -54,6 +58,22 @@ public class FilterUtil {
 		if (filterCount < 1) return null ;
 		return result;
 	}
+	
+
+	public final static Filter not(Filter... filters) {
+		if (filters == null || filters.length == 0) return null ;
+
+		BooleanFilter result = new BooleanFilter();
+		int filterCount = 0 ;
+		for (Filter filter : filters) {
+			if (filter == null) continue ;
+			filterCount++ ;
+			result.add(new FilterClause(filter, Occur.MUST_NOT));
+		}
+		if (filterCount < 1) return null ;
+		return result;
+	}
+
 
 	public static Filter and(Collection<Filter> filters) {
 		return and (filters.toArray(new Filter[0]));
@@ -72,6 +92,9 @@ public class FilterUtil {
 		return new TermsFilter(set.toArray(new Term[0])) ;
 	}
 
+	public static Filter query(String query, Searcher searcher) throws ParseException{
+		return and(new QueryWrapperFilter(searcher.parseQuery(query))) ;
+	}
 	
 	public static TermRangeFilter between(String fname, String lowerTerm, String upperTerm){
 		return new TermRangeFilter(fname, new BytesRef(lowerTerm), new BytesRef(upperTerm), true, true) ;

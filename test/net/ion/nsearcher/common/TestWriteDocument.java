@@ -9,6 +9,7 @@ import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.search.Searcher;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.Term;
 
 public class TestWriteDocument extends TestCase {
 
@@ -103,5 +104,33 @@ public class TestWriteDocument extends TestCase {
 		assertEquals(0, cen.newSearcher().createRequestByKey("NEWDOC").find().size()) ;
 	}
 	
+	
+	
+	public void testDelete() throws Exception {
+		indexer.index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				isession.newDocument("newdoc").text("name", "123").insert();
+				return null ;
+			}
+		}) ;
+		
+		
+		cen.newSearcher().createRequest("").find().debugPrint(); 
+		
+
+		indexer.index(new IndexJob<Void>() {
+			@Override
+			public Void handle(IndexSession isession) throws Exception {
+				isession.newDocument("abc").text("name", "123").insert();
+				isession.newDocument("def").text("name", "123").insert();
+				isession.deleteTerm(new Term("name", "123")) ;
+				return null ;
+			}
+		}) ;
+		
+		cen.newSearcher().createRequest("").find().debugPrint(); 
+
+	}
 	
 }

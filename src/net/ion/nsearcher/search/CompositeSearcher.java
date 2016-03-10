@@ -193,6 +193,10 @@ public class CompositeSearcher implements Searcher {
 		return searcher.indexReader() ;
 	}
 
+	public Query parseQuery(String query) throws ParseException {
+		return sconfig.parseQuery(iconfig, query) ;
+	}
+
 }
 
 class MultiSearcher implements ISearchable{

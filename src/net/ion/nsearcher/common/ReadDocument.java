@@ -57,7 +57,7 @@ public class ReadDocument extends AbDocument {
 
 
 	public long asLong(String name, long dftValue) {
-		return NumberUtil.toLong(getField(name).stringValue(), dftValue);
+		return NumberUtil.toLong(asString(name), dftValue);
 	}
 
 

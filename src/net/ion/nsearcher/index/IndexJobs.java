@@ -15,7 +15,6 @@ public class IndexJobs {
 					WriteDocument wdoc = isession.newDocument(prefix + i).keyword("prefix", prefix).number("idx", i) ;
 					isession.updateDocument(wdoc) ;
 				}
-				// TODO Auto-generated method stub
 				return null;
 			}
 		};

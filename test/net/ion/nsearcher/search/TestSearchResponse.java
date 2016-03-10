@@ -30,8 +30,7 @@ public class TestSearchResponse extends TestCase {
 	}
 	
 	public void testBlank() {
-		// TODO Auto-generated method stub
-
+		
 	}
 	
 	

@@ -202,42 +202,42 @@ public class ISTestCase extends TestCase{
 class WrapperLogger implements Logger {
 
 	public void debug(String arg0) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void error(String arg0) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void info(String arg0) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public boolean isDebugEnabled() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	public boolean isErrorEnabled() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	public boolean isInfoEnabled() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	public boolean isWarnEnabled() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	public void warn(String arg0) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 	

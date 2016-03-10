@@ -161,4 +161,8 @@ public class SearcherImpl implements Searcher{
 	public IndexReader indexReader() throws IOException{
 		return searcher.indexReader() ;
 	}
+	
+	public Query parseQuery(String query) throws ParseException {
+		return sconfig.parseQuery(iconfig, query) ;
+	}
 }

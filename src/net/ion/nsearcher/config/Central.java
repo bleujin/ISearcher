@@ -7,6 +7,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import net.ion.framework.util.Debug;
 import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.ListUtil;
 import net.ion.nsearcher.common.SearchConstant;
@@ -71,6 +72,10 @@ public class Central implements Closeable{
 	}
 
 	public void destroySelf() {
+		List<Runnable> remains = iconfig.indexExecutor().shutdownNow() ;
+		for(Runnable r : remains){
+			Debug.warn(r + " canceled");
+		}
 		IOUtil.close(singleSearcher);
 		IOUtil.closeQuietly(indexer);
 		IOUtil.closeQuietly(dir) ;

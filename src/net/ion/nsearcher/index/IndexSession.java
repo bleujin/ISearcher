@@ -81,17 +81,24 @@ public class IndexSession {
 	public WriteDocument loadDocument(String docId, boolean replaceValue, String... numfieldnames) throws IOException, ParseException {
 		ReadDocument rdoc = searcher.central().newSearcher().createRequestByKey(docId).findOne();
 		Document findDoc = (rdoc == null) ? new Document() : rdoc.toLuceneDoc() ;
-		
 		WriteDocument result = new WriteDocument(this, docId, findDoc, replaceValue);
 		for (String nfield : numfieldnames) {
 			IndexableField field = findDoc.getField(nfield) ;
 			if (field == null) continue ;
 			result.number(nfield, field.numericValue().longValue()) ;
 		}
-		
-		
 		return result;
 	}
+	
+	public WriteDocument loadDocument(String docId, boolean replaceValue, FieldLoadable floadable) throws IOException, ParseException {
+		ReadDocument rdoc = searcher.central().newSearcher().createRequestByKey(docId).findOne();
+		Document findDoc = (rdoc == null) ? new Document() : rdoc.toLuceneDoc() ;
+		WriteDocument result = new WriteDocument(this, docId, findDoc, replaceValue);
+		
+		return floadable.handle(result, findDoc);
+	}
+	
+	
 	
 	public WriteDocument loadDocument(String docId) throws IOException, ParseException {
 		return loadDocument(docId, false) ;
