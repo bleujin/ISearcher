@@ -57,4 +57,18 @@ public class TestSort extends TestCase{
 
 	}
 
+	
+	public void testLongSort() throws Exception {
+		Central central = CentralConfig.newRam().build() ;
+		central.newIndexer().index(new IndexJob<Void>() {
+			public Void handle(IndexSession isession) throws Exception {
+				for (int i = 0; i < 10; i++) {
+					isession.newDocument().number("index", RandomUtil.nextLong()).insert() ; 
+				}
+				return null;
+			}
+		}) ;
+		
+		central.newSearcher().createRequest("").sort("index desc").find().debugPrint("index");
+	}
 }

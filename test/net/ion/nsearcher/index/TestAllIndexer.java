@@ -16,6 +16,7 @@ public class TestAllIndexer {
 		ts.addTestSuite(TestReadDocument.class) ;
 		ts.addTestSuite(TestDocumentField.class);
 		ts.addTestSuite(TestMerge.class) ;
+		ts.addTestSuite(TestSpecialChar.class);
 //		ts.addTestSutie(TestBoost.class) ;
 		
 		ts.addTestSuite(TestIndexer.class) ;
