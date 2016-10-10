@@ -1,14 +1,19 @@
 package net.ion.nsearcher.search;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import net.ion.framework.db.Page;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
+import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.common.ReadDocument;
+import net.ion.nsearcher.util.PageOption;
+import net.ion.nsearcher.util.PageOutPut;
 
 import org.apache.ecs.xml.XML;
 import org.apache.lucene.search.ScoreDoc;
@@ -151,6 +156,13 @@ public class SearchResponse {
 		if (result.size() > 0) return result.get(0) ;
 		return null ;
 	}
+
+	public String pagePrint(Page page) {
+		String result = PageOption.DEFAULT.toHtml(this.size(), page) ;
+		return result ;
+	}
+	
+
 
 
 	
