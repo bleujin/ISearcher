@@ -27,42 +27,43 @@ public class SearchResponse {
 	private ISearchable searcher;
 	private final long startTime;
 	private final long endTime;
-	private Future<Void> postFuture ;
-	private List<Integer> docs ;
-	private int totalCount ;
+	private Future<Void> postFuture;
+	private List<Integer> docs;
+	private int totalCount;
+
 	private SearchResponse(ISearchable searcher, SearchRequest sreq, List<Integer> docs, int totalCount, long startTime) {
-		this.searcher = searcher ;
-		this.sreq = sreq ;
+		this.searcher = searcher;
+		this.sreq = sreq;
 		this.startTime = startTime;
 		this.endTime = System.currentTimeMillis();
-		this.docs = docs ;
-		this.totalCount = totalCount ;
+		this.docs = docs;
+		this.totalCount = totalCount;
 	}
 
 	public static SearchResponse create(ISearchable searcher, SearchRequest sreq, List<Integer> docs, int totalCount, long startTime) throws IOException {
-		return new SearchResponse(searcher, sreq, makeDocument(sreq, docs), totalCount, startTime) ;
+		return new SearchResponse(searcher, sreq, makeDocument(sreq, docs), totalCount, startTime);
 	}
-	
+
 	public static SearchResponse create(ISearchable searcher, SearchRequest sreq, TopDocs docs, long startTime) throws IOException {
 		return new SearchResponse(searcher, sreq, makeDocument(sreq, docs), docs.totalHits, startTime);
 	}
 
 	public int totalCount() {
-		return totalCount ;
-		// 전체 total은 searcherImpl이 구함. 
-//		return searcher.totalCount(sreq, sreq.getFilter()) ;
+		return totalCount;
+		// 전체 total은 searcherImpl이 구함.
+		// return searcher.totalCount(sreq, sreq.getFilter()) ;
 	}
-	
-	public int size(){
-		return docs.size() ;
+
+	public int size() {
+		return docs.size();
 	}
-	
-	public SearchRequest request(){
-		return sreq ;
+
+	public SearchRequest request() {
+		return sreq;
 	}
 
 	public void debugPrint() throws IOException {
-		eachDoc(EachDocHandler.DEBUG) ;
+		eachDoc(EachDocHandler.DEBUG);
 	}
 
 	public void debugPrint(final String... fields) throws IOException {
@@ -70,59 +71,65 @@ public class SearchResponse {
 
 			@Override
 			public <T> T handle(EachDocIterator iter) {
-				while(iter.hasNext()){
+				while (iter.hasNext()) {
 					ReadDocument next = iter.next();
-					List list = ListUtil.newList() ;
-					list.add(next.toString()) ;
+					List list = ListUtil.newList();
+					list.add(next.toString());
 					for (String field : fields) {
-						list.add(next.asString(field)) ;
+						list.add(next.asString(field));
 					}
-					Debug.line(list.toArray(new Object[0])) ;
+					Debug.line(list.toArray(new Object[0]));
 				}
 				return null;
+			}
+		});
+	}
+
+	public <T> T eachDoc(EachDocHandler<T> handler) {
+		EachDocIterator iter = new EachDocIterator(searcher, sreq, docs);
+		return handler.handle(iter);
+	}
+
+	public List<ReadDocument> getDocument() throws IOException {
+		return eachDoc(EachDocHandler.TOLIST);
+	}
+
+	public List<ReadDocument> getDocument(final Page page) {
+		return eachDoc(new EachDocHandler<List<ReadDocument>>() {
+			@Override
+			public List<ReadDocument> handle(EachDocIterator iter) {
+				return page.subList(iter) ;
 			}
 		}) ;
 	}
 
-
-	
-	public <T> T eachDoc(EachDocHandler<T> handler){
-		EachDocIterator iter = new EachDocIterator(searcher, sreq, docs) ;
-		return handler.handle(iter) ;
-	}
-	
-	
-	public List<ReadDocument> getDocument() throws IOException{
-		return eachDoc(EachDocHandler.TOLIST) ;
-	}
-
 	private static List<Integer> makeDocument(SearchRequest sreq, List<Integer> docs) {
-		List<Integer> result = ListUtil.newList() ;
+		List<Integer> result = ListUtil.newList();
 
 		for (int i = sreq.skip(); i < Math.min(sreq.limit(), docs.size()); i++) {
 			result.add(docs.get(i));
 		}
 		return result;
 	}
-	
+
 	private static List<Integer> makeDocument(SearchRequest sreq, TopDocs docs) {
 		ScoreDoc[] sdocs = docs.scoreDocs;
-		List<Integer> result = ListUtil.newList() ;
+		List<Integer> result = ListUtil.newList();
 
 		for (int i = sreq.skip(); i < Math.min(sreq.limit(), sdocs.length); i++) {
 			result.add(sdocs[i].doc);
 		}
 		return result;
 	}
-	
-	public <T> T transformer(Function<TransformerKey, T> function){
-		return function.apply(new TransformerKey(this.searcher, docs, sreq)) ;
+
+	public <T> T transformer(Function<TransformerKey, T> function) {
+		return function.apply(new TransformerKey(this.searcher, docs, sreq));
 	}
 
 	public long elapsedTime() {
 		return endTime - startTime;
 	}
-	
+
 	public long startTime() {
 		return startTime;
 	}
@@ -138,33 +145,29 @@ public class SearchResponse {
 		return result;
 	}
 
-	public String toString(){
-		return toXML().toString() ;
+	public String toString() {
+		return toXML().toString();
 	}
-	
+
 	public void awaitPostFuture() throws InterruptedException, ExecutionException {
-		postFuture.get() ;
+		postFuture.get();
 	}
 
 	public SearchResponse postFuture(Future<Void> postFuture) {
-		this.postFuture = postFuture ;
-		return this ;
+		this.postFuture = postFuture;
+		return this;
 	}
 
 	public ReadDocument first() throws IOException {
-		List<ReadDocument> result = getDocument() ;
-		if (result.size() > 0) return result.get(0) ;
-		return null ;
+		List<ReadDocument> result = getDocument();
+		if (result.size() > 0)
+			return result.get(0);
+		return null;
 	}
 
 	public String pagePrint(Page page) {
-		String result = PageOption.DEFAULT.toHtml(this.size(), page) ;
-		return result ;
+		String result = PageOption.DEFAULT.toHtml(this.size(), page);
+		return result;
 	}
-	
-
-
-
-	
 
 }

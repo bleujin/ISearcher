@@ -1,12 +1,14 @@
 package net.ion.nsearcher.search;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.lucene.queryparser.classic.ParseException;
 
 import junit.framework.TestCase;
 import net.ion.framework.db.Page;
 import net.ion.framework.util.Debug;
+import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
@@ -37,7 +39,8 @@ public class TestSearchResponse extends TestCase {
 	
 	public void testBlank() throws IOException, ParseException {
 		final SearchResponse sres = central.newSearcher().createRequest("").find();
-		sres.debugPrint();
+		List<ReadDocument> list = sres.getDocument(Page.create(2, 1)) ;
+		Debug.line(list);
 		
 		Debug.line(sres.pagePrint(Page.create(2, 1))) ;
 	}

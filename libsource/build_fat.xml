@@ -34,7 +34,8 @@
         	<fatjar.jarsource file="${basedir}\search4104\lucene-sandbox-4.10.4.jar" relpath=""/>  
         	<fatjar.jarsource file="${basedir}\search4104\lucene-analyzers-common-4.10.4.jar" relpath=""/>  
             <fatjar.jarsource file="${basedir}\search4104\arirang-analyzer-4.6-140808.jar" relpath=""/>
-        	
+        	<fatjar.jarsource file="${basedir}\search4104\lucene-suggest-4.10.4.jar" relpath=""/>  
+            	
         </fatjar.build>
     </target>
     	
