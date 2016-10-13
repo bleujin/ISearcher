@@ -27,6 +27,7 @@ import net.ion.nsearcher.index.event.CollectorEvent;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexableField;
@@ -246,6 +247,12 @@ public class WriteDocument extends AbDocument {
 		fields.put(field.name(), field);
 		indexFieldType.decideField(field) ;
 		return this;
+	}
+	
+	@Deprecated
+	public WriteDocument addField(Field field){
+		doc.add(field);
+		return this ;
 	}
 
 	public Collection<MyField> fields() {

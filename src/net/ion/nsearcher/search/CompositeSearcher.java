@@ -196,6 +196,8 @@ public class CompositeSearcher implements Searcher {
 	public Query parseQuery(String query) throws ParseException {
 		return sconfig.parseQuery(iconfig, query) ;
 	}
+	
+	
 
 }
 
@@ -240,9 +242,9 @@ class MultiSearcher implements ISearchable{
 		
 		Set<String> fields = request.selectorField();
 		if (fields == null || fields.size() == 0) {
-			return ReadDocument.loadDocument(isearcher.doc(docId));
+			return ReadDocument.loadDocument(docId, isearcher.doc(docId));
 		}
-		return ReadDocument.loadDocument(isearcher.doc(docId, request.selectorField()));
+		return ReadDocument.loadDocument(docId, isearcher.doc(docId, request.selectorField()));
 	}
 
 	private IndexReader multiIndexReader() throws IOException{
@@ -265,6 +267,11 @@ class MultiSearcher implements ISearchable{
 
 	public IndexReader indexReader() throws IOException{
 		return multiIndexReader() ;
+	}
+
+	@Override
+	public SearchConfig searchConfig() {
+		return cs.get(0).searchConfig();
 	}
 
 }

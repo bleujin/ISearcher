@@ -1,5 +1,7 @@
 package net.ion.nsearcher.search;
 
+import java.io.IOException;
+
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 
 import junit.framework.TestCase;
@@ -19,8 +21,8 @@ public class FirstTest extends TestCase{
 	}
 	
 	public void testSearch() throws Exception {
-		Central cen = CentralConfig.newRam().indexConfigBuilder().indexAnalyzer(new CJKAnalyzer()).parent().searchConfigBuilder().queryAnalyzer(new CJKAnalyzer()).build() ;
-		
+		final Central cen = CentralConfig.newRam().indexConfigBuilder().indexAnalyzer(new CJKAnalyzer()).parent().searchConfigBuilder().queryAnalyzer(new CJKAnalyzer()).build() ;
+
 		Indexer indexer = cen.newIndexer() ;
 		indexer.index(new IndexJob<Void>() {
 			@Override

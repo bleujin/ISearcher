@@ -17,7 +17,9 @@ import net.ion.nsearcher.search.CompositeSearcher;
 import net.ion.nsearcher.search.Searcher;
 import net.ion.nsearcher.search.SearcherImpl;
 import net.ion.nsearcher.search.SingleSearcher;
+import net.ion.nsearcher.search.Suggester;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.store.Directory;
@@ -108,6 +110,17 @@ public class Central implements Closeable{
 
 	public Lock writeLock(){
 		return rwlock.writeLock() ;
+	}
+
+	private Suggester suggester = null ;
+	public synchronized Suggester newSuggester(Analyzer analyzer) {
+		if (suggester == null){
+			this.suggester = new Suggester(this, analyzer);
+		}
+		return suggester ;
+	}
+	public Suggester newSuggester() {
+		return newSuggester(this.indexConfig().indexAnalyzer()) ;
 	}
 
 

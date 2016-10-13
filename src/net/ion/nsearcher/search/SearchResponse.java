@@ -12,12 +12,24 @@ import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.StringUtil;
 import net.ion.nsearcher.common.ReadDocument;
+import net.ion.nsearcher.config.SearchConfig;
 import net.ion.nsearcher.util.PageOption;
 import net.ion.nsearcher.util.PageOutPut;
 
 import org.apache.ecs.xml.XML;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.highlight.Highlighter;
+import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
+import org.apache.lucene.search.highlight.QueryScorer;
+import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
+import org.apache.lucene.search.highlight.TextFragment;
+import org.apache.lucene.search.highlight.TokenSources;
 
 import com.google.common.base.Function;
 
@@ -170,4 +182,35 @@ public class SearchResponse {
 		return result;
 	}
 
+	
+	public DocHighlighter createHighlighter(String savedFieldName, String matchString){
+		return new DocHighlighter(this, savedFieldName, matchString) ;
+	}
+	
+	
+
+	public String asHighlight(ReadDocument doc, String savedFieldName, String matchString) throws IOException, InvalidTokenOffsetsException {
+		SimpleHTMLFormatter htmlFormatter = new SimpleHTMLFormatter("<span class='matched'>","</span>");
+		Highlighter highlighter = new Highlighter(htmlFormatter, new QueryScorer(new TermQuery(new Term(savedFieldName, matchString))));
+		
+		String tvtext = doc.asString(savedFieldName) ;
+		TokenStream tstream = TokenSources.getAnyTokenStream(searcher.indexReader(), doc.docId(), savedFieldName, searcher.searchConfig().queryAnalyzer());
+		TextFragment[] tvfrag = highlighter.getBestTextFragments(tstream, tvtext, false, 10);
+		
+		StringBuilder result = new StringBuilder() ;
+		for (int j = 0; j < tvfrag.length; j++) {
+			if ((tvfrag[j] != null) && (tvfrag[j].getScore() > 0)) {
+				result.append(tvfrag[j].toString());
+			}
+		}
+		return result.toString();
+	}
+
+	IndexReader indexReader() throws IOException {
+		return searcher.indexReader();
+	}
+
+	SearchConfig searchConfig() {
+		return searcher.searchConfig();
+	}
 }

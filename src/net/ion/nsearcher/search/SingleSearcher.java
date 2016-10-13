@@ -158,9 +158,9 @@ public class SingleSearcher implements Closeable, ISearchable {
 	public ReadDocument doc(int docId, SearchRequest request) throws IOException {
 		Set<String> fields = request.selectorField();
 		if (fields == null || fields.size() == 0) {
-			return ReadDocument.loadDocument(dreader.document(docId));
+			return ReadDocument.loadDocument(docId, dreader.document(docId));
 		}
-		return ReadDocument.loadDocument(dreader.document(docId, request.selectorField()));
+		return ReadDocument.loadDocument(docId, dreader.document(docId, request.selectorField()));
 	}
 
 	public InfoReader reader() {

@@ -51,4 +51,5 @@ public interface Searcher {
 	public IndexConfig indexConfig();
 
 	public Query parseQuery(String query) throws ParseException ;
+
 }

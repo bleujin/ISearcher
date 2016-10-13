@@ -10,8 +10,8 @@
 	<classpathentry kind="lib" path="lib/aradon311_0.9.jar"/>
 	<classpathentry kind="lib" path="lib/jsr311_fat.jar"/>
 	<classpathentry kind="lib" path="lib/aclient_0.5.jar"/>
-	<classpathentry kind="lib" path="lib/search4104_fat.jar"/>
 	<classpathentry kind="lib" path="lib/extractfile_fat_1.8.jar"/>
+	<classpathentry kind="lib" path="lib/search4104_fat.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

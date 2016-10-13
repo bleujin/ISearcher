@@ -17,9 +17,9 @@ public abstract class AbstractDocCollector implements DocCollector {
 	private ReadDocument toDoc(DirectoryReader dreader, SearchRequest sreq, int docId) throws IOException {
 		Set<String> fields = sreq.selectorField();
 		if (fields == null || fields.size() == 0) {
-			return ReadDocument.loadDocument(dreader.document(docId));
+			return ReadDocument.loadDocument(docId, dreader.document(docId));
 		}
-		return ReadDocument.loadDocument(dreader.document(docId, sreq.selectorField()));
+		return ReadDocument.loadDocument(docId, dreader.document(docId, sreq.selectorField()));
 	}
 
 	

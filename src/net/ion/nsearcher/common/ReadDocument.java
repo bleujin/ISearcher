@@ -13,8 +13,16 @@ import net.ion.framework.util.NumberUtil;
 import net.ion.framework.util.SetUtil;
 import net.ion.framework.util.StringUtil;
 
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.highlight.Highlighter;
+import org.apache.lucene.search.highlight.QueryScorer;
+import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
+import org.apache.lucene.search.highlight.TextFragment;
+import org.apache.lucene.search.highlight.TokenSources;
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
@@ -24,13 +32,24 @@ public class ReadDocument extends AbDocument {
 
 	private static final long serialVersionUID = 2104871499687824141L;
 	private Document doc;
+	private int docId;
 
-	ReadDocument(Document doc) {
+	ReadDocument(int docId, Document doc) {
+		this.docId = docId ;
 		this.doc = doc ;
 	}
 
+	public static ReadDocument loadDocument(int docId, Document doc) {
+		return new ReadDocument(docId, doc) ;
+	}
+	
 	public static ReadDocument loadDocument(Document doc) {
-		return new ReadDocument(doc) ;
+		return new ReadDocument(-1, doc) ;
+	}
+
+	
+	public int docId(){
+		return docId ;
 	}
 	
 	public String idValue(){
@@ -140,5 +159,6 @@ public class ReadDocument extends AbDocument {
 		}
 		return helper.toString() ;
 	}
+
 	
 }
