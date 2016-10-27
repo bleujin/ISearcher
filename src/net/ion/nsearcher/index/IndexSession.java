@@ -35,17 +35,19 @@ public class IndexSession {
 	public final static String VERSION = "version" ;
 	public final static String LASTMODIFIED = "lastmodified" ;
 	private final IndexFieldType indexFieldType ;
+	private Indexer indexer;
 
-	IndexSession(SingleSearcher searcher, Analyzer analyzer, IndexWriter iwriter) {
+	IndexSession(SingleSearcher searcher, Analyzer analyzer, IndexWriter iwriter, Indexer indexer) {
 		this.searcher = searcher;
 		this.wconfig = searcher.central().indexConfig().newIndexWriterConfig(analyzer);
 		this.fieldIndexingStrategy = searcher.central().indexConfig().getFieldIndexingStrategy();
 		this.writer = iwriter ;
 		this.indexFieldType = searcher.central().indexConfig().indexFieldType() ;
+		this.indexer = indexer ;
 	}
 
-	static IndexSession create(SingleSearcher searcher, Analyzer analyzer, IndexWriter iwriter) {
-		return new IndexSession(searcher, analyzer, iwriter);
+	static IndexSession create(SingleSearcher searcher, Analyzer analyzer, IndexWriter iwriter, Indexer indexer) {
+		return new IndexSession(searcher, analyzer, iwriter, indexer);
 	}
 
 	public void begin(String owner) throws IOException {
@@ -180,6 +182,7 @@ public class IndexSession {
 	public void cancel() throws IOException {
 		this.alreadyCancelled = true;
 		writer.rollback();
+		indexer.closedWriter(); 
 	}
 
 	public IndexSession rollback() {
@@ -189,6 +192,7 @@ public class IndexSession {
 		if (writer != null) {
 			try {
 				writer.rollback();
+				indexer.closedWriter(); 
 			} catch (IOException ignore) {
 				ignore.printStackTrace();
 			}

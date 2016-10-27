@@ -93,6 +93,8 @@ public class FileEntryFactory {
 			return failHandler.onFail(file, ex);
 		} catch (TikaException ex) {
 			return failHandler.onFail(file, ex);
+		} catch (Throwable ex){
+			return failHandler.onFail(file, new IllegalArgumentException(ex.getMessage()));
 		}
 		return failHandler.onFail(file, new IllegalArgumentException("not supported file "));
 	}
@@ -151,6 +153,8 @@ public class FileEntryFactory {
 			return failHandler.onFail(vfile, ex);
 		} catch (TikaException ex) {
 			return failHandler.onFail(vfile, ex);
+		} catch (Throwable ex){
+			return failHandler.onFail(vfile, new IllegalArgumentException(ex.getMessage()));
 		}
 		return failHandler.onFail(vfile, new IllegalArgumentException("not supported file "));
 	}

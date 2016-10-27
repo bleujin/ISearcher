@@ -2,17 +2,21 @@ package net.ion.nsearcher.index;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
 
+import net.ion.framework.util.Debug;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.config.IndexConfig;
 import net.ion.nsearcher.exception.IndexException;
 import net.ion.nsearcher.search.SingleSearcher;
 
+import org.apache.commons.lang.reflect.FieldUtils;
+import org.apache.commons.lang.reflect.MethodUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.IndexWriter;
 
@@ -101,6 +105,10 @@ public class Indexer implements Closeable{
 		return iwriter ;
 	}
 	
+	public void closedWriter() throws IOException{
+		this.iwriter = new IndexWriter(searcher.central().dir(), searcher.central().indexConfig().newIndexWriterConfig(iconfig.indexAnalyzer()));
+	}
+	
 	public <T> Future<T> asyncIndex(final String name, final Analyzer analyzer, final IndexJob<T> indexJob, final IndexExceptionHandler handler) {
 		
 		return iconfig.indexExecutor().submit(new Callable<T>(){
@@ -109,7 +117,7 @@ public class Indexer implements Closeable{
 				Lock lock = central.writeLock() ;
 				try {
 					lock.lock();
-					session = IndexSession.create(searcher, analyzer, Indexer.this.indexWriter());
+					session = IndexSession.create(searcher, analyzer, Indexer.this.indexWriter(), Indexer.this);
 					session.begin(name) ;
 					T result = indexJob.handle(session);
 					
