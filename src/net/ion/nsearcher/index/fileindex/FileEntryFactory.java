@@ -108,8 +108,9 @@ public class FileEntryFactory {
 						ByteArrayOutputStream out = new ByteArrayOutputStream();
 						OutputStream output = new BufferedOutputStream(out);
 						HWPMeta hwpmeta = new HWPMeta();
-						InputStream input = new BufferedInputStream(vfile.getInputStream());
+						InputStream input = null ;
 						try {
+							input = new BufferedInputStream(vfile.getInputStream());
 							boolean parsed = hwpParser.GetText(input, hwpmeta, output, version);
 
 							Map<String, String> meta = MapUtil.<String> chainKeyMap().put("title", hwpmeta.getTitle()).put("subject", hwpmeta.getSubject()).put("createtime", hwpmeta.getCreatetime()).put("keyword", hwpmeta.getKeyword()).put("comment", hwpmeta.getComment())
@@ -123,8 +124,7 @@ public class FileEntryFactory {
 							return VFileEntry.create(vfile, content, meta);
 
 						} finally {
-							IOUtil.closeQuietly(output);
-							IOUtil.closeQuietly(input);
+							IOUtil.close(output, input);
 						}
 					}
 				}
