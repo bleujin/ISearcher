@@ -103,7 +103,11 @@ public class FileEntryFactory {
 		try {
 			if ("hwp".equals(vfile.getName().getExtension())) {
 				for (int version : new Integer[] { HWPVER.HML2, HWPVER.HWP3, HWPVER.HWP5 }) {
-					boolean able = hwpParser.IsHanFile(vfile.getInputStream(), version);
+					
+					final InputStream vinput = vfile.getInputStream();
+					boolean able = hwpParser.IsHanFile(vinput, version);
+					IOUtil.close(vinput);
+					
 					if (able) {
 						ByteArrayOutputStream out = new ByteArrayOutputStream();
 						OutputStream output = new BufferedOutputStream(out);
