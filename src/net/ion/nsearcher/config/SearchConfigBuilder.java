@@ -60,4 +60,8 @@ public class SearchConfigBuilder {
 		return new SearchConfig(this.es, parent.version(), queryAnalyzer(), defaultSearchFieldName());
 	}
 
+	public SearchConfigBuilder queryParser() {
+		return this ;
+	}
+
 }

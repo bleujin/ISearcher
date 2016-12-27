@@ -36,6 +36,7 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.MultiReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
@@ -43,6 +44,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.QueryWrapperFilter;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.util.Version;
 
 public class CompositeSearcher implements Searcher {
 
@@ -51,7 +53,7 @@ public class CompositeSearcher implements Searcher {
 	private List<PreProcessor> preListeners = new ArrayList<PreProcessor>();
 	private MultiSearcher searcher;
 	private IndexConfig iconfig;
-
+	private QueryParser qparser;
 
 	public CompositeSearcher(MultiSearcher searcher, SearchConfig sconfig, IndexConfig iconfig) {
 		this.searcher = searcher ;
@@ -72,6 +74,12 @@ public class CompositeSearcher implements Searcher {
 		return new CompositeSearcher(new MultiSearcher(bes, ListUtil.EMPTY), nconfig, iconfig) ;
 	}
 
+	
+	public Searcher queryParser(QueryParser qparser){
+		this.qparser = qparser ; 
+		return this ;
+	}
+	
 	public SearchConfig config(){
 		return sconfig ;
 	}
@@ -101,7 +109,7 @@ public class CompositeSearcher implements Searcher {
 			return new SearchRequest(this, new MatchAllDocsQuery(), query) ;
 		}
 		
-		final SearchRequest result = new SearchRequest(this, sconfig.parseQuery(iconfig, analyzer, query), query);
+		final SearchRequest result = new SearchRequest(this, (qparser == null) ? sconfig.parseQuery(iconfig, analyzer, query) : qparser.parse(query), query);
 		return result;
 	}
 	

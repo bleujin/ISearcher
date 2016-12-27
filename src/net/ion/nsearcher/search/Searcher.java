@@ -11,11 +11,14 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.Query;
 
 public interface Searcher {
 
+	public Searcher queryParser(QueryParser qparser) ;
+	
 	public SearchConfig config() ;
 	
 	public SearchRequest createRequest(String query) throws ParseException  ;

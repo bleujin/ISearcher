@@ -17,10 +17,12 @@ import net.ion.nsearcher.search.filter.FilterUtil;
 import net.ion.nsearcher.search.processor.PostProcessor;
 import net.ion.nsearcher.search.processor.PreProcessor;
 
+import org.apache.ecs.xhtml.q;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.Query;
@@ -34,11 +36,18 @@ public class SearcherImpl implements Searcher{
 	private SingleSearcher searcher ;
 	private SearchConfig sconfig;
 	private IndexConfig iconfig;
+	private QueryParser qparser;
 	
 	public SearcherImpl(SingleSearcher searcher, SearchConfig sconfig, IndexConfig iconfig) {
 		this.searcher = searcher ;
 		this.sconfig = sconfig ;
 		this.iconfig = iconfig ;
+	}
+	
+	
+	public Searcher queryParser(QueryParser qparser){
+		this.qparser = qparser ; 
+		return this ;
 	}
 	
 	public SearchConfig config(){
@@ -67,7 +76,7 @@ public class SearcherImpl implements Searcher{
 			return new SearchRequest(this, new MatchAllDocsQuery(), query) ;
 		}
 		
-		final SearchRequest result = new SearchRequest(this, searcher.searchConfig().parseQuery(iconfig, analyzer, query), query);
+		final SearchRequest result = new SearchRequest(this, (qparser == null) ? sconfig.parseQuery(iconfig, analyzer, query) : qparser.parse(query), query);
 		
 		return result;
 	}
