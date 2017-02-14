@@ -32,6 +32,7 @@ import org.apache.lucene.search.highlight.TextFragment;
 import org.apache.lucene.search.highlight.TokenSources;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 
 public class SearchResponse {
 
@@ -40,15 +41,16 @@ public class SearchResponse {
 	private final long startTime;
 	private final long endTime;
 	private Future<Void> postFuture;
-	private List<Integer> docs;
+	private List<Integer> docIds;
 	private int totalCount;
 
-	private SearchResponse(ISearchable searcher, SearchRequest sreq, List<Integer> docs, int totalCount, long startTime) {
+	
+	private SearchResponse(ISearchable searcher, SearchRequest sreq, List<Integer> docIds, int totalCount, long startTime) {
 		this.searcher = searcher;
 		this.sreq = sreq;
 		this.startTime = startTime;
 		this.endTime = System.currentTimeMillis();
-		this.docs = docs;
+		this.docIds = docIds;
 		this.totalCount = totalCount;
 	}
 
@@ -60,6 +62,8 @@ public class SearchResponse {
 		return new SearchResponse(searcher, sreq, makeDocument(sreq, docs), docs.totalHits, startTime);
 	}
 
+	
+	
 	public int totalCount() {
 		return totalCount;
 		// 전체 total은 searcherImpl이 구함.
@@ -67,9 +71,14 @@ public class SearchResponse {
 	}
 
 	public int size() {
-		return docs.size();
+		return docIds.size();
+	}
+	
+	public List<Integer> docIds(){
+		return docIds ;
 	}
 
+	
 	public SearchRequest request() {
 		return sreq;
 	}
@@ -98,7 +107,7 @@ public class SearchResponse {
 	}
 
 	public <T> T eachDoc(EachDocHandler<T> handler) {
-		EachDocIterator iter = new EachDocIterator(searcher, sreq, docs);
+		EachDocIterator iter = new EachDocIterator(searcher, sreq, docIds);
 		return handler.handle(iter);
 	}
 
@@ -106,14 +115,62 @@ public class SearchResponse {
 		return eachDoc(EachDocHandler.TOLIST);
 	}
 
-	public List<ReadDocument> getDocument(final Page page) {
-		return eachDoc(new EachDocHandler<List<ReadDocument>>() {
-			@Override
-			public List<ReadDocument> handle(EachDocIterator iter) {
-				return page.subList(iter) ;
+	
+	public SearchResponse filter(Predicate<ReadDocument> predic) throws IOException{
+		List<Integer> docIds = ListUtil.newList() ;
+		for (ReadDocument rdoc : getDocument()) {
+			if (predic.apply(rdoc)){
+				docIds.add(rdoc.docId()) ;
 			}
-		}) ;
+		}
+		return new SearchResponse(searcher, sreq, docIds, docIds.size(), startTime) ;
 	}
+	
+
+	public PageResponse getDocument(Page page) {
+		List<Integer> result = ListUtil.newList();
+		
+		for (int i = page.getStartLoc(); i < Math.min(page.getEndLoc(), docIds.size()); i++) {
+			result.add(docIds.get(i));
+		}
+		
+		return PageResponse.create(this, result, page, docIds);
+	}
+
+	public ReadDocument documentById(int docId) throws IOException {
+		return searcher.doc(docId, sreq) ;
+	}
+
+	public ReadDocument documentById(final String docIdValue) {
+		return eachDoc(new EachDocHandler<ReadDocument>() {
+			@Override
+			public ReadDocument handle(EachDocIterator iter) {
+				while (iter.hasNext()) {
+					ReadDocument rdoc = iter.next();
+					if (StringUtil.equals(docIdValue, rdoc.idValue()))
+						return rdoc;
+				}
+				throw new IllegalArgumentException("not found doc : " + docIdValue);
+			}
+		});
+	}
+	
+	public ReadDocument preDocBy(ReadDocument doc) throws IOException {
+		for(int i = 1 ; i <docIds.size() ; i++){
+			if (docIds.get(i) == doc.docId()) return documentById(docIds.get(i-1)) ;
+		}
+		return null ;
+	}
+	
+	public ReadDocument nextDocBy(ReadDocument doc) throws IOException {
+		for(int i = 0 ; i <docIds.size()-1 ; i++){
+			if (docIds.get(i) == doc.docId()) return documentById(docIds.get(i+1)) ;
+		}
+		return null ;
+	}
+	
+	
+	
 
 	private static List<Integer> makeDocument(SearchRequest sreq, List<Integer> docs) {
 		List<Integer> result = ListUtil.newList();
@@ -121,9 +178,13 @@ public class SearchResponse {
 		for (int i = sreq.skip(); i < Math.min(sreq.limit(), docs.size()); i++) {
 			result.add(docs.get(i));
 		}
+		
+		
+		
 		return result;
 	}
 
+	
 	private static List<Integer> makeDocument(SearchRequest sreq, TopDocs docs) {
 		ScoreDoc[] sdocs = docs.scoreDocs;
 		List<Integer> result = ListUtil.newList();
@@ -131,11 +192,14 @@ public class SearchResponse {
 		for (int i = sreq.skip(); i < Math.min(sreq.limit(), sdocs.length); i++) {
 			result.add(sdocs[i].doc);
 		}
+		
 		return result;
 	}
+	
+	
 
 	public <T> T transformer(Function<TransformerKey, T> function) {
-		return function.apply(new TransformerKey(this.searcher, docs, sreq));
+		return function.apply(new TransformerKey(this.searcher, docIds, sreq));
 	}
 
 	public long elapsedTime() {
@@ -213,4 +277,10 @@ public class SearchResponse {
 	SearchConfig searchConfig() {
 		return searcher.searchConfig();
 	}
+
+	ISearchable searcher() {
+		return searcher ;
+	}
+
+
 }
