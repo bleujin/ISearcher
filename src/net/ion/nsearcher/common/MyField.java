@@ -13,6 +13,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.FloatField;
+import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
@@ -98,7 +99,7 @@ public class MyField {
 	}
 
 	public static MyField number(String name, int value) {
-		return new MyField(new LongField(name, value, Store.YES), MyFieldType.Number);
+		return new MyField(new IntField(name, value, Store.YES), MyFieldType.Number);
 	}
 
 	public static MyField date(String name, Date date){ 

@@ -39,7 +39,7 @@ public class TestLoadDoc  extends TestCase {
 						return null;
 					}
 				}) ;
-				return null;
+				return null ;
 			}
 		}) ;
 

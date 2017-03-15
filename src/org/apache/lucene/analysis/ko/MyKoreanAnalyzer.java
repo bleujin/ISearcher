@@ -55,7 +55,7 @@ public class MyKoreanAnalyzer extends StopwordAnalyzerBase {
 		this(Version.LUCENE_46, STOP_WORDS_SET);
 		this.exactMatch = exactMatch;
 	}
-
+	
 	public MyKoreanAnalyzer(Version matchVersion, String[] stopWords) throws IOException {
 		this(matchVersion, StopFilter.makeStopSet(matchVersion, stopWords));
 	}

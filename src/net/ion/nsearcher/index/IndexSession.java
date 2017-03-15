@@ -1,7 +1,12 @@
 package net.ion.nsearcher.index;
 
 import java.io.IOException;
+import java.util.List;
 
+import javax.swing.plaf.ListUI;
+
+import net.ion.framework.util.Debug;
+import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.MapUtil;
 import net.ion.nsearcher.common.AbDocument.Action;
 import net.ion.nsearcher.common.FieldIndexingStrategy;
@@ -18,6 +23,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.index.IndexableFieldType;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.Query;
@@ -84,14 +90,37 @@ public class IndexSession {
 		ReadDocument rdoc = searcher.central().newSearcher().createRequestByKey(docId).findOne();
 		Document findDoc = (rdoc == null) ? new Document() : rdoc.toLuceneDoc() ;
 		WriteDocument result = new WriteDocument(this, docId, findDoc, replaceValue);
-		for (String nfield : numfieldnames) {
-			IndexableField field = findDoc.getField(nfield) ;
-			if (field == null) continue ;
-			result.number(nfield, field.numericValue().longValue()) ;
+		
+		
+		List<String> numFieldName = ListUtil.newList(); // find numeric field
+		for(IndexableField field : findDoc.getFields()){
+			IndexableFieldType type = field.fieldType() ;
+			if ( (!type.indexed()) && field.numericValue() != null){
+				numFieldName.add(field.name()) ;
+			}
 		}
+
+		for (String nfield : numFieldName) {
+			IndexableField field = findDoc.getField(nfield);
+			if (field == null)
+				continue;
+			result.number(nfield, field.numericValue().longValue());
+		}
+
+		
+//		for (String nfield : numfieldnames) {
+//			IndexableField field = findDoc.getField(nfield) ;
+//			if (field == null) continue ;
+//			result.number(nfield, field.numericValue().longValue()) ;
+//		}
 		return result;
 	}
+		
 	
+	public WriteDocument loadDocument(String docId) throws IOException, ParseException {
+		return loadDocument(docId, false) ;
+	}
+
 	public WriteDocument loadDocument(String docId, boolean replaceValue, FieldLoadable floadable) throws IOException, ParseException {
 		ReadDocument rdoc = searcher.central().newSearcher().createRequestByKey(docId).findOne();
 		Document findDoc = (rdoc == null) ? new Document() : rdoc.toLuceneDoc() ;
@@ -100,11 +129,7 @@ public class IndexSession {
 		return floadable.handle(result, findDoc);
 	}
 	
-	
-	
-	public WriteDocument loadDocument(String docId) throws IOException, ParseException {
-		return loadDocument(docId, false) ;
-	}
+
 
 	
 	public FieldIndexingStrategy fieldIndexingStrategy() {
