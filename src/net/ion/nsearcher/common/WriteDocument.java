@@ -218,6 +218,13 @@ public class WriteDocument extends AbDocument {
 		return this;
 	}
 
+	public WriteDocument vtext(String fieldName, String value) {
+		if (StringUtil.isBlank(value)) return this ;
+		add(MyField.vtext(fieldName, value, Store.YES));
+		
+		return this;
+	}
+
 
 	public WriteDocument number(String fieldName, long value) {
 		add(MyField.number(fieldName, value));

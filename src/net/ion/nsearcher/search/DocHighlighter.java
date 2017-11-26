@@ -20,15 +20,12 @@ public class DocHighlighter {
 
 	private SearchResponse sr;
 	private String savedFieldName;
-	private String matchString;
 	private Formatter formatter;
 	private Highlighter highlighter;
 
 	DocHighlighter(SearchResponse sr, String savedFieldName, String matchString) {
 		this.sr = sr ;
 		this.savedFieldName = savedFieldName ;
-		this.matchString = matchString ;
-		
 		
 		this.formatter = new SimpleHTMLFormatter("<span class='matched'>","</span>");
 		this.highlighter = new Highlighter(formatter, new QueryScorer(new TermQuery(new Term(savedFieldName, matchString))));

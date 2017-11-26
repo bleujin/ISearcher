@@ -11,13 +11,13 @@ import net.ion.framework.util.Debug;
 import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.ListUtil;
 import net.ion.nsearcher.common.SearchConstant;
+import net.ion.nsearcher.extend.Suggester;
 import net.ion.nsearcher.index.Indexer;
 import net.ion.nsearcher.reader.InfoReader;
 import net.ion.nsearcher.search.CompositeSearcher;
 import net.ion.nsearcher.search.Searcher;
 import net.ion.nsearcher.search.SearcherImpl;
 import net.ion.nsearcher.search.SingleSearcher;
-import net.ion.nsearcher.search.Suggester;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;

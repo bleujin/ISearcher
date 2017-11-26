@@ -1,4 +1,4 @@
-package net.ion.nsearcher.search;
+package net.ion.nsearcher.extend;
 
 import java.io.IOException;
 

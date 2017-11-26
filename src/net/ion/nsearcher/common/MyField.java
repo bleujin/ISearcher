@@ -122,7 +122,19 @@ public class MyField {
 		return new MyField(new TextField(name, value, Store.NO), MyFieldType.Text);
 	}
 
-
+	
+	private static final FieldType TYPE_VTEXT = new FieldType();
+	static {
+		TYPE_VTEXT.setIndexed(true);
+		TYPE_VTEXT.setTokenized(true);
+		TYPE_VTEXT.setStored(true);
+		TYPE_VTEXT.setStoreTermVectors(true);
+		TYPE_VTEXT.setStoreTermVectorPositions(true);
+		TYPE_VTEXT.freeze();
+	}
+	public static MyField vtext(String name, String value, Store store) {
+		return new MyField(new Field(name, value, TYPE_VTEXT), MyFieldType.Text);
+	}
 	
 	public static MyField keyword(String name, String value, Store store) {
 		return new MyField(new StringField(name, value, store), MyFieldType.Keyword) ;
@@ -152,7 +164,6 @@ public class MyField {
 		return new MyField(new TextField(name, value, store), MyFieldType.Text);
 	}
 
-	
 	
 	
 	public static MyField unknown(String name, Long value) {

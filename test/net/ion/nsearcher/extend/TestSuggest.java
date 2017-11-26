@@ -1,4 +1,4 @@
-package net.ion.nsearcher.search;
+package net.ion.nsearcher.extend;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Reader;
@@ -11,7 +11,6 @@ import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
-import net.ion.nsearcher.search.Suggester;
 
 import org.apache.commons.collections.KeyValue;
 import org.apache.lucene.index.AtomicReader;
