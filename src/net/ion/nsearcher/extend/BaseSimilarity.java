@@ -2,25 +2,22 @@ package net.ion.nsearcher.extend;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.RealVector;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
-import org.apache.lucene.queryparser.surround.query.SrndPrefixQuery;
 import org.apache.lucene.util.BytesRef;
 
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.MapUtil;
+import net.ion.framework.util.SetUtil;
 import net.ion.nsearcher.common.ReadDocument;
 import net.ion.nsearcher.search.SearchResponse;
 import net.ion.nsearcher.search.SimilaryDocs;
+import net.ion.nsearcher.util.ArrayVector;
 
 public class BaseSimilarity {
 
@@ -34,7 +31,7 @@ public class BaseSimilarity {
 	public SimilaryDocs foundBy(String field) throws IOException {
 		
 		IndexReader ireader = searchResponse.request().searcher().indexReader() ;
-		Set<String> allTerms = new HashSet();
+		Set<String> allTerms = SetUtil.newSet() ;
 		
 		Map<String, Integer> targetMap = termFrequencies(ireader, allTerms, target.docId(), field) ;
 		Map<Integer, Map<String, Integer>> temp = MapUtil.newMap() ;
@@ -44,11 +41,11 @@ public class BaseSimilarity {
 			temp.put(docId, tf) ;
 		}
 		
-		RealVector targetVector = realVector(allTerms, targetMap) ;
+		ArrayVector targetVector = realVector(allTerms, targetMap) ;
 		List<SimilaryDoc> result = ListUtil.newList() ;
 		for (int docId : temp.keySet()) {
 			Map<String, Integer> tf = temp.get(docId) ;
-			RealVector rv = realVector(allTerms, tf) ;
+			ArrayVector rv = realVector(allTerms, tf) ;
 			double simValue = (targetVector.dotProduct(rv)) / (targetVector.getNorm() * rv.getNorm()) ;
 			result.add(new SimilaryDoc(docId, simValue));
 		}
@@ -62,9 +59,8 @@ public class BaseSimilarity {
 	private Map<String, Integer> termFrequencies(IndexReader reader, Set<String> allTerms, int docId, String field) throws IOException {
 		Terms vector = reader.getTermVector(docId, field);
 		if (vector == null) throw new IllegalStateException("field not exist or, not indexed with vector") ;
-		TermsEnum termsEnum = null;
-		termsEnum = vector.iterator(termsEnum);
-		Map<String, Integer> frequencies = new HashMap();
+		TermsEnum termsEnum = vector.iterator(null);
+		Map<String, Integer> frequencies = MapUtil.newMap() ;
 		BytesRef text = null;
 		while ((text = termsEnum.next()) != null) {
 			String term = text.utf8ToString();
@@ -75,16 +71,15 @@ public class BaseSimilarity {
 		return frequencies;
 	}
 	
-	private RealVector realVector(Set<String> allTerms, Map<String, Integer> map) {
-		RealVector vector = new ArrayRealVector(allTerms.size());
+	private ArrayVector realVector(Set<String> allTerms, Map<String, Integer> tfmap) {
+		ArrayVector vector = new ArrayVector(allTerms.size());
 		int i = 0;
 		for (String term : allTerms) {
-			int value = map.containsKey(term) ? map.get(term) : 0;
+			int value = tfmap.containsKey(term) ? tfmap.get(term) : 0;
 			vector.setEntry(i++, value);
 		}
-		return (RealVector) vector.mapDivide(vector.getL1Norm());
+		return vector.mapDivide(vector.getL1Norm());
 	}
-
 
 }
 

@@ -11,7 +11,7 @@ public class SimilaryDoc implements Comparable<SimilaryDoc> {
 
 	@Override
 	public int compareTo(SimilaryDoc o) {
-		return new Double((this.simValue - o.simValue) * 1000000).intValue();
+		return new Double((this.simValue - o.simValue) * 100000000).intValue();
 	}
 
 	public double simValue() {

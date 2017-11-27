@@ -1,32 +1,11 @@
 package net.ion.nsearcher.extend;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.RealVector;
-import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.Terms;
-import org.apache.lucene.index.TermsEnum;
-import org.apache.lucene.util.BytesRef;
-
 import junit.framework.TestCase;
-import net.ion.framework.util.Debug;
-import net.ion.framework.util.MapUtil;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.config.CentralConfig;
-import net.ion.nsearcher.extend.BaseSimilarity;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
-import net.ion.nsearcher.index.Indexer;
-import net.ion.nsearcher.search.EachDocHandler;
-import net.ion.nsearcher.search.EachDocIterator;
 import net.ion.nsearcher.search.SearchResponse;
-import net.ion.nsearcher.search.Searcher;
 import net.ion.nsearcher.search.SimilaryDocs;
 
 public class TestSimilarity extends TestCase {
