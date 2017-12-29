@@ -8,16 +8,6 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-import net.ion.framework.util.IOUtil;
-import net.ion.framework.util.StringUtil;
-import net.ion.nsearcher.common.IKeywordField;
-import net.ion.nsearcher.config.IndexConfig;
-import net.ion.nsearcher.config.SearchConfig;
-import net.ion.nsearcher.search.filter.FilterUtil;
-import net.ion.nsearcher.search.processor.PostProcessor;
-import net.ion.nsearcher.search.processor.PreProcessor;
-
-import org.apache.ecs.xhtml.q;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
@@ -28,6 +18,15 @@ import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.QueryWrapperFilter;
 import org.apache.lucene.search.TermQuery;
+
+import net.ion.framework.util.IOUtil;
+import net.ion.framework.util.StringUtil;
+import net.ion.nsearcher.common.IKeywordField;
+import net.ion.nsearcher.config.IndexConfig;
+import net.ion.nsearcher.config.SearchConfig;
+import net.ion.nsearcher.search.filter.FilterUtil;
+import net.ion.nsearcher.search.processor.PostProcessor;
+import net.ion.nsearcher.search.processor.PreProcessor;
 
 public class SearcherImpl implements Searcher{
 

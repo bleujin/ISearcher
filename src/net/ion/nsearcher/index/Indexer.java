@@ -20,6 +20,8 @@ import org.apache.commons.lang.reflect.MethodUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.IndexWriter;
 
+import com.google.common.util.concurrent.Futures;
+
 public class Indexer implements Closeable{
 
 	private Central central;
@@ -110,6 +112,7 @@ public class Indexer implements Closeable{
 	}
 	
 	public <T> Future<T> asyncIndex(final String name, final Analyzer analyzer, final IndexJob<T> indexJob, final IndexExceptionHandler handler) {
+		if (iconfig.indexExecutor().isTerminated() || iconfig.indexExecutor().isShutdown()) return Futures.immediateFuture(null) ;
 		
 		return iconfig.indexExecutor().submit(new Callable<T>(){
 			public T call() throws Exception {

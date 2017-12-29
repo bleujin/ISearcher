@@ -4,13 +4,12 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 
-import net.ion.framework.util.Debug;
-import net.ion.framework.util.ListUtil;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+
+import net.ion.framework.util.ListUtil;
 
 public class AnalyzerUtil {
 
